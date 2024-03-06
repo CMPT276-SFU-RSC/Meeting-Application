@@ -19,8 +19,9 @@ public class PollController {
     public String getAllStudents(Model model){
 
         //get from DB
-        //need to verify it has the right user, likely through session giving userID, and searching through the "invited" list.
-        List<Poll> polls = pollRepo.findAll();
+        //get all polls this user has been invited to
+        //  could in the future move results the user has answered
+        List<Poll> polls = pollRepo.findByUID(1);
         
         model.addAttribute("polls", polls);
         
