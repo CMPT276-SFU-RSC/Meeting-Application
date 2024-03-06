@@ -1,0 +1,63 @@
+/**
+ * The UserServiceImplementation class provides an implementation of the UserService interface.
+ * It includes methods to save a User and to verify a token.
+ */
+package group9.sfursmeetingapplication.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import group9.sfursmeetingapplication.models.Confirmation;
+import group9.sfursmeetingapplication.models.User;
+import group9.sfursmeetingapplication.repositories.ConfirmationRepository;
+import group9.sfursmeetingapplication.repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
+
+@Service // This annotation is used to mark the class as a service provider
+@RequiredArgsConstructor // This annotation is used to generate a constructor with required fields
+public class UserServiceImplementation implements UserService {
+    @Autowired // This annotation is used to mark the field as autowired
+    private final UserRepository userRepository;
+    private final ConfirmationRepository confirmationRepository;
+    private final EmailService emailService;
+
+
+    /**
+     * This method saves a user to the database.
+     * @param user The user to be saved.
+     * @return The user that was saved.
+     * @throws IllegalArgumentException If the email already exists.
+     */
+    @Override
+    public User saveUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        user.setEnabled(false);
+        userRepository.save(user);
+
+        Confirmation confirmation = new Confirmation(user);
+        confirmationRepository.save(confirmation);
+
+        // Send an email to the user
+        emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), confirmation.getToken());
+
+        return user;
+    }
+
+    /**
+     * This method verifies a token.
+     * @param token The token to be verified.
+     * @return True if the token is verified, false otherwise.
+     */
+    @Override
+    public Boolean verifyToken(String token) {
+        Confirmation confirmation = confirmationRepository.findByToken(token);
+        User user = userRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
+        user.setEnabled(true);
+        userRepository.save(user);
+        confirmationRepository.delete(confirmation);
+
+        return Boolean.TRUE;
+    }
+}
