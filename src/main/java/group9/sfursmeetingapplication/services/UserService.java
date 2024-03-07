@@ -4,6 +4,8 @@
  */
 package group9.sfursmeetingapplication.services;
 
+import java.util.Map;
+
 import group9.sfursmeetingapplication.models.User;
 
 public interface UserService {
@@ -11,14 +13,18 @@ public interface UserService {
     /**
      * Saves a User to the database.
      * @param user The User to save.
-     * @return The saved User.
      */
     User saveUser(User user); // Possible to decouple from the database using DTOs.
 
     /**
      * Verifies a token.
      * @param token The token to verify.
-     * @return True if the token is valid, false otherwise.
      */
     Boolean verifyToken(String token);
+
+    /**
+     * Gets a User from form data.
+     * @param user The form data.
+     */
+    User getUserFromFormData(Map<String, String> user);
 }

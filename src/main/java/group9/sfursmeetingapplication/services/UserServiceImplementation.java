@@ -4,6 +4,8 @@
  */
 package group9.sfursmeetingapplication.services;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import group9.sfursmeetingapplication.models.Confirmation;
@@ -59,5 +61,18 @@ public class UserServiceImplementation implements UserService {
         confirmationRepository.delete(confirmation);
 
         return Boolean.TRUE;
+    }
+
+    @Override
+    public User getUserFromFormData(Map<String, String> formData) {
+        String email = formData.get("email");
+        String password = formData.get("password");
+        User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
+        
+        if (foundUser == null) {
+            throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
+        }
+        
+        return foundUser;
     }
 }

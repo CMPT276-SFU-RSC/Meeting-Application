@@ -1,7 +1,7 @@
 /**
  * The HttpResponse class represents a standard HTTP response.
  * It includes a timestamp, status code, HTTP status, message, developer message, path, request method, and data.
- * DEPRICATED: This class is no longer used in the application remove if used.
+ * DEPRICATED: This class is no longer used in the application remove deprication comment if used.
  */
 package group9.sfursmeetingapplication.models;
 
