@@ -17,7 +17,7 @@ public class PollController {
     @Autowired
     private PollRepository pollRepo;
     @GetMapping(value = "/dashboard")
-    public String getAllStudents(Model model, HttpSession session){
+    public String getAllStudents(Model model){//, HttpSession session){
         // User user = (User) session.getAttribute("user");
         // if (user == null){
         //     //not logged in, redirect
