@@ -7,8 +7,9 @@ public class EmailUtils {
 
     /**
      * Generates the email for user verification.
-     * @param name the name of the user
-     * @param host the host of the application
+     * 
+     * @param name  the name of the user
+     * @param host  the host of the application
      * @param token the token for verifying the user's account
      * @return the email message
      */
@@ -22,12 +23,13 @@ public class EmailUtils {
 
     /**
      * Gererates the verification URL for the user.
-     * @param host the host of the application
+     * 
+     * @param host  the host of the application
      * @param token the token for verifying the user's account
      * @return the verification URL
      */
     public static String getVerificationUrl(String host, String token) {
         return host + "/users?token=" + token;
     }
-    
+
 }

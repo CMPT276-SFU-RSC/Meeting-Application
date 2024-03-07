@@ -4,15 +4,17 @@
  * It also includes custom methods to find a User by email (ignoring case) and to check if a User exists by email.
  */
 package group9.sfursmeetingapplication.repositories;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.User;
 
 @Repository // Spring annotation to indicate that the class is a repository.
-public interface UserRepository extends JpaRepository<User, Long>{
+public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
      * Finds a User by email (ignoring case).
+     * 
      * @param email The email of the User to find.
      * @return The User with the given email (ignoring case).
      */
@@ -20,6 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     /**
      * Checks if a User exists by email.
+     * 
      * @param email The email of the User to check.
      * @return True if a User with the given email exists, false otherwise.
      */
@@ -27,7 +30,8 @@ public interface UserRepository extends JpaRepository<User, Long>{
 
     /**
      * Finds a User by email and password.
-     * @param email The email of the User to find.
+     * 
+     * @param email    The email of the User to find.
      * @param password The password of the User to find.
      * @return The User with the given email and password.
      */

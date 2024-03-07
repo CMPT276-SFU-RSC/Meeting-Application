@@ -3,6 +3,7 @@
  * It stores information about a user such as email, password, first name, last name, team, title, and roles.
  */
 package group9.sfursmeetingapplication.models;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,10 +15,12 @@ import lombok.experimental.SuperBuilder;
 @Getter // Lombok annotation to generate the getters.
 @ToString // Lombok annotation to generate the toString method.
 @Entity // JPA annotation to specify that the class is an entity.
-@Table(name = "users") // JPA annotation to specify the name of the database table to be used for the entity.
+@Table(name = "users") // JPA annotation to specify the name of the database table to be used for the
+                       // entity.
 public class User {
     @Id // JPA annotation to specify the primary key of an entity.
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // JPA annotation to specify the primary key generation strategy.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // JPA annotation to specify the primary key generation
+                                                        // strategy.
     private Long uid; // The primary key of the user entity.
     private String email;
     private String password;
@@ -27,5 +30,5 @@ public class User {
     private String title; // The title of the user or role of the user.
     private boolean isOrganizer; // Whether the user is an organizer.
     private boolean isEnabled; // Whether the user is enabled.
-    
+
 }

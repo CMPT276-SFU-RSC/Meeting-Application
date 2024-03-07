@@ -4,6 +4,7 @@
  * Each Confirmation is associated with one User.
  */
 package group9.sfursmeetingapplication.models;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,19 +17,23 @@ import lombok.Setter;
 @Getter // Lombok annotation to generate the getters.
 @Setter // Lombok annotation to generate the setters.
 @Entity // JPA annotation to specify that the class is an entity.
-@Table(name = "confirmations") // JPA annotation to specify the name of the database table to be used for the entity.
+@Table(name = "confirmations") // JPA annotation to specify the name of the database table to be used for the
+                               // entity.
 public class Confirmation {
 
     @Id // JPA annotation to specify the primary key of an entity.
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // JPA annotation to specify the primary key generation strategy.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // JPA annotation to specify the primary key generation
+                                                        // strategy.
     private Long cid; // The primary key of the confirmation entity.
     private String token; // The token used to confirm the user's email address.
 
-    @CreatedDate // JPA annotation to specify the date and time when the confirmation was created.
+    @CreatedDate // JPA annotation to specify the date and time when the confirmation was
+                 // created.
     private LocalDateTime createdDate; // The date and time when the confirmation was created.
 
     /**
-     * Creates the 1:1 relationship between the user and the confirmation and fetches the user data eagerly when the
+     * Creates the 1:1 relationship between the user and the confirmation and
+     * fetches the user data eagerly when the
      * confirmation is fetched.
      */
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
@@ -37,6 +42,7 @@ public class Confirmation {
 
     /**
      * Constructs a new Confirmation object for the given User.
+     * 
      * @param user The User for whom this Confirmation is created.
      */
     public Confirmation(User user) {

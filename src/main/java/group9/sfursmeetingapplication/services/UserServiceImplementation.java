@@ -5,7 +5,6 @@
 package group9.sfursmeetingapplication.services;
 
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import group9.sfursmeetingapplication.models.Confirmation;
@@ -22,9 +21,9 @@ public class UserServiceImplementation implements UserService {
     private final ConfirmationRepository confirmationRepository;
     private final EmailService emailService;
 
-
     /**
      * This method saves a user to the database.
+     * 
      * @param user The user to be saved.
      * @return The user that was saved.
      * @throws IllegalArgumentException If the email already exists.
@@ -34,21 +33,18 @@ public class UserServiceImplementation implements UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-
         user.setEnabled(false);
         userRepository.save(user);
-
         Confirmation confirmation = new Confirmation(user);
         confirmationRepository.save(confirmation);
-
         // Send an email to the user
         emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), confirmation.getToken());
-
         return user;
     }
 
     /**
      * This method verifies a token.
+     * 
      * @param token The token to be verified.
      * @return True if the token is verified, false otherwise.
      */
@@ -59,7 +55,6 @@ public class UserServiceImplementation implements UserService {
         user.setEnabled(true);
         userRepository.save(user);
         confirmationRepository.delete(confirmation);
-
         return Boolean.TRUE;
     }
 
@@ -68,11 +63,9 @@ public class UserServiceImplementation implements UserService {
         String email = formData.get("email");
         String password = formData.get("password");
         User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
-        
         if (foundUser == null) {
             throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
         }
-        
         return foundUser;
     }
 }
