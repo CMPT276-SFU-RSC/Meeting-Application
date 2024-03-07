@@ -30,12 +30,13 @@ public class PollController {
             //get from DB
             //get all polls this user has been invited to
             //  could in the future move results the user has answered
-            List<Poll> polls = pollRepo.findByUID(user.uid);
+            //  List<Poll> polls = pollRepo.findByUID(user.uid);
+            List<Poll> polls = pollRepo.findByUID(1);
             
             model.addAttribute("polls", polls);
             return "userDashboard";
 
-            
+
         //}
     }
 }
