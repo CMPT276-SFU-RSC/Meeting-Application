@@ -18,10 +18,10 @@ public class PollController {
     private PollRepository pollRepo;
     @GetMapping(value = "/dashboard")
     public String getAllStudents(Model model){//, HttpSession session){
-        // User user = (User) session.getAttribute("user");
+        // User user = (User) session.getAttribute("session_user");
         // if (user == null){
         //     //not logged in, redirect
-        //     return "login";
+        //     return "users/login";
         // }
         // else {
 
@@ -34,6 +34,7 @@ public class PollController {
             List<Poll> polls = pollRepo.findByUID(1);
             
             model.addAttribute("polls", polls);
+            // model.addAttribute("user", user);
             return "userDashboard";
 
 
