@@ -10,24 +10,21 @@ public class Poll {
     private int pid;
     private String title;
     private String description;
-    private int date;
-    private int startDate;
-    private int endDate;
+    private java.sql.Date startDate;
+    private java.sql.Date endDate;
     
     public Poll() {
     }
-    public Poll(String title, String description, int date, int startDate, int endDate) {
+    public Poll(String title, String description,  java.sql.Date startDate,  java.sql.Date endDate) {
         this.title = title;
         this.description = description;
-        this.date = date;
         this.startDate = startDate;
         this.endDate = endDate;
     }
-    public Poll(int pid, String title, String description, int date, int startDate, int endDate) {
+    public Poll(int pid, String title, String description,  java.sql.Date startDate, java.sql.Date endDate) {
         this.pid = pid;
         this.title = title;
         this.description = description;
-        this.date = date;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -43,22 +40,16 @@ public class Poll {
     public void setDescription(String description) {
         this.description = description;
     }
-    public int getDate() {
-        return date;
-    }
-    public void setDate(int date) {
-        this.date = date;
-    }
-    public int getStartDate() {
+    public java.sql.Date getStartDate() {
         return startDate;
     }
-    public void setStartDate(int startDate) {
+    public void setStartDate(java.sql.Date startDate) {
         this.startDate = startDate;
     }
-    public int getEndDate() {
+    public java.sql.Date getEndDate() {
         return endDate;
     }
-    public void setEndDate(int endDate) {
+    public void setEndDate(java.sql.Date endDate) {
         this.endDate = endDate;
     }
     public String getTitle() {
