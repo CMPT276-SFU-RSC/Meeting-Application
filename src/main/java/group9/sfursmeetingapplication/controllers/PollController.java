@@ -26,7 +26,7 @@ public class PollController {
         System.out.println("User: " + user);
         if (user == null){
             //not logged in, redirect
-            return "users/login";
+            return "redirect:/login";
         } else {
             //generate dashboard
             //get from DB

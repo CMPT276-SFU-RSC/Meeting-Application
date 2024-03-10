@@ -47,7 +47,7 @@ public class UserController {
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
             response.setStatus(201);
-            return "users/dashboard";
+            return "redirect:/dashboard";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -84,8 +84,8 @@ public class UserController {
      * Handles a GET request to redirect to the login page.
      */
     @GetMapping("/")
-    public RedirectView process() {
-        return new RedirectView("login");
+    public String returnToLogin() {
+        return "redirect:/dashboard";
     }
 
     /**
@@ -133,6 +133,6 @@ public class UserController {
     @GetMapping("/logout")
     public String getLogout(HttpServletRequest request) {
         request.getSession().invalidate();
-        return "users/login";
+        return "redirect:/login";
     }
 }
