@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import group9.sfursmeetingapplication.models.Poll;
 import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.PollRepository;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
