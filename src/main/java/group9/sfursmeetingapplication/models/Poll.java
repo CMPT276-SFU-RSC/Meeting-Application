@@ -12,21 +12,30 @@ public class Poll {
     private String description;
     private java.sql.Date startDate;
     private java.sql.Date endDate;
-    
+    private java.sql.Date expirary;
+
     public Poll() {
     }
-    public Poll(String title, String description,  java.sql.Date startDate,  java.sql.Date endDate) {
+    public Poll(String title, String description,  java.sql.Date startDate,  java.sql.Date endDate, java.sql.Date expirary) {
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.expirary = expirary;
     }
-    public Poll(int pid, String title, String description,  java.sql.Date startDate, java.sql.Date endDate) {
+    public Poll(int pid, String title, String description,  java.sql.Date startDate, java.sql.Date endDate, java.sql.Date expirary) {
         this.pid = pid;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.expirary = expirary;
+    }
+    public java.sql.Date getExpirary() {
+        return expirary;
+    }
+    public void setExpirary(java.sql.Date expirary) {
+        this.expirary = expirary;
     }
     public int getPid() {
         return pid;
