@@ -23,6 +23,7 @@ public class PollController {
     public String getAllStudents(Model model, HttpServletRequest request,
     HttpSession session) {
         User user = (User) session.getAttribute("session_user");
+        System.out.println("User: " + user);
         if (user == null){
             //not logged in, redirect
             return "users/login";
