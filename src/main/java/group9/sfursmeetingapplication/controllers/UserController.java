@@ -47,7 +47,7 @@ public class UserController {
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
             response.setStatus(201);
-            return "users/protected";
+            return "users/dashboard";
         } catch (Exception e) {
             System.out.println(e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -71,7 +71,6 @@ public class UserController {
             System.out.println("Creating User");
             userService.saveUser(user);
             response.setStatus(201);
-            // To do create template until user is verified
             return "universals/success";
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -121,7 +120,7 @@ public class UserController {
             return "users/login";
         } else {
             model.addAttribute("user", user);
-            return "users/protected";
+            return "users/dashboard";
         }
     }
 

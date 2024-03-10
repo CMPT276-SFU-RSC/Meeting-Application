@@ -1,9 +1,11 @@
-package group9.sfursmeetingapplication.models;
+package group9.sfursmeetingapplication.repositories;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import group9.sfursmeetingapplication.models.Poll;
 
 
 public interface PollRepository extends JpaRepository<Poll, Integer> {
@@ -15,5 +17,5 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
                 "ORDER BY polls.start_date;", //order by the first possible start time, could be changed later (maybe priority system)
         nativeQuery = true
     )
-    List<Poll> findByUID(Integer uid);
+    List<Poll> findByUID(long uid);
 }
