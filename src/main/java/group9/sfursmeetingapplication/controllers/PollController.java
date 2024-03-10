@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import group9.sfursmeetingapplication.models.Poll;
 import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.PollRepository;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -23,9 +22,10 @@ public class PollController {
     public String getAllStudents(Model model, HttpServletRequest request,
     HttpSession session) {
         User user = (User) session.getAttribute("session_user");
+        System.out.println("User: " + user);
         if (user == null){
             //not logged in, redirect
-            return "users/login";
+            return "redirect:/login";
         } else {
             //generate dashboard
             //get from DB
