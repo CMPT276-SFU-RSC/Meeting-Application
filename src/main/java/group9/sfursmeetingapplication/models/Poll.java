@@ -1,5 +1,7 @@
 package group9.sfursmeetingapplication.models;
 
+import java.sql.Date;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,28 +10,41 @@ public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pid;
+    private int creator_id;
     private String title;
     private String description;
-    private int date;
-    private int startDate;
-    private int endDate;
-    
+    private java.sql.Date startDate;
+    private java.sql.Date endDate;
+    private java.sql.Date expirary;
+
     public Poll() {
     }
-    public Poll(String title, String description, int date, int startDate, int endDate) {
+
+    public Poll(int creator_id, String title, String description, Date startDate, Date endDate, Date expirary) {
+        this.creator_id = creator_id;
         this.title = title;
         this.description = description;
-        this.date = date;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.expirary = expirary;
     }
-    public Poll(int pid, String title, String description, int date, int startDate, int endDate) {
+
+    public Poll(int pid, int creator_id, String title, String description, Date startDate, Date endDate,
+            Date expirary) {
         this.pid = pid;
+        this.creator_id = creator_id;
         this.title = title;
         this.description = description;
-        this.date = date;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.expirary = expirary;
+    }
+
+    public java.sql.Date getExpirary() {
+        return expirary;
+    }
+    public void setExpirary(java.sql.Date expirary) {
+        this.expirary = expirary;
     }
     public int getPid() {
         return pid;
@@ -43,22 +58,16 @@ public class Poll {
     public void setDescription(String description) {
         this.description = description;
     }
-    public int getDate() {
-        return date;
-    }
-    public void setDate(int date) {
-        this.date = date;
-    }
-    public int getStartDate() {
+    public java.sql.Date getStartDate() {
         return startDate;
     }
-    public void setStartDate(int startDate) {
+    public void setStartDate(java.sql.Date startDate) {
         this.startDate = startDate;
     }
-    public int getEndDate() {
+    public java.sql.Date getEndDate() {
         return endDate;
     }
-    public void setEndDate(int endDate) {
+    public void setEndDate(java.sql.Date endDate) {
         this.endDate = endDate;
     }
     public String getTitle() {
@@ -66,5 +75,13 @@ public class Poll {
     }
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getCreator_id() {
+        return creator_id;
+    }
+
+    public void setCreator_id(int creator_id) {
+        this.creator_id = creator_id;
     }
 }
