@@ -14,15 +14,16 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
+    <section>
+        <p class="small fw-bold mt-2 pt-1">Create Poll <a href="/pollcreate" class="link-danger">
+                </br>
+                <button class="btn btn-primary" type="button">Now</button></a></p>
+        <p class="small fw-bold mt-2 pt-1">Create Medium <a href="/mediumCreate" class="link-danger">
+                </br>
+                <button class="btn btn-primary" type="button">Now</button></a></p>
+    </section>
 
-
-    <main>
-        <p class="small fw-bold mt-2 pt-1">Create Poll <a href="/pollcreate" class="link-danger"><button type="button">Now</button></a></p>
-        <p class="small fw-bold mt-2 pt-1">Create Medium <a href="/mediumCreate" class="link-danger"><button type="button">Now</button></a></p>
-
-
-    <main>
-
+    <section>
         <!-- add maybe a footer with copywrite info or smthn? -->
         <div th:each="poll:${polls}">
             <div class="card">
@@ -34,13 +35,8 @@
             </div>
             <br>
         </div>
-
-
-
-
-
-    </main>
-    <footer class="sticky-footer" th:replace="~{universals/footer :: footer}"></footer>
+    </section>
+    <footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
 
 </html>
