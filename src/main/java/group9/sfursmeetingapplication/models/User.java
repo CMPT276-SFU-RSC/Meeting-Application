@@ -31,4 +31,11 @@ public class User {
     private boolean isOrganizer; // Whether the user is an organizer.
     private boolean isEnabled; // Whether the user is enabled.
 
+    
 }
+
+
+
+
+
+
