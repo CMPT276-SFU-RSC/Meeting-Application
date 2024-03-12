@@ -13,6 +13,7 @@ import group9.sfursmeetingapplication.repositories.PollRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,12 +22,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
+
 @Controller
 public class PollController {
 
     @Autowired
     private PollRepository pollRepo;
-
 
     @GetMapping(value = "/dashboard")
     public String getAllStudents(Model model, HttpServletRequest request,
@@ -49,6 +50,7 @@ public class PollController {
             return "users/dashboard";
         }
     }
+
 
 
     @PostMapping("/create-poll")
@@ -79,4 +81,5 @@ public class PollController {
     }
    
    
+
 }

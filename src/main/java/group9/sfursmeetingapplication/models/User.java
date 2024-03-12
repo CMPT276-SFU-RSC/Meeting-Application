@@ -30,7 +30,12 @@ public class User {
     private String title; // The title of the user or role of the user.
     private boolean isOrganizer; // Whether the user is an organizer.
     private boolean isEnabled; // Whether the user is enabled.
+
     
 }
 
+
+
+
+}
 

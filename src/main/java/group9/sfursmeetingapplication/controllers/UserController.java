@@ -46,7 +46,7 @@ public class UserController {
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
             response.setStatus(201);
-        
+
             return "redirect:/dashboard";
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -80,7 +80,6 @@ public class UserController {
         }
     }
 
-    
 
     /**
      * Handles a GET request to redirect to the login page.
@@ -111,10 +110,12 @@ public class UserController {
     public String registerUser() {
         return "users/registration";
     }
+
     @GetMapping("/pollcreate")
     public String poll() {
         return "users/pollcreate";
     }
+
 
     /**
      * Handles a GET request to login a user.

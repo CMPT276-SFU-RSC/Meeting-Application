@@ -1,5 +1,10 @@
 package group9.sfursmeetingapplication.models;
 
+
+
+import java.sql.Date;
+
+
 import jakarta.persistence.*;
 
 @Entity
@@ -8,6 +13,9 @@ public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pid;
+
+    private int creator_id;
+
     private String title;
     private String description;
     private java.sql.Date startDate;
@@ -16,21 +24,38 @@ public class Poll {
 
     public Poll() {
     }
+
     public Poll(String title, String description,  java.sql.Date startDate,  java.sql.Date endDate, java.sql.Date expirary) {
+
+
+    public Poll(int creator_id, String title, String description, Date startDate, Date endDate, Date expirary) {
+        this.creator_id = creator_id;
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.expirary = expirary;
     }
+
     public Poll(int pid, String title, String description,  java.sql.Date startDate, java.sql.Date endDate, java.sql.Date expirary) {
         this.pid = pid;
+
+
+    public Poll(int pid, int creator_id, String title, String description, Date startDate, Date endDate,
+            Date expirary) {
+        this.pid = pid;
+        this.creator_id = creator_id;
+
         this.title = title;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.expirary = expirary;
     }
+
+
+
+
     public java.sql.Date getExpirary() {
         return expirary;
     }
@@ -67,4 +92,14 @@ public class Poll {
     public void setTitle(String title) {
         this.title = title;
     }
+
+
+    public int getCreator_id() {
+        return creator_id;
+    }
+
+    public void setCreator_id(int creator_id) {
+        this.creator_id = creator_id;
+    }
+
 }
