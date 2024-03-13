@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
+<nav class="navbar navbar-expand-lg" th:fragment="navbar">
     <main class="container-fluid">
-        <a class="navbar-brand" href="/">Group Organizer 276</a>
+        <a class="navbar-brand" href="/"> <i class="fas fa-home"></i></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
             aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -13,14 +13,20 @@
                         data-bs-toggle="dropdown" aria-expanded="false" th:if="${user.isOrganizer}">
                         Meeting Organizer
                     </a>
-                    <ul class="dropdown-menu m-2" aria-labelledby="navbarDropdownMenuLink">
-                        <li><a class="dropdown-item" href="/pollcreate">Create New Poll</a></li>
+                    <ul class="dropdown-menu m2" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">New Poll</a></li>
+                        <li><a class="dropdown-item" href="#">View User List</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-                <a class="nav-link active" aria-current="page" href="#">Holder for User Profile</a>
+                <a class="nav-link active" aria-current="page" href="#">Profile</a>
                 </li>
             </ul>
             <a class="btn btn-primary ml-auto" href="/logout">Log Out</a>
         </fieldset>
+            <!--Dark Mode button, putting on navbar for more accessiblility for now-->
+            <button id="darkModeBtn"><i class="fas fa-moon"></i></button>
     </main>
 </nav>
+
+

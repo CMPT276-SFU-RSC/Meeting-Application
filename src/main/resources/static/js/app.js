@@ -7,3 +7,17 @@ function redirectAfterDelay() {
         window.location.href = '/';
     }, 3000);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('darkModeBtn').addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+        var text = document.getElementById("darkModeBtn");
+            if (text.textContent === '🌙') {
+                text.textContent = '☀';
+            }
+            else {
+                text.textContent = '🌙';
+            }
+    });
+});
+
