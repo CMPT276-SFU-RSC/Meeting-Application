@@ -32,6 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-
-### DB ###
+### ENV ###
 env.properties

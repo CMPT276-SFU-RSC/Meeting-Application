@@ -14,10 +14,17 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-    
-    <main>
-        <!-- add maybe a footer with copywrite info or smthn? -->
-        <div th:each="poll:${polls}">
+    <section th:if="${user.isOrganizer}">
+        <p class="small fw-bold mt-2 pt-1">Create Poll <a href="/pollcreate" class="link-danger">
+                </br>
+                <button class="btn btn-primary" type="button">Now</button></a></p>
+        <p class="small fw-bold mt-2 pt-1">Create Medium <a href="/mediumCreate" class="link-danger">
+                </br>
+                <button class="btn btn-primary" type="button">Now</button></a></p>
+    </section>
+
+    <section >
+        <div th:each="poll:${polls}" >
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${poll.title}"></h5>
@@ -27,9 +34,9 @@
             </div>
             <br>
         </div>
-
-    </main>
-    <footer class="sticky-footer" th:replace="~{universals/footer :: footer}"></footer>
+    </section>
+            <!-- add maybe a footer with copywrite info or smthn? -->
+    <footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
 
 <!-- This is for the DarkMode button. -->
