@@ -8,6 +8,8 @@ package group9.sfursmeetingapplication.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.Confirmation;
+import group9.sfursmeetingapplication.models.User;
+
 
 @Repository // Spring annotation to indicate that the class is a repository.
 public interface ConfirmationRepository extends JpaRepository<Confirmation, Long> {
@@ -19,5 +21,13 @@ public interface ConfirmationRepository extends JpaRepository<Confirmation, Long
      * @return The Confirmation with the given token.
      */
     Confirmation findByToken(String token);
+
+    /**
+     * Finds a Confirmation by uid.
+     * 
+     * @param uid
+     * @return The Confirmation with the given uid.
+     */
+    Confirmation findByUser(User user);
 
 }

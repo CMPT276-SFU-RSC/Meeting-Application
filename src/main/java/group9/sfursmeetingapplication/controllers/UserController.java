@@ -80,6 +80,23 @@ public class UserController {
         }
     }
 
+    @PostMapping("/email/resend")
+    public String resendConfirmation(@ModelAttribute User user, HttpServletResponse response,
+            RedirectAttributes redirectAttributes) {
+        try {
+            System.out.println("Resending Confirmation");
+            userService.resendConfirmation(user);
+            response.setStatus(201);
+            return "universals/success";
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            response.setStatus(401);
+            return "redirect:/resendConfirmation";
+        }
+    }
+    
+
 
     /**
      * Handles a GET request to redirect to the login page.
@@ -109,6 +126,15 @@ public class UserController {
     @GetMapping("/registration")
     public String registerUser() {
         return "users/registration";
+    }
+
+    /**
+     * Handles a GET request to resend a confirmation email.
+     * @return The view for the user.
+     */
+    @GetMapping("/resendConfirmation")
+    public String resendConfirmation() {
+        return "users/resendConfirmation";
     }
 
     @GetMapping("/pollcreate")
