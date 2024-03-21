@@ -29,4 +29,10 @@ public interface UserService {
      * @param user The form data.
      */
     User getUserFromFormData(Map<String, String> user);
+
+    /**
+     * Resends a confirmation email.
+     * @param user The user to resend the confirmation email to.
+     */
+    void resendConfirmation(User user);
 }
