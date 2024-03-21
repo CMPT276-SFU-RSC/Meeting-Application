@@ -98,7 +98,7 @@ public class UserController {
     @GetMapping("/users") // Spring annotation to map HTTP GET requests onto specific handler methods
     public String confirmUserAccount(@RequestParam("token") String token) {
         userService.verifyToken(token);
-        return "universals/success";
+        return "universals/emailConfirmed";
     }
 
     /**
