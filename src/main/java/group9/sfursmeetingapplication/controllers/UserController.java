@@ -43,6 +43,7 @@ public class UserController {
         try {
             System.out.println("Finding User");
             User user = userService.getUserFromFormData(formData);
+            System.out.println("Controller User: " + user);
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
             response.setStatus(201);
@@ -80,6 +81,14 @@ public class UserController {
         }
     }
 
+    /**
+     * Handles a POST request to resend a confirmation email.
+     * 
+     * @param user               The user to resend the confirmation email to.
+     * @param response           The HTTP response.
+     * @param redirectAttributes The redirect attributes.
+     * @return The view for the user.
+     */
     @PostMapping("/email/resend")
     public String resendConfirmation(@ModelAttribute User user, HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
@@ -95,8 +104,6 @@ public class UserController {
             return "redirect:/resendConfirmation";
         }
     }
-    
-
 
     /**
      * Handles a GET request to redirect to the login page.
@@ -135,6 +142,7 @@ public class UserController {
 
     /**
      * Handles a GET request to resend a confirmation email.
+     * 
      * @return The view for the user.
      */
     @GetMapping("/resendConfirmation")
@@ -151,7 +159,6 @@ public class UserController {
     public String medium() {
         return "users/mediumCreate";
     }
-
 
     /**
      * Handles a GET request to login a user.
@@ -176,12 +183,10 @@ public class UserController {
     @GetMapping("/logout")
     public String getLogout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
-
         // Set the cache control headers
         response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
         response.setHeader("Pragma", "no-cache");
         response.setHeader("Expires", "0");
-
         return "redirect:/login";
     }
 }

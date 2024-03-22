@@ -6,6 +6,7 @@ package group9.sfursmeetingapplication.services;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import group9.sfursmeetingapplication.models.Confirmation;
 import group9.sfursmeetingapplication.models.User;
@@ -20,6 +21,7 @@ public class UserServiceImplementation implements UserService {
     private final UserRepository userRepository;
     private final ConfirmationRepository confirmationRepository;
     private final EmailService emailService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     /**
      * This method saves a user to the database.
@@ -34,6 +36,7 @@ public class UserServiceImplementation implements UserService {
             throw new IllegalArgumentException("Email already exists");
         }
         user.setEnabled(false);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         Confirmation confirmation = new Confirmation(user);
         confirmationRepository.save(confirmation);
@@ -67,7 +70,12 @@ public class UserServiceImplementation implements UserService {
     public User getUserFromFormData(Map<String, String> formData) {
         String email = formData.get("email");
         String password = formData.get("password");
-        User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
+        User foundUser = userRepository.findByEmailIgnoreCase(email);
+        System.out.println(foundUser);
+        if (passwordEncoder.matches(password, foundUser.getPassword())) {
+            System.out.println("Password does not match");
+            foundUser = null;
+        }
         if (foundUser == null) {
             throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
         }
@@ -86,7 +94,11 @@ public class UserServiceImplementation implements UserService {
     public void resendConfirmation(User user) {
         String email = user.getEmail();
         String password = user.getPassword();
-        User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
+        User foundUser = userRepository.findByEmailIgnoreCase(email);
+        System.out.println(foundUser);
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
+            foundUser = null;
+        }
         if (foundUser == null) {
             throw new IllegalArgumentException("Email or password does not match or exist.");
         }
