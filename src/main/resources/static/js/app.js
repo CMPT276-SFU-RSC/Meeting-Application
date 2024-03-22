@@ -8,6 +8,18 @@ function redirectAfterDelay() {
     }, 3000);
 }
 
+
+function checkPasswordMatch() {
+    let password1 = document.getElementById("password1").value;
+    let password2 = document.getElementById("password2").value;
+
+    if (password1 !== password2) {
+        errorMessage.textContent = 'Passwords do not match';
+    } else {
+        errorMessage.textContent = '';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('darkModeBtn').addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');

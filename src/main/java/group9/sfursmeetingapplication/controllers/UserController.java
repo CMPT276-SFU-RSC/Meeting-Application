@@ -102,8 +102,13 @@ public class UserController {
      * Handles a GET request to redirect to the login page.
      */
     @GetMapping("/")
-    public String returnToLogin() {
-        return "redirect:/dashboard";
+    public String returnToLogin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("session_user") == null) {
+            return "redirect:/login";
+        } else {
+            return "redirect:/dashboard";
+        }
     }
 
     /**
@@ -169,8 +174,14 @@ public class UserController {
      * @return The view for the user.
      */
     @GetMapping("/logout")
-    public String getLogout(HttpServletRequest request) {
+    public String getLogout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
+
+        // Set the cache control headers
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
+
         return "redirect:/login";
     }
 }
