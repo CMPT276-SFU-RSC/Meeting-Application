@@ -63,6 +63,7 @@ public class UserServiceImplementation implements UserService {
 
     /**
      * This method gets a user from form data.
+     * 
      * @param formData The form data.
      * @return The user from the form data.
      */
@@ -71,22 +72,22 @@ public class UserServiceImplementation implements UserService {
         String email = formData.get("email");
         String password = formData.get("password");
         User foundUser = userRepository.findByEmailIgnoreCase(email);
-        System.out.println(foundUser);
-        if (passwordEncoder.matches(password, foundUser.getPassword())) {
-            System.out.println("Password does not match");
-            foundUser = null;
-        }
         if (foundUser == null) {
-            throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
+            throw new IllegalArgumentException("User does not exist. Please Register.");
         }
-        if (foundUser.isEnabled() == false) {
-            throw new IllegalArgumentException("Please verify your email first.");
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
+            foundUser = null;
+            throw new IllegalArgumentException("Password is incorrect. Please try again.");
+        }
+        if (!foundUser.isEnabled()) {
+            throw new IllegalArgumentException("Account is not enabled. Please verify your email.");
         }
         return foundUser;
     }
 
     /**
      * This method resends a confirmation email.
+     * 
      * @param user The user to resend the confirmation email to.
      * @return The user that the confirmation email was resent to.
      */
@@ -95,14 +96,12 @@ public class UserServiceImplementation implements UserService {
         String email = user.getEmail();
         String password = user.getPassword();
         User foundUser = userRepository.findByEmailIgnoreCase(email);
-        System.out.println(foundUser);
-        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
-            foundUser = null;
-        }
         if (foundUser == null) {
-            throw new IllegalArgumentException("Email or password does not match or exist.");
+            throw new IllegalArgumentException("User does not exist. Please Register.");
         }
-
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
+            throw new IllegalArgumentException("Password is incorrect. Please try again.");
+        }
         Confirmation confirmation = confirmationRepository.findByUser(foundUser);
         if (confirmation == null) {
             throw new IllegalArgumentException("Confirmation does not exist.");

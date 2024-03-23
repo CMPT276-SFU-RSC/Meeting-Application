@@ -39,15 +39,13 @@ public class UserController {
     public String login(@RequestParam Map<String, String> formData, Model model,
             HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes,
             HttpServletResponse response) {
-        System.out.println("Login");
         try {
-            System.out.println("Finding User");
+            System.out.println("Finding User...");
             User user = userService.getUserFromFormData(formData);
-            System.out.println("Controller User: " + user);
+            System.out.println("Controller User: " + user); // delete later
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
             response.setStatus(201);
-
             return "redirect:/dashboard";
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -69,7 +67,7 @@ public class UserController {
     public String createUser(@ModelAttribute User user, HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("Creating User");
+            System.out.println("Creating User...");
             userService.saveUser(user);
             response.setStatus(201);
             return "universals/success";
@@ -93,7 +91,6 @@ public class UserController {
     public String resendConfirmation(@ModelAttribute User user, HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("Resending Confirmation");
             userService.resendConfirmation(user);
             response.setStatus(201);
             return "universals/success";
