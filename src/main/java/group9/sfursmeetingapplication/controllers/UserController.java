@@ -137,16 +137,6 @@ public class UserController {
         return "users/resendConfirmation";
     }
 
-    @GetMapping("/pollcreate")
-    public String poll() {
-        return "users/pollcreate";
-    }
-
-    @GetMapping("/mediumCreate")
-    public String medium() {
-        return "users/mediumCreate";
-    }
-
 
     /**
      * Handles a GET request to login a user.

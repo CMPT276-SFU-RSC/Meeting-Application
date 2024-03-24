@@ -8,6 +8,7 @@ public class Medium {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int mid; 
+    private int pid;
     private String name; 
     private Boolean remote; 
 
@@ -48,6 +49,14 @@ public class Medium {
 
     public void setRemote(Boolean remote) {
         this.remote = remote;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 
 
