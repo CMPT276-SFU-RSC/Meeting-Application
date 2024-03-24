@@ -16,6 +16,16 @@ import lombok.RequiredArgsConstructor;
 @Service // This annotation is used to mark the class as a service provider
 @RequiredArgsConstructor // This annotation is used to generate a constructor with required fields
 public class UserServiceImplementation implements UserService {
+    /**
+     * The following constants are used to define the keys for the user data.
+     */
+    private static final String EMAIL = "email";
+    private static final String PASSWORD = "password";
+    private static final String FIRST_NAME = "firstName";
+    private static final String LAST_NAME = "lastName";
+    private static final String TEAM = "team";
+    private static final String TITLE = "title";
+
     @Autowired // This annotation is used to mark the field as autowired
     private final UserRepository userRepository;
     private final ConfirmationRepository confirmationRepository;
@@ -43,6 +53,18 @@ public class UserServiceImplementation implements UserService {
     }
 
     /**
+     * This method gets a user from the database.
+     * 
+     * @param email The email of the user to get.
+     * @return The user from the database.
+     */
+    @Override
+    public User getUser(String email) {
+        User user = userRepository.findByEmailIgnoreCase(email);
+        return user;
+    }
+
+    /**
      * This method verifies a token.
      * 
      * @param token The token to be verified.
@@ -60,13 +82,14 @@ public class UserServiceImplementation implements UserService {
 
     /**
      * This method gets a user from form data.
+     * 
      * @param formData The form data.
      * @return The user from the form data.
      */
     @Override
     public User getUserFromFormData(Map<String, String> formData) {
-        String email = formData.get("email");
-        String password = formData.get("password");
+        String email = formData.get(EMAIL);
+        String password = formData.get(PASSWORD);
         User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
         if (foundUser == null) {
             throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
@@ -79,6 +102,7 @@ public class UserServiceImplementation implements UserService {
 
     /**
      * This method resends a confirmation email.
+     * 
      * @param user The user to resend the confirmation email to.
      * @return The user that the confirmation email was resent to.
      */
@@ -96,5 +120,44 @@ public class UserServiceImplementation implements UserService {
             throw new IllegalArgumentException("Confirmation does not exist.");
         }
         emailService.sendSimpleMailMessage(foundUser.getFirstName(), foundUser.getEmail(), confirmation.getToken());
+    }
+
+    /**
+     * 
+     * This method updates a user's profile.
+     * 
+     * @param userProfile The user profile to update.
+     * @return True if the user profile was updated, false otherwise.
+     */
+    @Override
+    public Boolean updateUserProfile(Map<String, String> userProfile) {
+        if (!userProfile.containsKey(EMAIL) || !userProfile.containsKey(FIRST_NAME) ||
+                !userProfile.containsKey(LAST_NAME) || !userProfile.containsKey(TEAM) ||
+                !userProfile.containsKey(TITLE)) {
+            throw new IllegalArgumentException("User profile is missing necessary information.");
+        }
+        String email = userProfile.get(EMAIL);
+        User user = userRepository.findByEmailIgnoreCase(email);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found in Database.");
+        }
+        user.setFirstName(userProfile.get(FIRST_NAME));
+        user.setLastName(userProfile.get(LAST_NAME));
+        user.setTeam(userProfile.get(TEAM));
+        user.setTitle(userProfile.get(TITLE));
+
+        // Save the updated user profile
+        userRepository.save(user);
+
+        // Check if the user was saved successfully
+        User savedUser = userRepository.findByEmailIgnoreCase(email);
+        if (savedUser != null && savedUser.getFirstName().equals(userProfile.get(FIRST_NAME)) &&
+                savedUser.getLastName().equals(userProfile.get(LAST_NAME)) &&
+                savedUser.getTeam().equals(userProfile.get(TEAM)) &&
+                savedUser.getTitle().equals(userProfile.get(TITLE))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
