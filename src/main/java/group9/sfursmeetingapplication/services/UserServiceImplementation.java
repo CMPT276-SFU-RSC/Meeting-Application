@@ -58,6 +58,11 @@ public class UserServiceImplementation implements UserService {
         return Boolean.TRUE;
     }
 
+    /**
+     * This method gets a user from form data.
+     * @param formData The form data.
+     * @return The user from the form data.
+     */
     @Override
     public User getUserFromFormData(Map<String, String> formData) {
         String email = formData.get("email");
@@ -66,6 +71,30 @@ public class UserServiceImplementation implements UserService {
         if (foundUser == null) {
             throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
         }
+        if (foundUser.isEnabled() == false) {
+            throw new IllegalArgumentException("Please verify your email first.");
+        }
         return foundUser;
+    }
+
+    /**
+     * This method resends a confirmation email.
+     * @param user The user to resend the confirmation email to.
+     * @return The user that the confirmation email was resent to.
+     */
+    @Override
+    public void resendConfirmation(User user) {
+        String email = user.getEmail();
+        String password = user.getPassword();
+        User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
+        if (foundUser == null) {
+            throw new IllegalArgumentException("Email or password does not match or exist.");
+        }
+
+        Confirmation confirmation = confirmationRepository.findByUser(foundUser);
+        if (confirmation == null) {
+            throw new IllegalArgumentException("Confirmation does not exist.");
+        }
+        emailService.sendSimpleMailMessage(foundUser.getFirstName(), foundUser.getEmail(), confirmation.getToken());
     }
 }
