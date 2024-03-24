@@ -112,11 +112,11 @@ public class PollController {
             int i = 0;
             while (true){
                 try {
+                    //get json medium
                     String mediumText = pollData.get("m" + (Integer.toString(i)));
-                    System.out.println(mediumText);
-                    System.out.println("m" + (Integer.toString(i)));
                     Boolean online = false;
                     if (mediumText.startsWith("(R) ")){
+                        //(R) signals online
                         mediumText = mediumText.substring(4);
                         online = true;
                     }
