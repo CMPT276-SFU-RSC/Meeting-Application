@@ -7,9 +7,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
 import group9.sfursmeetingapplication.models.Poll;
 import group9.sfursmeetingapplication.models.User;
+import group9.sfursmeetingapplication.repositories.InvitedRepository;
 import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +33,9 @@ public class PollController {
 
     @Autowired
     private MediumRepository mediumRepo;
+
+    @Autowired
+    private InvitedRepository invitedRepo;
 
     @GetMapping(value = "/dashboard")
     public String getAllStudents(Model model, HttpServletRequest request,
@@ -128,7 +133,24 @@ public class PollController {
                 }
             }
             //create and save invited list
-            
+            i = 0;
+            while (true){
+                try {
+                    String uid = pollData.get("u" + (Integer.toString(i)));
+                    int end = uid.indexOf(')');
+                    uid = uid.substring(1, end);
+                    
+                    //add to database
+                    Invited invited = new Invited();
+                    invited.setPid(newPoll.getPid());
+                    invited.setUid(Integer.parseInt(uid));
+                    invitedRepo.save(invited);
+                    i++;
+                }
+                catch(Exception e){
+                    break;
+                }
+            }
             
             return "redirect:/dashboard"; 
         }
