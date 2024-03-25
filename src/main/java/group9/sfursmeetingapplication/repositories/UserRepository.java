@@ -62,5 +62,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return The User with the given email and password.
      */
     User findByEmailIgnoreCaseAndPassword(String email, String password);
-
 }
