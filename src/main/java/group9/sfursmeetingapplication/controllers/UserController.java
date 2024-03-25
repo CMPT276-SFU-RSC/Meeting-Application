@@ -102,6 +102,27 @@ public class UserController {
         }
     }
 
+    @PostMapping("/users/save")
+    public String saveUser(@RequestParam Map<String, String> userDetails,
+            RedirectAttributes redirectAttributes, HttpServletResponse response,
+            HttpSession session) {
+        try {
+            System.out.println("Updating user...");
+            Boolean updated = userService.updateUserProfile(userDetails);
+            if (updated) {
+                response.setStatus(201);
+                return "universals/success";
+            } else {
+                throw new IllegalArgumentException("Something went wrong. Please try again.");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            response.setStatus(401);
+            return "redirect:/users/profile";
+        }
+    }
+
     /**
      * Handles a GET request to redirect to the login page.
      */
@@ -145,6 +166,26 @@ public class UserController {
     @GetMapping("/resendConfirmation")
     public String resendConfirmation() {
         return "users/resendConfirmation";
+    }
+
+    /**
+     * Handles a GET request to redirect to the dashboard.
+     * 
+     * @param model
+     * @param session
+     * @return
+     */
+    @GetMapping("/users/profile")
+    public String profile(Model model, HttpSession session) {
+        // TODO: needs to be modified to include ssessions paramaters
+        User sessionUser = (User) session.getAttribute("session_user");
+        User user = userService.getUser(sessionUser.getEmail());
+        if (user == null) {
+            return "redirect:/login";
+        } else {
+            model.addAttribute("user", user);
+            return "users/profile";
+        }
     }
 
     @GetMapping("/pollcreate")

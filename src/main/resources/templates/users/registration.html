@@ -23,6 +23,10 @@
                     <label class="col-form-label" for="email">Email Address: </label>
                     <input class="form-control form-control-lg mb-3" type="email" id="email" autofocus
                         placeholder="example@example.com" name="email" required>
+                  
+                    <label class="col-form-label-lg" for="password">Password: </label>
+                    <input class="form-control form-control-lg mb-3" type="password" id="password"
+                        placeholder="Password" name="password" required>
 
                     <fieldset class="mb-2">
                         <label class="col-form-label" for="password">Password: </label>
@@ -61,25 +65,25 @@
                         name="lastName" required>
 
                     <label class="col-form-label" for="team">Team: </label>
-                    <select class="form-select" id="title" name="team" required>
-                        <option value="">Select Team</option>
-                        <option type="text" value="other">Office</option>
-                        <option type="text" value="Mechanics">Mechanics</option>
-                        <option type="text" value="Electronics">Electronics</option>
-                        <option type="text" value="software">Software</option>
-                        <option type="text" value="other">Other</option>
+                    <select class="form-select-lg" id="title" name="team" required>
+                        <option disabled>Select Team</option>
+                        <option value="office">Office</option>
+                        <option value="mechanics">Mechanics</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="software">Software</option>
+                        <option value="other">Other</option>
                     </select>
 
                     <label class="col-form-label" for="title">Title: </label>
                     <select class="form-select" id="title" name="title" required>
-                        <option value="">Select Title</option>
-                        <option type="text" value="alumni">Alumni</option>
-                        <option type="text" value="alumni">Member</option>
-                        <option type="text" value="coordinator">Coordinator</option>
-                        <option type="text" value="head">Head</option>
-                        <option type="text" value="lead">Lead</option>
-                        <option type="text" value="director">Director</option>
-                        <option type="text" value="executive">Executive</option>
+                        <option disabled>Select Title</option>
+                        <option value="alumni">Alumni</option>
+                        <option value="member">Member</option>
+                        <option value="coordinator">Coordinator</option>
+                        <option value="head">Head</option>
+                        <option value="lead">Lead</option>
+                        <option value="director">Director</option>
+                        <option value="executive">Executive</option>
                     </select>
                 </fieldset>
                 <fieldset class="text-center text-lg-start mt-4 pt-2">
