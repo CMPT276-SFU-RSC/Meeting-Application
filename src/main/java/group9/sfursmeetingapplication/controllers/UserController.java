@@ -57,8 +57,7 @@ public class UserController {
             System.out.println("Controller User: " + user); // delete later
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
-            //List<User> user1 = pollRepo1.finder1();
-            //model.addAttribute("user", user1);
+            
             
             response.setStatus(201);
             return "redirect:/dashboard";
@@ -231,18 +230,7 @@ public class UserController {
 
     @GetMapping("/userdisplay")
     public String userpage(Model model, HttpServletRequest request,  HttpSession session) {
-        //User user = (User) session.getAttribute("session_user");
-        //System.out.println("User: " + user);
-        //if (user == null){
-            //not logged in, redirect
-            //return "redirect:/login";
-        //} else {
-            //generate dashboard
-            //get from DB
-            //get all polls this user has been invited to
-            //  could in the future move results the user has answered
-            //  List<Poll> polls = pollRepo.findByUID(user.uid);
-            //long uid = user.findall();
+        
         List<User> u1 = userRepo1.findall();
         model.addAttribute("u1", u1);
 
@@ -265,7 +253,7 @@ public class UserController {
         //TODO: process POST request
         
        Integer snumberr = Integer.parseInt(poll.get("snumber"));
-       //userRepo1.deleteuser(snumberr);
+      
        List<User> usersToDelete1 = userRepo1.findname(snumberr);
         for (User user : usersToDelete1) {
             userRepo1.delete(user);

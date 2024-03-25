@@ -49,11 +49,10 @@ public class PollController {
             long uid = user.getUid();
             List<Poll> polls = pollRepo.findByUID(uid);
             List<Poll> polls1 = pollRepo.find();
-            //List<Poll> polls2 = pollRepo.findByUID(uid);
+            
             
             model.addAttribute("polls1", polls1);
             model.addAttribute("polls", polls);
-            //model.addAttribute("polls", polls2);
             model.addAttribute("user", user);
             return "users/dashboard";
         }
