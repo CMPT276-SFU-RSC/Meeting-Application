@@ -39,14 +39,13 @@ public class UserController {
     public String login(@RequestParam Map<String, String> formData, Model model,
             HttpServletRequest request, HttpSession session, RedirectAttributes redirectAttributes,
             HttpServletResponse response) {
-        System.out.println("Login");
         try {
-            System.out.println("Finding User");
+            System.out.println("Finding User...");
             User user = userService.getUserFromFormData(formData);
+            System.out.println("Controller User: " + user); // delete later
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
             response.setStatus(201);
-
             return "redirect:/dashboard";
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -68,7 +67,7 @@ public class UserController {
     public String createUser(@ModelAttribute User user, HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("Creating User");
+            System.out.println("Creating User...");
             userService.saveUser(user);
             response.setStatus(201);
             return "universals/success";
@@ -80,11 +79,18 @@ public class UserController {
         }
     }
 
+    /**
+     * Handles a POST request to resend a confirmation email.
+     * 
+     * @param user               The user to resend the confirmation email to.
+     * @param response           The HTTP response.
+     * @param redirectAttributes The redirect attributes.
+     * @return The view for the user.
+     */
     @PostMapping("/email/resend")
     public String resendConfirmation(@ModelAttribute User user, HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
         try {
-            System.out.println("Resending Confirmation");
             userService.resendConfirmation(user);
             response.setStatus(201);
             return "universals/success";
@@ -121,8 +127,13 @@ public class UserController {
      * Handles a GET request to redirect to the login page.
      */
     @GetMapping("/")
-    public String returnToLogin() {
-        return "redirect:/dashboard";
+    public String returnToLogin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("session_user") == null) {
+            return "redirect:/login";
+        } else {
+            return "redirect:/dashboard";
+        }
     }
 
     /**
@@ -208,8 +219,12 @@ public class UserController {
      * @return The view for the user.
      */
     @GetMapping("/logout")
-    public String getLogout(HttpServletRequest request) {
+    public String getLogout(HttpServletRequest request, HttpServletResponse response) {
         request.getSession().invalidate();
+        // Set the cache control headers
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Expires", "0");
         return "redirect:/login";
     }
 }

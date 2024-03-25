@@ -6,6 +6,7 @@ package group9.sfursmeetingapplication.services;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import group9.sfursmeetingapplication.models.Confirmation;
 import group9.sfursmeetingapplication.models.User;
@@ -30,6 +31,7 @@ public class UserServiceImplementation implements UserService {
     private final UserRepository userRepository;
     private final ConfirmationRepository confirmationRepository;
     private final EmailService emailService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     /**
      * This method saves a user to the database.
@@ -44,6 +46,7 @@ public class UserServiceImplementation implements UserService {
             throw new IllegalArgumentException("Email already exists");
         }
         user.setEnabled(false);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         Confirmation confirmation = new Confirmation(user);
         confirmationRepository.save(confirmation);
@@ -90,12 +93,17 @@ public class UserServiceImplementation implements UserService {
     public User getUserFromFormData(Map<String, String> formData) {
         String email = formData.get(EMAIL);
         String password = formData.get(PASSWORD);
-        User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
+        User foundUser = userRepository.findByEmailIgnoreCase(email);
+
         if (foundUser == null) {
-            throw new IllegalArgumentException("Email or password is incorrect. Please try again.");
+            throw new IllegalArgumentException("User does not exist. Please Register.");
         }
-        if (foundUser.isEnabled() == false) {
-            throw new IllegalArgumentException("Please verify your email first.");
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
+            foundUser = null;
+            throw new IllegalArgumentException("Password is incorrect. Please try again.");
+        }
+        if (!foundUser.isEnabled()) {
+            throw new IllegalArgumentException("Account is not enabled. Please verify your email.");
         }
         return foundUser;
     }
@@ -110,11 +118,13 @@ public class UserServiceImplementation implements UserService {
     public void resendConfirmation(User user) {
         String email = user.getEmail();
         String password = user.getPassword();
-        User foundUser = userRepository.findByEmailIgnoreCaseAndPassword(email, password);
+        User foundUser = userRepository.findByEmailIgnoreCase(email);
         if (foundUser == null) {
-            throw new IllegalArgumentException("Email or password does not match or exist.");
+            throw new IllegalArgumentException("User does not exist. Please Register.");
         }
-
+        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
+            throw new IllegalArgumentException("Password is incorrect. Please try again.");
+        }
         Confirmation confirmation = confirmationRepository.findByUser(foundUser);
         if (confirmation == null) {
             throw new IllegalArgumentException("Confirmation does not exist.");
