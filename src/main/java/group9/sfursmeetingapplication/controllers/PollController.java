@@ -36,9 +36,9 @@ public class PollController {
     public String getAllStudents(Model model, HttpServletRequest request,
     HttpSession session) {
         User user = (User) session.getAttribute("session_user");
-        System.out.println("User: " + user);
-        if (user == null){
-            //not logged in, redirect
+        session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            // If the user is not logged in, redirect them to the login page
             return "redirect:/login";
         } else {
             //generate dashboard

@@ -36,8 +36,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Void deleteuser(Integer uid);
     //delete from users where uid =?1
 
-
-  
     /**
      * Finds a User by email (ignoring case).
      * 
@@ -62,5 +60,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return The User with the given email and password.
      */
     User findByEmailIgnoreCaseAndPassword(String email, String password);
-
 }
