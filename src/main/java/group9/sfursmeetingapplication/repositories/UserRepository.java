@@ -8,9 +8,33 @@ package group9.sfursmeetingapplication.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.User;
+import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 
 @Repository // Spring annotation to indicate that the class is a repository.
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    @Query(
+        value = "SELECT * FROM users",
+        nativeQuery = true
+    )
+    
+    List<User> findall();
+
+    @Query(
+        value = "SELECT * FROM users WHERE uid = ?1",
+        nativeQuery = true
+    )
+
+    List<User> findname(Integer uid);
+
+    @Query(
+        value = "delete from users where uid =?1",
+        nativeQuery = true
+    )
+
+    Void deleteuser(Integer uid);
+    //delete from users where uid =?1
 
     /**
      * Finds a User by email (ignoring case).
@@ -27,4 +51,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return True if a User with the given email exists, false otherwise.
      */
     Boolean existsByEmail(String email);
+
+    /**
+     * Finds a User by email and password.
+     * 
+     * @param email    The email of the User to find.
+     * @param password The password of the User to find.
+     * @return The User with the given email and password.
+     */
+    User findByEmailIgnoreCaseAndPassword(String email, String password);
 }

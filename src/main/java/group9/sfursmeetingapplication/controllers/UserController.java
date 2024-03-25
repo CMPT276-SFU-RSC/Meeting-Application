@@ -18,11 +18,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import group9.sfursmeetingapplication.repositories.PollRepository;
+import group9.sfursmeetingapplication.repositories.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import group9.sfursmeetingapplication.models.Poll;
+
 
 @Controller // Spring annotation to mark the class as a controller
 @RequiredArgsConstructor // Lombok annotation to generate the required constructor
 public class UserController {
     private final UserService userService;
+    @Autowired
+    private PollRepository pollRepo;
+    @Autowired
+    private UserRepository userRepo1;
+  
 
     /**
      * Handles a POST request to login a user.
@@ -45,6 +57,9 @@ public class UserController {
             System.out.println("Controller User: " + user); // delete later
             request.getSession().setAttribute("session_user", user);
             model.addAttribute("user", user);
+            //List<User> user1 = pollRepo1.finder1();
+            //model.addAttribute("user", user1);
+            
             response.setStatus(201);
             return "redirect:/dashboard";
         } catch (Exception e) {
@@ -186,4 +201,81 @@ public class UserController {
         response.setHeader("Expires", "0");
         return "redirect:/login";
     }
+    @GetMapping("/delete")
+    public String deletepage(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
+
+        
+        
+        return "users/delete";
+        
+    }
+
+    @PostMapping("/users/delete")
+    public String deleteuser(@RequestParam Map<String, String> poll,HttpServletResponse response) {
+
+        
+        //TODO: process POST request
+        
+        Integer snumberr = Integer.parseInt(poll.get("snumber"));
+        List<Poll> usersToDelete = pollRepo.findname(snumberr);
+        for (Poll user : usersToDelete) {
+            pollRepo.delete(user);
+        }
+    
+        response.setStatus(200);
+     
+
+        return "redirect:/dashboard";
+        
+    } 
+
+    @GetMapping("/userdisplay")
+    public String userpage(Model model, HttpServletRequest request,  HttpSession session) {
+        //User user = (User) session.getAttribute("session_user");
+        //System.out.println("User: " + user);
+        //if (user == null){
+            //not logged in, redirect
+            //return "redirect:/login";
+        //} else {
+            //generate dashboard
+            //get from DB
+            //get all polls this user has been invited to
+            //  could in the future move results the user has answered
+            //  List<Poll> polls = pollRepo.findByUID(user.uid);
+            //long uid = user.findall();
+        List<User> u1 = userRepo1.findall();
+        model.addAttribute("u1", u1);
+
+
+       
+       
+        return "users/display";
+        
+    //}
+    }
+    @GetMapping("/deleteuser")
+    public String deleteuser1(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
+        
+        return "users/userdelete";
+        
+    }
+
+    @PostMapping("/users/d")
+    public String deleteuser2(@RequestParam Map<String, String> poll,HttpServletResponse response) {
+        //TODO: process POST request
+        
+       Integer snumberr = Integer.parseInt(poll.get("snumber"));
+       //userRepo1.deleteuser(snumberr);
+       List<User> usersToDelete1 = userRepo1.findname(snumberr);
+        for (User user : usersToDelete1) {
+            userRepo1.delete(user);
+        }
+    
+        response.setStatus(200);
+     
+
+        return "redirect:/dashboard";
+        
+    } 
+
 }
