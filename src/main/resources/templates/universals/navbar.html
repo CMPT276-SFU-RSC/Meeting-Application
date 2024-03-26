@@ -20,6 +20,9 @@
                     </ul>
                 </li>
                 <a class="nav-link active" aria-current="page" href="#">Profile</a>
+                <section th:if="${user.isOrganizer}">
+                     <a class="nav-link active" aria-current="page" href="/pollcreate"> Make a New Poll <i class="fas fa-plus"></i></a>
+                </section>
                 </li>
             </ul>
             <a class="btn btn-primary ml-auto" href="/logout">Log Out</a>
