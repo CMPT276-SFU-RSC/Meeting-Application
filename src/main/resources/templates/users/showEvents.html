@@ -12,27 +12,23 @@
 </head>
 <body>
     <header>
-        <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
+      <!--  <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav> -->
     </header>
-    <section>
-    </section>
 
     <div class="container-fluid d-flex justify-content-around">
         <section class="col-md-4">
-            <label>Poll Events</label>
+            <label>Voting for Events in Poll</label>
             <div th:each="medium:${mediums}" >
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title" th:text="${poll.title}"></h5>
                         <p class="card-text" th:text="${poll.description}"></p>
                         <p class="card-text" th:text="${medium.name}"></p>
-                        <p class="card-text" th:text="Online = ${medium.remote}"></p>
                     </div>
                 </div>
                 <br>
             </div>
         </section>
-
     </div>
             <!-- add maybe a footer with copywrite info or smthn? -->
     <footer th:replace="~{universals/footer :: footer}"></footer>
@@ -47,3 +43,4 @@
 </script>
 
 </html>
+

@@ -161,16 +161,16 @@ public class PollController {
 
     }
 
-    @PostMapping("/poll/{pid}")
+    @GetMapping("/getPolls/{pid}")
     public String displayEvents(@PathVariable int pid, Model model)  {
         List<Poll> polls = pollRepo.findBypid(pid);
         List<Medium> mediums = mediumRepo.findBypid(pid);
-        if(!(polls.isEmpty())) {
+        if(polls.isEmpty()) {
             return "";
         }
         Poll poll = polls.get(0);
         model.addAttribute("poll", poll);
         model.addAttribute("mediums", mediums);
-        return "users/showEvents.html";
+        return "users/showEvents";
     }
 }

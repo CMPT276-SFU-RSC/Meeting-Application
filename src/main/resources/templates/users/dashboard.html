@@ -28,7 +28,7 @@
                     <div class="card-body">
                         <h5 class="card-title" th:text="${poll.title}"></h5>
                         <p class="card-text" th:text="${poll.description}"></p>
-                        <a th:href="@{/poll/{pid}(pid=${poll.pid})}" class="btn btn-primary">View Poll</a>
+                        <a th:href="@{/getPolls/{pid}(pid=${poll.pid})}" class="btn btn-primary">View Poll</a>
                     </div>
                 </div>
                 <br>
