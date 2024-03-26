@@ -11,8 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.User;
-import java.util.List;
-import org.springframework.data.jpa.repository.Query;
 
 @Repository // Spring annotation to indicate that the class is a repository.
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -65,6 +63,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return The User with the given email and password.
      */
     User findByEmailIgnoreCaseAndPassword(String email, String password);
+
+    /**
+     * Finds a User by user uid.
+     * @param uid The user uid.
+     * @return User
+     */
+    User findByUid(Long uid);
 
 
     @Query(

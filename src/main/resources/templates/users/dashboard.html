@@ -11,79 +11,58 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 
-
 <body>
-
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-   
-    <div class="header-greeting">
-        <h1 >  Active Polls</h1>
-    </div>
 
     <section th:if="${user.isOrganizer}">
         <div class="card-group">
             <div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
                 <div class="card-header">Admin Privelages</div>
                 <div class="card-body">
-                  <h5 class="card-title"></h5>
-                  <a href="/userdisplay" class="btn btn-primary">Display users</a>
-                 
+                    <h5 class="card-title"></h5>
+                    <a href="/userdisplay" class="btn btn-primary">Display users</a>
                 </div>
-      </div>
-       
+            </div>
     </section>
 
-
-
-   
-    <section >
+    <div class="header-greeting">
+        <h1> Active Polls</h1>
+    </div>
+    <section>
         <div class="card-group">
-        
-            <div th:each="poll : ${polls}" >
+            <div th:each="poll : ${polls}">
                 <div class="card bg-light mb-3" style="width: 14rem;">
                     <div class="card-header">
                         <h5 class="card-title" th:text="${poll.title}"></h5>
                     </div>
                     <ul class="list-group list-group-flush">
                         Description: <span th:text="${poll.description}"></span>
-                       
-                        
                     </ul>
                     <ul class="list-group list-group-flush">
                         Start Date: <span th:text="${poll.startDate}"></span>
-                        
                     </ul>
                     <ul class="list-group list-group-flush">
                         End Date: <span th:text="${poll.endDate}"></span>
-                        
                     </ul>
                     <ul class="list-group list-group-flush">
                         Poll id: <span th:text="${poll.pid}"></span>
                         <a href="#" class="btn btn-primary">Reply to Poll</a>
                     </ul>
-
-                    <ul class="list-group list-group-flush" th:if="${user.uid == poll.creator_id}"
-                    >
-                    
+                    <ul class="list-group list-group-flush" th:if="${user.uid == poll.creator_id}">
                         <a href="/delete" class="btn btn-primary">Delete</a>
                         <!--<a href="/delete" class="btn btn-primary">
                             <img src="x.png" alt="Delete" class="button-icon"> Delete
                         </a>-->
-                        
-                        
                     </ul>
-                    
                 </div>
             </div>
-      </div>
-       
-       
+        </div>
     </section>
 
     <section class="card-section">
-        <div th:each="users1 : ${u}" >
+        <div th:each="users1 : ${u}">
             <div class="card" style="width: 14rem;">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${users1.first_name}"></h5>
@@ -92,43 +71,36 @@
         </div>
     </section>
 
-    <section th:if="${user.isOrganizer}" >
+    <section th:if="${user.isOrganizer}">
         <div class="card-group">
-        
-            <div th:each="poll1 : ${polls1}" >
+
+            <div th:each="poll1 : ${polls1}">
                 <div class="card text-white bg-success mb-3" style="width: 14rem;">
                     <div class="card-header">
                         <h5 class="card-title" th:text="${poll1.title}"></h5>
                     </div>
                     <ul class="list-group list-group-flush">
                         Description: <span th:text="${poll1.description}"></span>
-                       
-                        
                     </ul>
                     <ul class="list-group list-group-flush">
                         Start Date: <span th:text="${poll1.startDate}"></span>
-                        
                     </ul>
                     <ul class="list-group list-group-flush">
                         End Date: <span th:text="${poll1.endDate}"></span>
-                        
                     </ul>
                     <ul class="list-group list-group-flush">
                         Poll id: <span th:text="${poll1.pid}"></span>
                     </ul>
                     <ul class="list-group list-group-flush">
-                    
                         <a href="/delete" class="btn btn-primary">Delete</a>
-                        
                     </ul>
                 </div>
             </div>
-      </div>
-       
+        </div>
+
     </section>
-    
-   
- <!-- 
+
+    <!-- 
     <section >
         <div th:each="poll:${polls}" >
             <div class="card">
@@ -141,16 +113,16 @@
             <br>
         </div>
     </section> -->
-            <!-- add maybe a footer with copywrite info or smthn? -->
+    <!-- add maybe a footer with copywrite info or smthn? -->
     <footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
 
 <!-- This is for the DarkMode button. -->
-<script> document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('darkModeBtn').addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
+<script> document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('darkModeBtn').addEventListener('click', function () {
+            document.body.classList.toggle('dark-mode');
+        });
     });
-});
 </script>
 
 </html>

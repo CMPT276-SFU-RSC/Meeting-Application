@@ -20,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.repositories.UserRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import group9.sfursmeetingapplication.models.Poll;
-
 
 @Controller // Spring annotation to mark the class as a controller
 @RequiredArgsConstructor // Lombok annotation to generate the required constructor
@@ -34,7 +32,6 @@ public class UserController {
     private PollRepository pollRepo;
     @Autowired
     private UserRepository userRepo1;
-  
 
     /**
      * Handles a POST request to login a user.
@@ -55,10 +52,9 @@ public class UserController {
             System.out.println("Finding User...");
             User user = userService.getUserFromFormData(formData);
             System.out.println("Controller User: " + user); // delete later
-            request.getSession().setAttribute("session_user", user);
+            request.getSession().setAttribute("user_id", user.getUid());
             model.addAttribute("user", user);
-            
-            
+
             response.setStatus(201);
             return "redirect:/dashboard";
         } catch (Exception e) {
@@ -116,6 +112,15 @@ public class UserController {
         }
     }
 
+    /**
+     * Handles a POST request to save a user's profile.
+     * 
+     * @param userDetails        The user's details.
+     * @param redirectAttributes The redirect attributes.
+     * @param response           The HTTP response.
+     * @param session            The HTTP session.
+     * @return The view for the user.
+     */
     @PostMapping("/users/save")
     public String saveUser(@RequestParam Map<String, String> userDetails,
             RedirectAttributes redirectAttributes, HttpServletResponse response,
@@ -143,7 +148,7 @@ public class UserController {
     @GetMapping("/")
     public String returnToLogin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("session_user") == null) {
+        if (session == null || session.getAttribute("user_id") == null) {
             return "redirect:/login";
         } else {
             return "redirect:/dashboard";
@@ -182,13 +187,12 @@ public class UserController {
         return "users/resendConfirmation";
     }
 
-
     /**
      * Handles a GET request to login a user.
      */
     @GetMapping("/login")
     public String getLogin(Model model, HttpServletRequest request, HttpSession session) {
-        User user = (User) session.getAttribute("session_user");
+        Long user = (Long) session.getAttribute("user_id");
         if (user == null) {
             return "users/login";
         } else {
@@ -197,7 +201,7 @@ public class UserController {
         }
     }
 
-        /**
+    /**
      * Handles a GET request to redirect to the dashboard.
      * 
      * @param model
@@ -205,97 +209,87 @@ public class UserController {
      * @return
      */
     @GetMapping("/users/profile")
-    public String profile(Model model, HttpSession session) {
-        // TODO: needs to be modified to include ssessions paramaters
-        User sessionUser = (User) session.getAttribute("session_user");
-        User user = userService.getUser(sessionUser.getEmail());
-        if (user == null) {
+    public String profile(Model model, HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+        // Check if the user is logged in
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
             return "redirect:/login";
-        } else {
-            model.addAttribute("user", user);
-            return "users/profile";
         }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        } // End of session check
+
+        model.addAttribute("user", user);
+        return "users/profile";
     }
 
     /**
-     * Handles a GET request to logout a user.
+     * Handles a GET request to redirect to the dashboard.
      * 
-     * @param request The HTTP request.
+     * @param session The HTTP session.
      * @return The view for the user.
      */
     @GetMapping("/logout")
-    public String getLogout(HttpServletRequest request, HttpServletResponse response) {
-        request.getSession().invalidate();
-        // Set the cache control headers
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
-        response.setHeader("Pragma", "no-cache");
-        response.setHeader("Expires", "0");
+    public String getLogout(HttpSession session) {
+        session.invalidate();
         return "redirect:/login";
     }
+
     @GetMapping("/delete")
     public String deletepage(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
-
-        
-        
         return "users/delete";
-        
     }
 
     @PostMapping("/users/delete")
-    public String deleteuser(@RequestParam Map<String, String> poll,HttpServletResponse response) {
-
-        
-        //TODO: process POST request
-        
+    public String deleteuser(@RequestParam Map<String, String> poll, HttpServletResponse response) {
+        // TODO: process POST request
         Integer snumberr = Integer.parseInt(poll.get("snumber"));
         List<Poll> usersToDelete = pollRepo.findname(snumberr);
         for (Poll user : usersToDelete) {
             pollRepo.delete(user);
         }
-    
         response.setStatus(200);
-     
-
         return "redirect:/dashboard";
-        
-    } 
+
+    }
 
     @GetMapping("/userdisplay")
-    public String userpage(Model model, HttpServletRequest request,  HttpSession session) {
-        
+    public String userpage(Model model, HttpServletRequest request, HttpSession session) {
         List<User> u1 = userRepo1.findall();
         model.addAttribute("u1", u1);
-
-
-       
-       
         return "users/display";
-        
-    //}
     }
+
     @GetMapping("/deleteuser")
     public String deleteuser1(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
-        
         return "users/userdelete";
-        
     }
 
     @PostMapping("/users/d")
-    public String deleteuser2(@RequestParam Map<String, String> poll,HttpServletResponse response) {
-        //TODO: process POST request
-        
-       Integer snumberr = Integer.parseInt(poll.get("snumber"));
-      
-       List<User> usersToDelete1 = userRepo1.findname(snumberr);
+    public String deleteuser2(@RequestParam Map<String, String> poll, HttpServletResponse response) {
+        // TODO: process POST request
+
+        Integer snumberr = Integer.parseInt(poll.get("snumber"));
+        List<User> usersToDelete1 = userRepo1.findname(snumberr);
         for (User user : usersToDelete1) {
             userRepo1.delete(user);
         }
-    
+
         response.setStatus(200);
-     
-
         return "redirect:/dashboard";
-        
-    } 
-
+    }
 }

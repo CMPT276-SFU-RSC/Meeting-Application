@@ -20,7 +20,7 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
         nativeQuery = true
     )
 
-    List<Poll> findByUID(long uid);
+    List<Poll> findByUID(Long uid);
     @Query(
         value = "SELECT * FROM polls",
         nativeQuery = true
