@@ -112,11 +112,14 @@
                     <h5 class="card-title" th:text="${poll.title}"></h5>
                     <p class="card-text" th:text="${poll.description}"></p>
                     <a th:href="@{./poll/{pid}(pid=${poll.pid})}" class="btn btn-primary">View Event</a>
+
                 </div>
+                <br>
             </div>
             <br>
         </div>
     </section> -->
+
             <!-- add maybe a footer with copywrite info or smthn? -->
     <footer th:replace="~{universals/footer :: footer}"></footer>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -134,3 +137,5 @@
 </body>
 
 </html>
+
+

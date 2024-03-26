@@ -20,7 +20,8 @@
         <p th:text="${errorMessage}"></p>
     </div>
     
-    <main class="container-fluid d-flex justify-content-center">
+
+    <main class="container-fluid d-flex justify-content-around">
         <section class="col-md-5">
             <form id="inputField" method="post" action="/create-poll">
                 <fieldset class="mt-3 form-group row">
@@ -69,16 +70,19 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                 </fieldset>
             </form>
         </section>
-        <section class="col-md-4">
+        <section class="col-md-5">
             <!-- mediums -->
             <label class="col-form-label" for="mediums">Mediums (click to remove)</label>
             <div class="overflow-auto" style="height: 100px; border-style: solid;" id="mediumsList"><!--List of mediums, which the form will read from-->
             </div>
 
+
             <input class="form-control form-control-lg mb-3" type="text" id="mediumInput" placeholder="Enter Medium">
             <button class="btn btn-primary btn-lg" onclick="addMedium()">Add Medium</button>
             <label><input class="form-check-input" type="checkbox" id="mediumRemote">Remote?</label>
+
             
+            <br>
             <br>
 
             <!-- users -->  
@@ -86,10 +90,16 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
             <div class="overflow-auto" style="height: 100px; border-style: solid;" id="usersList"> <!--List of users, which the form will read from-->
             </div>
 
+
             <input class="form-control form-control-lg mb-3" type="text" id="usersInput" placeholder="Enter Name to Search" oninput="getUsers()">
-            <div class="dropdown-content" id="usersSearchResults">
-                <!-- Dropdown items will be populated dynamically -->
-              </div>
+            <div class="overflow-auto" style="max-height: 100px; border-style: solid;" id="usersSearchResults">
+            </div>
+
+            <br>
+
+            <label class="col-form-label" for="users">List of All Users</label>
+            <div class="overflow-auto" style="height: 100px; border-style: solid;" id="allUsersList"> <!--List of users, which the form will read from-->
+            </div>
         </section>
 
     </main>

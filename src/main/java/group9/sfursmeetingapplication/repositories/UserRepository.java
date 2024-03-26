@@ -73,5 +73,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 "WHERE UPPER(users.first_name || ' ' || users.last_name) LIKE UPPER(?1 || '%');",
         nativeQuery = true
     )
+
     List<User> findBySearch(String firstName);
+
+    List<User> findAll();
+
 }

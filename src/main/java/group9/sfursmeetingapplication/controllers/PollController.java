@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
@@ -140,6 +141,7 @@ public class PollController {
             i = 0;
             while (true){
                 try {
+                    // getting json users
                     String uid = pollData.get("u" + (Integer.toString(i)));
                     int end = uid.indexOf(')');
                     uid = uid.substring(1, end);
@@ -163,9 +165,16 @@ public class PollController {
 
     }
 
-   
-   
-   
-   
-
+    @GetMapping("/getPolls/{pid}")
+    public String displayEvents(@PathVariable int pid, Model model)  {
+        List<Poll> polls = pollRepo.findBypid(pid);
+        List<Medium> mediums = mediumRepo.findBypid(pid);
+        if(polls.isEmpty()) {
+            return "";
+        }
+        Poll poll = polls.get(0);
+        model.addAttribute("poll", poll);
+        model.addAttribute("mediums", mediums);
+        return "users/showEvents";
+    }
 }
