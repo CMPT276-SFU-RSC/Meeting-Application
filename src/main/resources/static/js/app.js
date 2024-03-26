@@ -77,6 +77,37 @@ function addMediumsUsersToForm(){
     //send
     document.getElementById("inputField").requestSubmit();
 }
+
+function getUsersList() {
+    fetch('./userAll', {
+        method: 'GET', 
+        headers:{
+        'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => updateAll(data));
+
+}
+
+function updateAll(data) {
+
+    var div = document.getElementById("allUsersList");
+    var html = '';
+
+    // Assuming data is an array of objects with properties you want to display
+    data.forEach(function(item) {
+        html += '<div>';
+        html += '<p>UID: ' +  item.uid + '</p>';
+        html += '<p>Name: ' + item.firstName + '</p>';
+        html += '<p>Age: ' + item.lastName + '</p>';
+        // Add more properties as needed
+        html += '</div>';
+    });
+
+    div.innerHTML = html;
+}
+
 function getUsers(){
     //get partial search
     let search = document.getElementById("usersInput").value.trim();

@@ -136,6 +136,7 @@ public class PollController {
             i = 0;
             while (true){
                 try {
+                    // getting json users
                     String uid = pollData.get("u" + (Integer.toString(i)));
                     int end = uid.indexOf(')');
                     uid = uid.substring(1, end);

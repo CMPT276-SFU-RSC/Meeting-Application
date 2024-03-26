@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,6 +28,12 @@ public class UserControllerRest {
     public List<User> userSearch(@RequestBody String search) {
         List<User> res = userRepo.findBySearch(search);
         
+        return res;
+    }
+
+    @GetMapping("/userAll")
+    public List<User> userAll() {
+        List<User> res = userRepo.findAll();
         return res;
     }
 
