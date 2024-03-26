@@ -7,5 +7,6 @@ import group9.sfursmeetingapplication.models.Medium;
 
 public interface MediumRepository extends JpaRepository<Medium, Integer> {
      List<Medium> findBymid(Integer mid);
+     List<Medium> findBypid(Integer pid);
 
 }
