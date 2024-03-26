@@ -105,6 +105,7 @@ function getUsers(){
     //get partial search
     let search = document.getElementById("usersInput").value.trim();
     if (search == ""){
+        document.getElementById("usersSearchResults").replaceChildren();
         return;
     }
     //send partial search
