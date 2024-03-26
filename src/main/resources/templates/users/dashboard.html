@@ -59,6 +59,11 @@
                         <div class="event-box-divider"></div>
                         <label for="details">Poll ID: </label>
                        <label class="description" th:text="${poll.pid}" ></label>
+                       <div class="d-flex">
+                    
+                        <a href="/getPolls/{pid}(pid=${poll.pid})" class="btn btn-secondary">Vote</a>
+                        
+                    </div>
                     </div>
                 </div>
         </div>
@@ -94,8 +99,9 @@
                            <label class="description" th:text="${poll1.pid}" ></label>
                            <div class="d-flex">
                     
+                            <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}" class="btn btn-primary">View</a>
                             <a href="/delete" class="btn btn-secondary">Delete</a>
-                            
+
                         </div>
                         </div>
                     </div>
