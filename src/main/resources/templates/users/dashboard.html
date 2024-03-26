@@ -20,18 +20,29 @@
                 <button class="btn btn-primary" type="button">Now</button></a></p>
     </section>
 
-    <section >
-        <div th:each="poll:${polls}" >
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${poll.title}"></h5>
-                    <p class="card-text" th:text="${poll.description}"></p>
-                    <a th:href="@{./poll/{pid}(pid=${poll.pid})}" class="btn btn-primary">View Event</a>
+    <div class="container-fluid d-flex justify-content-around">
+        <section class="col-md-4">
+            <label>Polls</label>
+            <div th:each="poll:${polls}" >
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${poll.title}"></h5>
+                        <p class="card-text" th:text="${poll.description}"></p>
+                        <a th:href="@{./poll/{pid}(pid=${poll.pid})}" class="btn btn-primary">View Poll</a>
+                    </div>
                 </div>
+                <br>
             </div>
-            <br>
-        </div>
-    </section>
+        </section>
+        <section class="col-md-4">
+            <label>Confirmed Events - Attendee</label>
+
+        </section>
+        <section class="col-md-4">
+            <label>Confirmed Events - Organizer</label>
+
+        </section>
+    </div>
             <!-- add maybe a footer with copywrite info or smthn? -->
     <footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
@@ -45,3 +56,5 @@
 </script>
 
 </html>
+
+
