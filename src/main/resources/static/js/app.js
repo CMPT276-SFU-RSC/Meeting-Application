@@ -8,6 +8,12 @@ function redirectAfterDelay() {
     }, 3000);
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('darkModeBtn').addEventListener('click', function() {
+        document.body.classList.toggle('dark-mode');
+    });
+});
+
 
 function checkPasswordMatch() {
     let password1 = document.getElementById("password1").value;
@@ -69,14 +75,54 @@ function togglePasswordVisibility() {
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('darkModeBtn').addEventListener('click', function() {
         document.body.classList.toggle('dark-mode');
-        var text = document.getElementById("darkModeBtn");
-            if (text.textContent === '🌙') {
-                text.textContent = '☀';
-            }
-            else {
-                text.textContent = '🌙';
-            }
     });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dateTimeRangeInput = document.getElementById('dateTimeRange');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    const startTimeInput = document.getElementById('startTime');
+    const endTimeInput = document.getElementById('endTime');
+
+    flatpickr(dateTimeRangeInput, {
+        enableTime: true,
+        time_24hr: false, // Use 24-hour time format
+        mode: 'range', // Enable range mode for selecting a date and time range
+        dateFormat: "Y-m-d H:i",
+        onClose: function(selectedDates, dateStr, instance) {
+            // Update input labels with selected date and time range values
+            if (selectedDates.length === 2) {
+                // Get the date parts
+                let startDate = selectedDates[0];
+                let endDate = selectedDates[1];
+    
+                // Format date parts with leading zero for single-digit days
+                let startDateStr = formatDate(startDate);
+                let endDateStr = formatDate(endDate);
+    
+                startDateInput.value = startDateStr;
+                endDateInput.value = endDateStr;
+    
+                // Format time parts in 24-hour format using toLocaleTimeString
+                startTimeInput.value = selectedDates[0].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                endTimeInput.value = selectedDates[1].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+            } else {
+                startDateInput.value = '';
+                endDateInput.value = '';
+                startTimeInput.value = '';
+                endTimeInput.value = '';
+            }
+        }
+    });
+    
+    function formatDate(date) {
+        let year = date.getFullYear();
+        let month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero to month if needed
+        let day = ('0' + date.getDate()).slice(-2); // Add leading zero to day if needed
+        return year + '-' + month + '-' + day;
+    }
 });
 
 //code for creating poll
@@ -135,10 +181,12 @@ function addMediumsUsersToForm(){
     //send
     document.getElementById("inputField").requestSubmit();
 }
+
 function getUsers(){
     //get partial search
     let search = document.getElementById("usersInput").value.trim();
     if (search == ""){
+        document.getElementById("usersSearchResults").replaceChildren();
         return;
     }
     //send partial search
@@ -151,8 +199,8 @@ function getUsers(){
     })
     .then(response => response.json())
     .then(data => updateUsers(data));
-    
 }
+
 function updateUsers(data){
     //update list
 
@@ -166,11 +214,13 @@ function updateUsers(data){
             continue;
         }
         let par = document.getElementById("usersSearchResults");
-        let node = document.createElement("p");
+        let node = document.createElement('p');
 
         node.classList.add('singleUser');
         node.id = "uid" + data[i].uid;
         node.innerHTML = "(" + data[i].uid + ") " + data[i].firstName + " " + data[i].lastName;
+
+        par.classList.add('show');
 
         //on select
         node.onclick = function () {
@@ -189,4 +239,16 @@ function updateUsers(data){
         };
         par.appendChild(node);
     }
+    // This is to hide the dropdown Searchbox once the user clicks outside of it.
+    window.onclick = function(event) {
+        if (!event.target.matches('#userInput')) {
+          var dropdowns = document.getElementsByClassName('dropdown-content');
+          for (var i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
+          }
+        }
+      }
 }

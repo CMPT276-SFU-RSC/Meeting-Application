@@ -9,21 +9,22 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" role="button"
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false" th:if="${user.isOrganizer}">
                         Admin
                     </a>
                     <ul class="dropdown-menu m2" aria-labelledby="navbarDropdownMenuLink">
                         <li><a class="dropdown-item" href="/pollcreate">New Poll</a></li>
-                        <li>View User List</li>
+                        <li><a class="dropdown-item" href="#">View User List</a></li>
                     </ul>
                 </li>
                 <a class="nav-link active" aria-current="page" href="/users/profile">Profile</a>
+                <a class="nav-link active" aria-current="page" href="/pollcreate"> Make a New Poll <i class="fas fa-plus"></i></a>
                 </li>
             </ul>
             <a class="btn btn-primary ml-auto" href="/logout">Log Out</a>
         </fieldset>
-        <!--Dark Mode button, putting on navbar for more accessiblility for now-->
-        <button id="darkModeBtn"><i class="fas fa-moon"></i></button>
+            <!--Dark Mode button, putting on navbar for more accessiblility for now-->
+            <button id="darkModeBtn"><i class="fas fa-moon"></i></button>
     </main>
 </nav>
