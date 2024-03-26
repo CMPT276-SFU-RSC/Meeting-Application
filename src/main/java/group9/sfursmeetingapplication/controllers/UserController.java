@@ -197,6 +197,26 @@ public class UserController {
         }
     }
 
+        /**
+     * Handles a GET request to redirect to the dashboard.
+     * 
+     * @param model
+     * @param session
+     * @return
+     */
+    @GetMapping("/users/profile")
+    public String profile(Model model, HttpSession session) {
+        // TODO: needs to be modified to include ssessions paramaters
+        User sessionUser = (User) session.getAttribute("session_user");
+        User user = userService.getUser(sessionUser.getEmail());
+        if (user == null) {
+            return "redirect:/login";
+        } else {
+            model.addAttribute("user", user);
+            return "users/profile";
+        }
+    }
+
     /**
      * Handles a GET request to logout a user.
      * 
