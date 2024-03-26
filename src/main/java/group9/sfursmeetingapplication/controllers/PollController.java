@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -28,6 +29,8 @@ public class PollController {
 
     @Autowired
     private PollRepository pollRepo;
+    //private UserRepository userRepo1;
+  
 
     @GetMapping(value = "/dashboard")
     public String getAllStudents(Model model, HttpServletRequest request,
@@ -45,6 +48,10 @@ public class PollController {
             //  List<Poll> polls = pollRepo.findByUID(user.uid);
             long uid = user.getUid();
             List<Poll> polls = pollRepo.findByUID(uid);
+            List<Poll> polls1 = pollRepo.find();
+            
+            
+            model.addAttribute("polls1", polls1);
             model.addAttribute("polls", polls);
             model.addAttribute("user", user);
             return "users/dashboard";
@@ -79,6 +86,9 @@ public class PollController {
 
         return "redirect:/dashboard"; 
     }
+
+   
+   
    
    
 
