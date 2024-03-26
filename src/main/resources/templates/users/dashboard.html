@@ -14,7 +14,7 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-    <section th:if="${user.isOrganizer}">
+    <section>
         <p class="small fw-bold mt-2 pt-1">Create Poll <a href="/pollcreate" class="link-danger">
                 </br>
                 <button class="btn btn-primary" type="button">Now</button></a></p>
