@@ -32,6 +32,7 @@ public class User {
     private boolean isEnabled; // Whether the user is enabled.
 
     
+    
 }
 
 
