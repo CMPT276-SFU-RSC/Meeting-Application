@@ -7,8 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import group9.sfursmeetingapplication.models.Invited;
+import group9.sfursmeetingapplication.models.Medium;
 import group9.sfursmeetingapplication.models.Poll;
 import group9.sfursmeetingapplication.models.User;
+import group9.sfursmeetingapplication.repositories.InvitedRepository;
+import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -19,8 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 
@@ -31,6 +33,12 @@ public class PollController {
     private PollRepository pollRepo;
     //private UserRepository userRepo1;
   
+
+    @Autowired
+    private MediumRepository mediumRepo;
+
+    @Autowired
+    private InvitedRepository invitedRepo;
 
     @GetMapping(value = "/dashboard")
     public String getAllStudents(Model model, HttpServletRequest request,
@@ -59,32 +67,103 @@ public class PollController {
     }
 
 
+    @GetMapping("/pollcreate")
+    public String poll(Model model, HttpServletRequest request,
+    HttpSession session) {
+        User user = (User) session.getAttribute("session_user");
+
+        
+        if (user == null){
+            //not logged in, redirect
+            return "redirect:/login";
+        } else {
+            return "users/pollcreate";
+        }
+    }
 
     @PostMapping("/create-poll")
-    public String createPoll(@RequestParam Map<String, String> pollData) throws ParseException {
-        String title = pollData.get("title");
-        String description = pollData.get("description");
-        String startDateString = pollData.get("startDate");
-        String endDateString = pollData.get("endDate");
-        String expiraryDateString = pollData.get("expirary");
+    public String createPoll(@RequestParam Map<String, String> pollData, HttpSession session) throws ParseException {
+        User user = (User) session.getAttribute("session_user");
+        if (user == null){
+            //not logged in, redirect
+            return "redirect:/login";
+        } else {
+            //add poll
 
-        // Parse dates
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = dateFormat.parse(startDateString);
-        Date endDate = dateFormat.parse(endDateString);
-        Date expiraryDate = dateFormat.parse(expiraryDateString);
+            String title = pollData.get("title");
+            String description = pollData.get("description");
+            String startDateString = pollData.get("startDate");
+            String startTimeString = pollData.get("startTime");
+            String endDateString = pollData.get("endDate");
+            String endTimeString = pollData.get("endTime");
+            String expiraryDateString = pollData.get("expirary");
 
-        // Create and save Poll object
-        Poll newPoll = new Poll();
-        newPoll.setTitle(title);
-        newPoll.setDescription(description);
-        newPoll.setStartDate(new java.sql.Date(startDate.getTime()));
-        newPoll.setEndDate(new java.sql.Date(endDate.getTime()));
-        newPoll.setExpirary(new java.sql.Date(expiraryDate.getTime()));
+            // Parse dates
+            java.time.Instant startDate = java.time.Instant.parse(startDateString+"T"+startTimeString + ":00.00Z");
+            java.time.Instant endDate = java.time.Instant.parse(endDateString+"T"+endTimeString + ":00.00Z");
+            java.time.Instant expiraryDate = java.time.Instant.parse(expiraryDateString + "T23:59:00.00Z");
 
-        pollRepo.save(newPoll);
+            // Create and save Poll object
+            Poll newPoll = new Poll();
+            newPoll.setTitle(title);
+            newPoll.setDescription(description);
+            newPoll.setStartDate(startDate);
+            newPoll.setEndDate(endDate);
+            newPoll.setExpirary(expiraryDate);
+            newPoll.setCreator_id(user.getUid());
 
-        return "redirect:/dashboard"; 
+            pollRepo.save(newPoll);
+
+            
+            //create and save mediums
+            int i = 0;
+            while (true){
+                try {
+                    //get json medium
+                    String mediumText = pollData.get("m" + (Integer.toString(i)));
+                    Boolean online = false;
+                    if (mediumText.startsWith("(R) ")){
+                        //(R) signals online
+                        mediumText = mediumText.substring(4);
+                        online = true;
+                    }
+                    //add to database
+                    Medium medium = new Medium();
+                    medium.setPid(newPoll.getPid());
+                    medium.setRemote(online);
+                    medium.setName(mediumText);
+                    mediumRepo.save(medium);
+                    i++;
+                }
+                catch(Exception e){
+                    break;
+                }
+            }
+            //create and save invited list
+            i = 0;
+            while (true){
+                try {
+                    String uid = pollData.get("u" + (Integer.toString(i)));
+                    int end = uid.indexOf(')');
+                    uid = uid.substring(1, end);
+                    
+                    //add to database
+                    Invited invited = new Invited();
+                    invited.setPid(newPoll.getPid());
+                    invited.setUid(Integer.parseInt(uid));
+                    invitedRepo.save(invited);
+                    i++;
+                }
+                catch(Exception e){
+                    break;
+                }
+            }
+            
+            return "redirect:/dashboard"; 
+        }
+
+
+
     }
 
    

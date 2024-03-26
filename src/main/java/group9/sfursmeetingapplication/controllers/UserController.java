@@ -182,7 +182,22 @@ public class UserController {
         return "users/resendConfirmation";
     }
 
+
     /**
+     * Handles a GET request to login a user.
+     */
+    @GetMapping("/login")
+    public String getLogin(Model model, HttpServletRequest request, HttpSession session) {
+        User user = (User) session.getAttribute("session_user");
+        if (user == null) {
+            return "users/login";
+        } else {
+            model.addAttribute("user", user);
+            return "users/dashboard";
+        }
+    }
+
+        /**
      * Handles a GET request to redirect to the dashboard.
      * 
      * @param model
@@ -199,30 +214,6 @@ public class UserController {
         } else {
             model.addAttribute("user", user);
             return "users/profile";
-        }
-    }
-
-    @GetMapping("/pollcreate")
-    public String poll() {
-        return "users/pollcreate";
-    }
-
-    @GetMapping("/mediumCreate")
-    public String medium() {
-        return "users/mediumCreate";
-    }
-
-    /**
-     * Handles a GET request to login a user.
-     */
-    @GetMapping("/login")
-    public String getLogin(Model model, HttpServletRequest request, HttpSession session) {
-        User user = (User) session.getAttribute("session_user");
-        if (user == null) {
-            return "users/login";
-        } else {
-            model.addAttribute("user", user);
-            return "users/dashboard";
         }
     }
 

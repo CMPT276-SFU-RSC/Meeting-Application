@@ -5,7 +5,10 @@
  */
 package group9.sfursmeetingapplication.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.User;
 import java.util.List;
@@ -62,4 +65,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @return The User with the given email and password.
      */
     User findByEmailIgnoreCaseAndPassword(String email, String password);
+
+
+    @Query(
+        value = "SELECT users.* " + 
+                "FROM users " +
+                "WHERE UPPER(users.first_name || ' ' || users.last_name) LIKE UPPER(?1 || '%');",
+        nativeQuery = true
+    )
+    List<User> findBySearch(String firstName);
 }
