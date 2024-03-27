@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test;
 import group9.sfursmeetingapplication.models.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.*;
 
+@SpringBootTest
 public class UserTest {
 
     private User userEmpty; 
@@ -45,8 +47,8 @@ public class UserTest {
 
     @Test
     public void testSetEmail() {
-        userAll.setEmail("hello@gmail.com"); 
-        assertEquals("hello@gmail.com", userAll.getEmail());
+        userAll.setEmail("hello@email.com"); 
+        assertEquals("hello@email.com", userAll.getEmail());
     }
 
     @Test

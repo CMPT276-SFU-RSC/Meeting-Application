@@ -18,11 +18,10 @@
       <!--  <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav> -->
     </header>
 
-    <div class="container-fluid d-flex justify-content-around">
-        <section class="col-md-4">
+    <section class="container-fluid justify-content-between">
             <h1 class="d-flex justify-content-center m-5" th:text="${poll.title}"></h1>
-            <div th:each="medium:${mediums}" >
                 <div class="card-group">
+                    <div th:each="medium:${mediums}" >
                         <div class="event-box">
                             <div class="event-box-divider"></div>
                             <label for="details">Description: </label>

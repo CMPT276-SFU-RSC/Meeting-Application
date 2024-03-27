@@ -8,7 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.Instant; 
 
 import group9.sfursmeetingapplication.models.Poll;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class PollTest {
 
     private Poll poll;
