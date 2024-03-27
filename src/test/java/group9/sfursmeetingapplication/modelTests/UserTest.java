@@ -1,8 +1,5 @@
 package group9.sfursmeetingapplication.modelTests;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,17 +8,14 @@ import group9.sfursmeetingapplication.models.User;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.*;
 
 @SpringBootTest
 public class UserTest {
 
-    private User userEmpty; 
     private User userAll; 
 
     @BeforeEach
     public void setUp() {
-        userEmpty = new User(); 
         long generatedLong = 25;
         userAll = new User(generatedLong, "organizer@yahoo.com", "password", "Harry", "Potter", "Robotics Team", "President", true, true);
     }

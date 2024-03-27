@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import group9.sfursmeetingapplication.models.Organizer;
-import group9.sfursmeetingapplication.models.User;
 
 
 @SpringBootTest

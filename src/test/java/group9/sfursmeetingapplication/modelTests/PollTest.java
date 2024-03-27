@@ -74,7 +74,6 @@ public class PollTest {
 
     @Test 
     void testGetStartTime() {
-        Instant startTime = Instant.parse("2024-03-25T12:00:00Z");
         assertEquals("2024-03-25T12:00:00Z", poll.getStartDate().toString());
     }
 
@@ -87,7 +86,6 @@ public class PollTest {
 
     @Test 
     void testGetEndTime() {
-        Instant endTime = Instant.parse("2024-03-25T12:00:00Z");
         assertEquals("2024-03-25T13:00:00Z", poll.getEndDate().toString());
     }
 
@@ -100,7 +98,6 @@ public class PollTest {
 
     @Test 
     void testGetExpiryTime() {
-        Instant expiryTime = Instant.parse("2024-03-27T12:00:00Z");
         assertEquals("2024-03-27T12:00:00Z", poll.getExpirary().toString());
     }
 
