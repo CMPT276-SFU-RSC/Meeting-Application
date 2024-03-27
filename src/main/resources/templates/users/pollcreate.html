@@ -49,7 +49,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     </div>
                     <div class="form-group col-md-6">
                         <label class="col-form-label" for="startTime">Earliest Start Time: </label>
-                        <input class="form-control form-control-lg mb-3" type="text" maxlength="7" start="0" step="1800" id="startTime" name="startTime" placeholder="--:-- A-PM" title="Example: 12:00 AM OR 11:59 PM" required>
+                        <input class="form-control form-control-lg mb-3" type="text" maxlength="5" start="0" step="1800" id="startTime" name="startTime" placeholder="--:--" title="00:00 TO 23:59" required>
                     </div>
 
                     <!-- end time/date -->
@@ -59,7 +59,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     </div>
                     <div class="form-group col-md-6">
                         <label class="col-form-label" for="endTime">Latest End Time: </label>
-                        <input class="form-control form-control-lg mb-3" type="text" maxlength="7" id="endTime" start="0" step="1800" name="endTime" placeholder="--:-- A-PM" title="Example: 12:00 AM OR 11:59 PM" required>
+                        <input class="form-control form-control-lg mb-3" type="text" maxlength="5" id="endTime" start="0" step="1800" name="endTime" placeholder="--:--" title="00:00 TO 23:59" required>
                     </div>
                     <label class="col-form-label" for="expirary">Expiry Date</label>
                     <input class="form-control form-control-lg" type="date" id="expirary" name="expirary" required>
@@ -92,8 +92,9 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
 
 
             <input class="form-control form-control-lg mb-3" type="text" id="usersInput" placeholder="Enter Name to Search" oninput="getUsers()">
-            <div class="overflow-auto" style="max-height: 100px; border-style: solid;" id="usersSearchResults">
-            </div>
+            <div class="dropdown-content" id="usersSearchResults">
+                <!-- Dropdown items will be populated dynamically -->
+              </div>
 
             <br>
 
