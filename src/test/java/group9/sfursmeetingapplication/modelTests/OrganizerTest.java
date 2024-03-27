@@ -6,7 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import group9.sfursmeetingapplication.models.Organizer;
-import group9.sfursmeetingapplication.models.User;
 
 public class OrganizerTest {
 
