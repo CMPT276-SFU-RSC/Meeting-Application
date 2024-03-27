@@ -6,7 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import group9.sfursmeetingapplication.models.Invited;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class InvitedTest {
     private Invited invited; 
 
@@ -34,7 +36,7 @@ public class InvitedTest {
 
     @Test
     void testSetUid() {
-        invited.setPid(20);
+        invited.setUid(20);
         assertEquals(20, invited.getUid());
     }
 

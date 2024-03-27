@@ -4,8 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import group9.sfursmeetingapplication.models.Medium;
+
+@SpringBootTest
 public class MediumTest {
 
     private Medium medium; 
