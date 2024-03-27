@@ -50,4 +50,11 @@ public interface UserService {
      * @param user The form data.
      */
     User getUser(String email);
+
+    /**
+     * Gets a user from the database.
+     * @param uid The user id.
+     * @return User
+     */
+    User getUserById(Long uid);
 }

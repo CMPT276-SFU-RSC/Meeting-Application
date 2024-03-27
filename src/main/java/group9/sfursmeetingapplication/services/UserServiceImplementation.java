@@ -170,4 +170,18 @@ public class UserServiceImplementation implements UserService {
             return false;
         }
     }
+
+    /**
+     * This method gets a user by their user uid.
+     * @param uid The user uid.
+     * @return The user with the given user uid.
+     */
+    @Override
+    public User getUserById(Long uid) {
+        User user = userRepository.findByUid(uid);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found in Database.");
+        }
+        return user;
+    }
 }

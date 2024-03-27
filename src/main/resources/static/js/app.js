@@ -14,7 +14,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-
+/**
+ * checkPasswordMatch() is called when the user types in the password fields.
+ * It checks if the passwords match and if they do, it checks if the password
+ * is valid. If the password is valid, the registration-validation element is removed.
+ * If the password is not valid, the registration-validation element is displayed.
+ * If the passwords do not match, an error message is displayed.
+ * If the password is not at least 5 characters long, a message is displayed.
+ * If the password does not contain at least one lowercase letter, a message is displayed.
+ * If the password does not contain at least one uppercase letter, a message is displayed.
+ * If the password does not contain at least one number, a message is displayed.
+ * 
+ */
 function checkPasswordMatch() {
     let password1 = document.getElementById("password1").value;
     let password2 = document.getElementById("password2").value;
@@ -58,11 +69,14 @@ function checkPasswordMatch() {
 
 }
 
+/**
+ * togglePasswordVisibility() is called when the checkbox is clicked.
+ * If the checkbox is checked, the password is displayed, otherwise it is hidden.
+ */
 function togglePasswordVisibility() {
-    var password1 = document.getElementById('password1');
-    var password2 = document.getElementById('password2');
-    var showPasswordCheckbox = document.getElementById('showPassword');
-
+    let password1 = document.getElementById('password1');
+    let password2 = document.getElementById('password2');
+    let showPasswordCheckbox = document.getElementById('showPassword');
     if (showPasswordCheckbox.checked) {
         password1.type = 'text';
         password2.type = 'text';

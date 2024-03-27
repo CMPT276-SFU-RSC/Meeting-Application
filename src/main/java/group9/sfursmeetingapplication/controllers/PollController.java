@@ -1,13 +1,11 @@
 package group9.sfursmeetingapplication.controllers;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
 import group9.sfursmeetingapplication.models.Poll;
@@ -15,25 +13,23 @@ import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.InvitedRepository;
 import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
+import group9.sfursmeetingapplication.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.text.ParseException;
 import java.util.Map;
 
-
 @Controller
+@RequiredArgsConstructor
 public class PollController {
+    private final UserService userService; // This is a final variable, so it must be initialized in the constructor
 
     @Autowired
     private PollRepository pollRepo;
-    //private UserRepository userRepo1;
-  
+    // private UserRepository userRepo1;
 
     @Autowired
     private MediumRepository mediumRepo;
@@ -43,99 +39,142 @@ public class PollController {
 
     @GetMapping(value = "/dashboard")
     public String getAllStudents(Model model, HttpServletRequest request,
-    HttpSession session) {
-        User user = (User) session.getAttribute("session_user");
+            HttpSession session) {
+        // Check if the user is logged in
         session = request.getSession(false);
- {
-            //generate dashboard
-            //get from DB
-            //get all polls this user has been invited to
-            //  could in the future move results the user has answered
-            //  List<Poll> polls = pollRepo.findByUID(user.uid);
-            long uid = user.getUid();
-            List<Poll> polls = pollRepo.findByUID(uid);
-            List<Poll> polls1 = pollRepo.find();
-            
-            
-            model.addAttribute("polls1", polls1);
-            model.addAttribute("polls", polls);
-            model.addAttribute("user", user);
-            return "users/dashboard";
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
         }
-    }
 
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        } // End of session check
+
+        // generate dashboard
+        // get from DB
+        // get all polls this user has been invited to
+        // could in the future move results the user has answered
+        // List<Poll> polls = pollRepo.findByUID(user.uid);
+        List<Poll> polls = pollRepo.findByUID(user.getUid());
+        List<Poll> polls1 = pollRepo.find();
+        model.addAttribute("polls1", polls1);
+        model.addAttribute("polls", polls);
+        model.addAttribute("user", user);
+        return "users/dashboard";
+    }
 
     @GetMapping("/pollcreate")
     public String poll(Model model, HttpServletRequest request,
-    HttpSession session) {
-        User user = (User) session.getAttribute("session_user");
-
-        
-        if (user == null){
-            //not logged in, redirect
+            HttpSession session) {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
             return "redirect:/login";
-        } else {
-            return "users/pollcreate";
         }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        return "users/pollcreate";
     }
 
     @PostMapping("/create-poll")
-    public String createPoll(@RequestParam Map<String, String> pollData, HttpSession session) throws ParseException {
-        User user = (User) session.getAttribute("session_user");
-        if (user == null){
-            //not logged in, redirect
+    public String createPoll(@RequestParam Map<String, String> pollData, HttpSession session,
+            HttpServletRequest request) throws ParseException {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
             return "redirect:/login";
-        } else {
-            //add poll
+        }
 
-            String title = pollData.get("title");
-            String description = pollData.get("description");
-            String startDateString = pollData.get("startDate");
-            String startTimeString = pollData.get("startTime");
-            String endDateString = pollData.get("endDate");
-            String endTimeString = pollData.get("endTime");
-            String expiraryDateString = pollData.get("expirary");
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
 
-            // Parse dates
-            java.time.Instant startDate = java.time.Instant.parse(startDateString+"T"+startTimeString + ":00.00Z");
-            java.time.Instant endDate = java.time.Instant.parse(endDateString+"T"+endTimeString + ":00.00Z");
-            java.time.Instant expiraryDate = java.time.Instant.parse(expiraryDateString + "T23:59:00.00Z");
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+        // add poll
 
-            // Create and save Poll object
-            Poll newPoll = new Poll();
-            newPoll.setTitle(title);
-            newPoll.setDescription(description);
-            newPoll.setStartDate(startDate);
-            newPoll.setEndDate(endDate);
-            newPoll.setExpirary(expiraryDate);
-            newPoll.setCreator_id(user.getUid());
+        String title = pollData.get("title");
+        String description = pollData.get("description");
+        String startDateString = pollData.get("startDate");
+        String startTimeString = pollData.get("startTime");
+        String endDateString = pollData.get("endDate");
+        String endTimeString = pollData.get("endTime");
+        String expiraryDateString = pollData.get("expirary");
 
-            pollRepo.save(newPoll);
+        // Parse dates
+        java.time.Instant startDate = java.time.Instant.parse(startDateString + "T" + startTimeString + ":00.00Z");
+        java.time.Instant endDate = java.time.Instant.parse(endDateString + "T" + endTimeString + ":00.00Z");
+        java.time.Instant expiraryDate = java.time.Instant.parse(expiraryDateString + "T23:59:00.00Z");
 
-            
-            //create and save mediums
-            int i = 0;
-            while (true){
-                try {
-                    //get json medium
-                    String mediumText = pollData.get("m" + (Integer.toString(i)));
-                    Boolean online = false;
-                    if (mediumText.startsWith("(R) ")){
-                        //(R) signals online
-                        mediumText = mediumText.substring(4);
-                        online = true;
-                    }
-                    //add to database
-                    Medium medium = new Medium();
-                    medium.setPid(newPoll.getPid());
-                    medium.setRemote(online);
-                    medium.setName(mediumText);
-                    mediumRepo.save(medium);
-                    i++;
+        // Create and save Poll object
+        Poll newPoll = new Poll();
+        newPoll.setTitle(title);
+        newPoll.setDescription(description);
+        newPoll.setStartDate(startDate);
+        newPoll.setEndDate(endDate);
+        newPoll.setExpirary(expiraryDate);
+        newPoll.setCreator_id(user.getUid());
+
+        pollRepo.save(newPoll);
+
+        // create and save mediums
+        int i = 0;
+        while (true) {
+            try {
+                // get json medium
+                String mediumText = pollData.get("m" + (Integer.toString(i)));
+                Boolean online = false;
+                if (mediumText.startsWith("(R) ")) {
+                    // (R) signals online
+                    mediumText = mediumText.substring(4);
+                    online = true;
                 }
-                catch(Exception e){
-                    break;
-                }
+                // add to database
+                Medium medium = new Medium();
+                medium.setPid(newPoll.getPid());
+                medium.setRemote(online);
+                medium.setName(mediumText);
+                mediumRepo.save(medium);
+                i++;
+            } catch (Exception e) {
+                break;
             }
             //create and save invited list
             i = 0;
@@ -157,12 +196,8 @@ public class PollController {
                     break;
                 }
             }
-            
-            return "redirect:/dashboard"; 
         }
-
-
-
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/getPolls/{pid}")
