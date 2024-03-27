@@ -5,26 +5,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.*;
-import org.hamcrest.Matchers;
-import group9.sfursmeetingapplication.controllers.UserController;
 import group9.sfursmeetingapplication.models.User;
-import group9.sfursmeetingapplication.repositories.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.*;
 
-@WebMvcTest(UserController.class)
 public class UserTest {
 
     private User userEmpty; 
@@ -36,12 +23,6 @@ public class UserTest {
         long generatedLong = 25;
         userAll = new User(generatedLong, "organizer@yahoo.com", "password", "Harry", "Potter", "Robotics Team", "President", true, true);
     }
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockBean
-    private UserRepository userRepository;
 
     @Test
     public void testGetUid() {
@@ -142,4 +123,6 @@ public class UserTest {
         userAll.setEnabled(false);
         assertEquals(false, userAll.isEnabled());
     }
+    
+    
 }
