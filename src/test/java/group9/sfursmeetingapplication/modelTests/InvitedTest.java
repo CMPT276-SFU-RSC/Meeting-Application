@@ -34,7 +34,7 @@ public class InvitedTest {
 
     @Test
     void testSetUid() {
-        invited.setPid(20);
+        invited.setUid(20);
         assertEquals(20, invited.getUid());
     }
 
