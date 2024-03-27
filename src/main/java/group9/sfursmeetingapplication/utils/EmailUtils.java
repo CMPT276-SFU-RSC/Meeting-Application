@@ -29,7 +29,7 @@ public class EmailUtils {
      * @return the verification URL
      */
     public static String getVerificationUrl(String host, String token) {
-        return host + "/users?token=" + token;
+        return host + "/confirmation?token=" + token;
     }
 
 }

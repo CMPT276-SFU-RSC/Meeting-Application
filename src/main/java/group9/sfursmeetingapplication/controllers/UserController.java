@@ -161,7 +161,7 @@ public class UserController {
      * @param token The token to verify the user's account.
      * @return The view for the user.
      */
-    @GetMapping("/users") // Spring annotation to map HTTP GET requests onto specific handler methods
+    @GetMapping("/confirmation") // Spring annotation to map HTTP GET requests onto specific handler methods
     public String confirmUserAccount(@RequestParam("token") String token) {
         userService.verifyToken(token);
         return "universals/emailConfirmed";
