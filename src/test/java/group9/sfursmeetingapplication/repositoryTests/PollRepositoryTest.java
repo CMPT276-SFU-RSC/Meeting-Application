@@ -1,6 +1,7 @@
 package group9.sfursmeetingapplication.repositoryTests;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,6 @@ public class PollRepositoryTest {
 
     @Test
     public void testFindByUID() {
-
         List<Poll> polls = pollRepository.findByUID(1L);
         assertEquals(0, polls.size());
 
