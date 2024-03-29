@@ -248,10 +248,10 @@ input {
 .dropdown-content {
   display: none;
   overflow: auto;
-  position: fixed;
+  position: absolute;
   margin-top: -16px;
   border-radius: 5px;
-  background-color: #686767;
+  background-color: #acacac;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
@@ -592,7 +592,7 @@ input {
   color: #f9f9f9;
 }
 
-.dark-mode .form-select-lg {
+.dark-mode .form-control.form-control-lg:hover {
   background-color:#2c2c2c;
   color: #ffffff;
 }
