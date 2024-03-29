@@ -213,6 +213,7 @@ body {
 
 input::placeholder {
   font-style: italic;
+  font-weight: bolder;
 }
 input {
   font-style: normal; /* this is to avoid making input italic */
@@ -521,7 +522,7 @@ input {
 }
 
 .dark-mode .overflow-auto {
-  background-color: #242424;
+  background-color: #303030;
   border-radius: 10px;
   border-width: 1px;
   margin-bottom: 5px;
@@ -588,11 +589,11 @@ input {
 }
 
 .dark-mode .form-control.form-control-lg {
-  background-color: #2c2c2c;
+  background-color: #363636;
   color: #f9f9f9;
 }
 
 .dark-mode .form-select-lg {
-  background-color: #2c2c2c;
+  background-color: #363636;
   color: #f9f9f9;
 }
