@@ -36,7 +36,7 @@
         <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Active Polls</h1>
     </div>
 
-    <section class="container-fluid justify-content-between">
+    <section class="container-fluid justify-content-between mb-3">
         <div class="card-group">
             <div th:each="poll1 : ${polls}">
                 <div class="event-box">
@@ -71,7 +71,7 @@
         </div>
     </section>
 
-    <section class="container-fluid justify-content-between" th:if="${user.isOrganizer}">
+    <section class="container-fluid justify-content-between mb-3" th:if="${user.isOrganizer}">
         <div class="card-group">
             <div th:each="poll1 : ${polls1}">
                 <div class="event-box">
