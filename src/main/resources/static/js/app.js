@@ -114,9 +114,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 startDateInput.value = startDateStr;
                 endDateInput.value = endDateStr;
 
-                // Format time parts in 24-hour format using toLocaleTimeString
-                startTimeInput.value = selectedDates[0].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                endTimeInput.value = selectedDates[1].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                let startTime = selectedDates[0];
+                let endTime = selectedDates[1];
+                
+                let startTimeFormatted = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                let endTimeFormatted = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                
+                if (startTimeFormatted.substring(0, 2) === '24') {
+                    startTimeInput.value = '00' + startTimeFormatted.substring(2);
+                }
+                else {
+                    startTimeInput.value = startTimeFormatted;
+                }
+
+                if (endTimeFormatted.substring(0, 2) === '24') {
+                    endTimeInput.value = '00' + endTimeFormatted.substring(2);
+                }
+                else {
+                    endTimeInput.value = endTimeFormatted;
+                }
+
             } else {
                 startDateInput.value = '';
                 endDateInput.value = '';
