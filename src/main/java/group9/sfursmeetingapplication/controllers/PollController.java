@@ -177,24 +177,24 @@ public class PollController {
             } catch (Exception e) {
                 break;
             }
-            // create and save invited list
-            i = 0;
-            while (true) {
-                try {
-                    // getting json users
-                    String uid = pollData.get("u" + (Integer.toString(i)));
-                    int end = uid.indexOf(')');
-                    uid = uid.substring(1, end);
+        }
+        // create and save invited list
+        i = 0;
+        while (true) {
+            try {
+                // getting json users
+                String uid = pollData.get("u" + (Integer.toString(i)));
+                int end = uid.indexOf(')');
+                uid = uid.substring(1, end);
 
-                    // add to database
-                    Invited invited = new Invited();
-                    invited.setPid(newPoll.getPid());
-                    invited.setUid(Integer.parseInt(uid));
-                    invitedRepo.save(invited);
-                    i++;
-                } catch (Exception e) {
-                    break;
-                }
+                // add to database
+                Invited invited = new Invited();
+                invited.setPid(newPoll.getPid());
+                invited.setUid(Integer.parseInt(uid));
+                invitedRepo.save(invited);
+                i++;
+            } catch (Exception e) {
+                break;
             }
         }
         return "redirect:/dashboard";

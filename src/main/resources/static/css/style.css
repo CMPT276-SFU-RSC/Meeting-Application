@@ -213,7 +213,7 @@ body {
 
 input::placeholder {
   font-style: italic;
-  font-weight: bolder;
+  font-weight: 600;
 }
 input {
   font-style: normal; /* this is to avoid making input italic */
@@ -282,17 +282,20 @@ input {
 
 .event-box {
   width: 300px;
+  margin: 50px auto;
   background-color: #f9f9f9;
-  border: 1px solid #757575;
   border-top: 10px solid #cae4ff;
-  /* Choose your desired color */
-  border-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
   padding: 20px;
   margin: 5px;
-  margin-bottom: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   display: inline-block;
   position: relative;
-  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.411);
+  box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.658);
 }
 
 .event-box .title {
@@ -546,15 +549,19 @@ input {
   width: 300px;
   margin: 50px auto;
   background-color: #242424;
-  border: 1px solid #222222;
   border-top: 10px solid #8d1313;
   color: #d8d8d8;
-  border-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  border-top-left-radius: 40px;
+  border-bottom-right-radius: 40px;
   padding: 20px;
   margin: 5px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   display: inline-block;
   position: relative;
-  box-shadow: 0px 2px 3px 0px rgba(43, 43, 43, 0.411);
+  box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.705);
 }
 
 .dark-mode .event-box .description {

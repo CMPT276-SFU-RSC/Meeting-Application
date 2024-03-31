@@ -144,7 +144,9 @@ function addMedium() {
     }
     node.onclick = function () {
         this.parentElement.removeChild(this);
+
     };
+    document.getElementById("mediumInput").value = "";
     par.appendChild(node);
 }
 
