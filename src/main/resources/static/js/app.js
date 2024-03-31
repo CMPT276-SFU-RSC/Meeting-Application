@@ -33,6 +33,8 @@ function checkPasswordMatch() {
 
     if (password1 !== password2) {
         errorMessage.textContent = 'Passwords do not match';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
     } else {
         errorMessage.textContent = '';
     }
@@ -42,31 +44,36 @@ function checkPasswordMatch() {
         validityMessageLength.textContent = '';
     } else {
         validityMessageLength.textContent = 'Password must be at least 5 characters long';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
     }
 
     if (/[a-z]/.test(password1)) {
         validityMessageLowerCase.textContent = '';
     } else {
         validityMessageLowerCase.textContent = 'Password must contain at least one lowercase letter';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
     }
 
     if (/[A-Z]/.test(password1)) {
         validityMessageUpperCase.textContent = '';
     } else {
         validityMessageUpperCase.textContent = 'Password must contain at least one uppercase letter';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
     }
 
     if (/[0-9]/.test(password1)) {
         validityMessageNumber.textContent = '';
+
     } else {
         validityMessageNumber.textContent = 'Password must contain at least one number';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
     }
-
-    // If all conditions are true, remove the element
-    if (password1 === password2 && password1.length >= 5 && /[a-z]/.test(password1) && /[A-Z]/.test(password1) && /[0-9]/.test(password1)) {
-        element.style.display = 'none';
-    }
-
+    element.style.display = 'none';
+    return true;
 }
 
 /**
