@@ -35,7 +35,7 @@ public class EmailController {
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            response.setStatus(401);
+            response.setStatus(400);
             return "redirect:/email/resendConfirmation";
         }
     }
@@ -47,12 +47,24 @@ public class EmailController {
      * @return The view for the user.
      */
     @GetMapping("/email/verified") // Spring annotation to map HTTP GET requests onto specific handler methods
-    public String confirmUserAccount(@RequestParam("token") String token) {
+    public String confirmUserAccount(@RequestParam("token") String token, HttpServletResponse response,
+    RedirectAttributes redirectAttributes) {
+        // Check if the token is null or empty
         if (token == null || token.isEmpty()) {
             return "redirect:/email/resendConfirmation";
         }
-        userService.verifyToken(token);
-        return "emails/emailConfirmed";
+
+        // if there is a token, verify the token
+        try {
+            userService.verifyToken(token);
+            response.setStatus(200);
+            return "emails/emailConfirmed";
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            response.setStatus(400);
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/login";
+        }
     }
 
     /**

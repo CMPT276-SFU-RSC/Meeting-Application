@@ -76,7 +76,20 @@ public class UserServiceImplementation implements UserService {
     @Override
     public Boolean verifyToken(String token) {
         Confirmation confirmation = confirmationRepository.findByToken(token);
+        if (confirmation == null) {
+            throw new IllegalArgumentException("Token does not exist. Try Logging in.");
+        }
+
         User user = userRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist.");
+        }
+
+        // Check user enabled status
+        if (user.isEnabled()) {
+            throw new IllegalArgumentException("User is already enabled.");
+        }
+
         user.setEnabled(true);
         userRepository.save(user);
         confirmationRepository.delete(confirmation);
