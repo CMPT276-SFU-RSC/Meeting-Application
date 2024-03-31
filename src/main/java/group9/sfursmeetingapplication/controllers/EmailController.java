@@ -36,7 +36,7 @@ public class EmailController {
             System.out.println(e.getMessage());
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             response.setStatus(401);
-            return "redirect:/resendConfirmation";
+            return "redirect:/email/resendConfirmation";
         }
     }
     
