@@ -16,10 +16,15 @@
   
 </head>
 <body>
-    <h1 class="d-flex justify-content-center m-5">Users Display</h1>
+
+    <header>
+        <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
+    </header>
+    
+    <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Users Display</h1>
     <main class="container-fluid justify-content-between">
         <div>
-        <a class="btn btn-secondary" aria-current="page" href="/deleteuser"> Delete a User</a>
+        <a class="btn btn-secondary m-2" aria-current="page" href="/deleteuser"> Delete a User</a>
     </div>
         <section >
             <div class="card-group">
@@ -40,5 +45,6 @@
         </div>
         </section>
     </main>
+    <footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
 </html>
