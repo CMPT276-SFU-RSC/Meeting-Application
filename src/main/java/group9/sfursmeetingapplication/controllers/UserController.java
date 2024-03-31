@@ -90,29 +90,6 @@ public class UserController {
     }
 
     /**
-     * Handles a POST request to resend a confirmation email.
-     * 
-     * @param user               The user to resend the confirmation email to.
-     * @param response           The HTTP response.
-     * @param redirectAttributes The redirect attributes.
-     * @return The view for the user.
-     */
-    @PostMapping("/email/resend")
-    public String resendConfirmation(@ModelAttribute User user, HttpServletResponse response,
-            RedirectAttributes redirectAttributes) {
-        try {
-            userService.resendConfirmation(user);
-            response.setStatus(201);
-            return "universals/success";
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-            response.setStatus(401);
-            return "redirect:/resendConfirmation";
-        }
-    }
-
-    /**
      * Handles a POST request to save a user's profile.
      * 
      * @param userDetails        The user's details.
@@ -146,25 +123,29 @@ public class UserController {
      * Handles a GET request to redirect to the login page.
      */
     @GetMapping("/")
-    public String returnToLogin(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user_id") == null) {
+    public String returnToLogin(HttpServletRequest request, HttpSession session) {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
             return "redirect:/login";
-        } else {
-            return "redirect:/dashboard";
         }
-    }
 
-    /**
-     * Handles a GET request to confirm a user's account.
-     * 
-     * @param token The token to verify the user's account.
-     * @return The view for the user.
-     */
-    @GetMapping("/users") // Spring annotation to map HTTP GET requests onto specific handler methods
-    public String confirmUserAccount(@RequestParam("token") String token) {
-        userService.verifyToken(token);
-        return "universals/emailConfirmed";
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+        return "redirect:/dashboard";
     }
 
     /**
@@ -175,16 +156,6 @@ public class UserController {
     @GetMapping("/registration")
     public String registerUser() {
         return "users/registration";
-    }
-
-    /**
-     * Handles a GET request to resend a confirmation email.
-     * 
-     * @return The view for the user.
-     */
-    @GetMapping("/resendConfirmation")
-    public String resendConfirmation() {
-        return "users/resendConfirmation";
     }
 
     /**

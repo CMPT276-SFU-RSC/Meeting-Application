@@ -14,8 +14,8 @@
     <h1 class="d-flex justify-content-center m-5">LOG IN</h1>
     <section th:if="${errorMessage}" class="alert alert-danger" role="alert">
         <p th:text="${errorMessage}"></p>
-        <article th:if="${errorMessage} == 'Please verify your email first.'">
-            <p><a href="/resendConfirmation">Click Here </a>to Resend Confirmation Email.</p>
+        <article th:if="${errorMessage} == 'Account is not enabled. Please verify your email.'">
+            <p><a href="/email/resendConfirmation">Click Here </a>to Resend Confirmation Email.</p>
         </article>
     </section>
     <main class="container-fluid d-flex justify-content-center">
