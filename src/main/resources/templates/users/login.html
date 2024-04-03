@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <h1 class="d-flex justify-content-center mt-5 mb-1" style="font-weight: bolder; font-size: 44px;">SFU Robot Soccer Meeting App</h1>
+    <h1 class="d-flex justify-content-center mt-5 mb-3" style="font-weight: bolder; font-size: 44px;">SFU Robot Soccer Meeting App</h1>
     <section th:if="${errorMessage}" class="alert alert-danger" role="alert">
         <p th:text="${errorMessage}"></p>
         <article th:if="${errorMessage} == 'Account is not enabled. Please verify your email.'">
@@ -38,7 +38,7 @@
                     </fieldset>
 
                     <fieldset class="text-center text-lg-start mt-4 pt-2">
-                        <button id="login-button" type="submit" class="btn btn-primary btn-lg">Login</button>
+                        <button id="login-button" type="submit" class="btn btn-primary btn-lg">Log in</button>
                     </fieldset>
                 </form>
             </div>

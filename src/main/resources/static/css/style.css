@@ -5,18 +5,38 @@ h1 {
 
 #login-card{
   box-shadow: 2px 2px 10px grey;
+  min-width: 100px;
 }
 
 #login-button{
 color: white;
 background-color: #A5192E;
-width: auto;
+width: 100%;
+margin-right: auto;
 }
+
+#register-button{
+  color: white;
+  background-color: #A5192E;
+  margin-right: auto;
+  }
 
 #login-logo{
 height: 160px;
 width: 190px;
 }
+
+#register-card{
+  box-shadow: 2px 2px 10px grey;
+  width: 100%;
+  border-style: solid;
+  border: 2px solid white; 
+}
+
+#register-logo{
+  height: 160px;
+  width: 190px;
+  }
 
 #login-name{
   color: #A5192E;
@@ -619,6 +639,7 @@ input {
   background-color: #363636;
   color: #f9f9f9;
 }
+
 
 .dark-mode .form-select-lg {
   background-color: #363636;
