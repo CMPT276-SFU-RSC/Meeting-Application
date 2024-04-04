@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import group9.sfursmeetingapplication.models.Poll;
 
@@ -19,32 +20,26 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
                 "ORDER BY polls.start_date;", //order by the first possible start time, could be changed later (maybe priority system)
         nativeQuery = true
     )
-
     List<Poll> findByUID(Long uid);
+
     @Query(
         value = "SELECT * FROM polls",
         nativeQuery = true
     )
-    
-
     List<Poll> find();
 
     @Query(
         value = "SELECT * FROM polls WHERE pid = ?1",
         nativeQuery = true
     )
-
     List<Poll> findname(Integer pid);
 
-   
-
-
-   /* 
-    @Query(
-        value = "SELECT * FROM users",
-        nativeQuery = true
-    )
-    List<User> finder1();*/
-
+    /**
+     * Find all polls created by a user
+     * @param userUid The user's UID
+     * @return A list of polls created by the user
+     */
+    @Query(value = "SELECT * FROM polls WHERE creator_id = :userUid", nativeQuery = true)
+    List<Poll> findByCreator_id(@Param("userUid") Long userUid);
    
 }

@@ -70,9 +70,13 @@ public class PollController {
         // List<Poll> polls = pollRepo.findByUID(user.uid);
         List<Poll> polls = pollRepo.findByUID(user.getUid());
         List<Poll> polls1 = pollRepo.find();
+        // Gets a list of all the polls the user has created.
+        List<Poll> createdPolls = pollRepo.findByCreator_id(user.getUid());
         model.addAttribute("polls1", polls1);
         model.addAttribute("polls", polls);
         model.addAttribute("user", user);
+        model.addAttribute("createdPolls", createdPolls);
+
         return "users/dashboard";
     }
 
