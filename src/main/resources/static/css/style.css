@@ -134,9 +134,9 @@ body {
   border: none;
   font-weight: 500;
   cursor: pointer;
-  background: #f0f0f0;
+  background: #A5192E;
   font-size: 16px;
-  color: rgb(92, 92, 92);
+  color: white;
   transition: all 170ms ease-in-out;
 }
 
@@ -147,6 +147,8 @@ body {
 .btn.btn-primary.ml:active {
   background-color: #f0f0f0;
 }
+
+
 
 /* Adjust the shadow */
 .navbar {
