@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import group9.sfursmeetingapplication.dto.PollDTO;
 import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
 import group9.sfursmeetingapplication.models.Poll;
@@ -13,6 +15,7 @@ import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.InvitedRepository;
 import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
+import group9.sfursmeetingapplication.services.PollService;
 import group9.sfursmeetingapplication.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -26,7 +29,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PollController {
     private final UserService userService; // This is a final variable, so it must be initialized in the constructor
-
+    private final PollService pollService; // This is a final variable, so it must be initialized in the constructor
     @Autowired
     private PollRepository pollRepo;
     // private UserRepository userRepo1;
@@ -232,5 +235,54 @@ public class PollController {
         } // End of session check
         model.addAttribute("user", user);
         return "users/showEvents";
+    }
+
+    /**
+     * Respond to a poll
+     * @param pid
+     * @param model
+     * @param session
+     * @param request
+     * @return
+     */
+    @GetMapping("/polls/respond/{pid}")
+    public String respondPoll(@PathVariable int pid, Model model, HttpSession session,
+    HttpServletRequest request) {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        Poll poll = pollRepo.findByPid(pid);
+        // Get the user who created the poll
+        User creator = userService.getUserById(poll.getCreator_id());
+        String fullName = creator.getFirstName() + " " + creator.getLastName();
+        //Create a Poll DTO.
+        PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
+
+        // Get the list of users that are invited to the poll.
+        
+
+        model.addAttribute("poll", pollDTO);
+        model.addAttribute("user", user);
+
+        return "polls/respond";
     }
 }

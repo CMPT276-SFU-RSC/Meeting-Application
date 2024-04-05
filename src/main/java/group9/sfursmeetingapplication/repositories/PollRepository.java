@@ -41,5 +41,11 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
      */
     @Query(value = "SELECT * FROM polls WHERE creator_id = :userUid", nativeQuery = true)
     List<Poll> findByCreator_id(@Param("userUid") Long userUid);
+
+    /**
+     * Find a poll by its PID
+     */
+    Poll findByPid(Integer pid);
+
    
 }

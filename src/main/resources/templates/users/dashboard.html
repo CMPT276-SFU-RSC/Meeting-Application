@@ -118,7 +118,7 @@
                         <label for="details">Poll ID: </label>
                         <label class="description" th:text="${poll.pid}"></label>
                         <div class="d-flex">
-                            <a class="btn btn-secondary">Vote</a>
+                            <a class="btn btn-secondary" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
                         </div>
                     </div>
                 </div>
