@@ -20,6 +20,14 @@
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
 
+    <div class="secondary-navbar">
+        <div class="tab-btn1" onclick="refresh(); openTab('pending')" >Pending Polls</div>
+        <div class="tab-btn2" onclick="refresh(); openTab('created')" >Created Polls</div>
+        <div th:if="${user.isOrganizer}">
+            <div class="tab-btn3" onclick="refresh(); openTab('allPolls')">All Polls</div>
+        </div>
+    </div>
+
     <section th:if="${user.isOrganizer}">
         <div class="card-group">
             <div class="event-box">
@@ -32,7 +40,7 @@
         </div>
     </section>
 
-    <main th:if="${user.isOrganizer}">
+    <main id="allPolls" th:if="${user.isOrganizer}" style="display: none;">
         <header class="header-greeting">
             <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">List Of All
                 Polls</h1>
@@ -55,8 +63,8 @@
                             <label for="details">Poll ID: </label>
                             <label class="description" th:text="${poll1.pid}"></label>
                             <div class="d-flex">
-                                <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}" class="btn btn-secondary">View</a>
-                                <a href="#" class="btn btn-secondary">Edit</a>
+                                <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}" class="btn btn-primary redButton">View</a>
+                                <a href="#" class="btn btn-primary redButton">Edit</a>
                                 <a href="/delete" class="btn btn-secondary">Delete</a>
                             </div>
                         </div>
@@ -66,7 +74,7 @@
         </section>
     </main>
 
-    <main>
+    <section id="created" style="display: none;">
         <header class="header-greeting">
             <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Created Polls
             </h1>
@@ -89,13 +97,15 @@
                             <label for="details">Poll ID: </label>
                             <label class="description" th:text="${createdPolls.pid}"></label>
                             <div class="d-flex">
-                                <a class="btn btn-secondary">EDIT</a>
+                                <a class="btn btn-primary redButton">EDIT</a>
                             </div>
                         </div>
                     </div>
                 </div>
         </section>
-    </main>
+    </section>
+
+    <section id="pending" style="display: block;">
     <header class="header-greeting">
         <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Polls To Respond To
         </h1>
@@ -118,18 +128,18 @@
                         <label for="details">Poll ID: </label>
                         <label class="description" th:text="${poll.pid}"></label>
                         <div class="d-flex">
-                            <a class="btn btn-secondary" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
+                            <a class="btn btn-primary redButton" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
                         </div>
                     </div>
                 </div>
             </div>
     </section>
-    <main>
+</section>
 
-        <footer th:replace="~{universals/footer :: footer}"></footer>
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <footer th:replace="~{universals/footer :: footer}"></footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
