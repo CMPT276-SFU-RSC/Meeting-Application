@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import group9.sfursmeetingapplication.dto.InvitedDTO;
 import group9.sfursmeetingapplication.dto.PollDTO;
 import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
@@ -17,6 +18,7 @@ import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.services.PollService;
 import group9.sfursmeetingapplication.services.UserService;
+import group9.sfursmeetingapplication.services.InvitedService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ import java.util.Map;
 public class PollController {
     private final UserService userService; // This is a final variable, so it must be initialized in the constructor
     private final PollService pollService; // This is a final variable, so it must be initialized in the constructor
+    private final InvitedService invitedService; // This is a final variable, so it must be initialized in the
+                                                 // constructor
     @Autowired
     private PollRepository pollRepo;
     // private UserRepository userRepo1;
@@ -239,6 +243,7 @@ public class PollController {
 
     /**
      * Respond to a poll
+     * 
      * @param pid
      * @param model
      * @param session
@@ -247,7 +252,7 @@ public class PollController {
      */
     @GetMapping("/polls/respond/{pid}")
     public String respondPoll(@PathVariable int pid, Model model, HttpSession session,
-    HttpServletRequest request) {
+            HttpServletRequest request) {
         session = request.getSession(false);
         if (session == null) {
             System.out.println("Redirecting because there's no session");
@@ -269,20 +274,29 @@ public class PollController {
             session.invalidate();
             return "redirect:/login";
         }
-
-        Poll poll = pollRepo.findByPid(pid);
-        // Get the user who created the poll
-        User creator = userService.getUserById(poll.getCreator_id());
-        String fullName = creator.getFirstName() + " " + creator.getLastName();
-        //Create a Poll DTO.
-        PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
-
-        // Get the list of users that are invited to the poll.
         
-
-        model.addAttribute("poll", pollDTO);
-        model.addAttribute("user", user);
-
-        return "polls/respond";
+        try {
+            // Get the poll
+            Poll poll = pollRepo.findByPid(pid);
+            // Get the user who created the poll
+            User creator = userService.getUserById(poll.getCreator_id());
+     
+            String fullName = creator.getFirstName() + " " + creator.getLastName();
+            // Create a Poll DTO.
+            PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
+    
+            // Get the list of users that are invited to the poll.
+            // invitedService.createListOfInvitedFromDTO(invitedRepo.findByPid(pid));
+            List<Object[]> queryResults = invitedRepo.findByPid(pid);
+            List<InvitedDTO> invitedDTOs = invitedService.createListOfInvitedFromDTO(queryResults);
+    
+            model.addAttribute("invited", invitedDTOs);
+            model.addAttribute("poll", pollDTO);
+            model.addAttribute("user", user);
+    
+            return "polls/respond";
+        } catch (Exception e) {
+            return "redirect:/dashboard";
+        }
     }
 }
