@@ -140,6 +140,55 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script th:inline="javascript"> // Function to open the selected tab
+    function openTab(tabId) { 
+        // Get the active tab from sessionStorage
+        var activeTabId = sessionStorage.getItem("active");
+        var isOrganizer = /*[[${user.isOrganizer}]]*/ false;
+    
+        // Get references to tab buttons and tab contents
+        var tabBtn1 = document.querySelector('.tab-btn1');
+        var tabBtn2 = document.querySelector('.tab-btn2');
+        if (isOrganizer) {
+        var tabBtn3 = document.querySelector('.tab-btn3');
+        }
+        var tabContentPending = document.getElementById('pending');
+        var tabContentCreated = document.getElementById('created');
+        if (isOrganizer) {
+        var tabContentAllPolls = document.getElementById('allPolls');
+        }
+
+        // Hide all tab contents
+        tabContentPending.style.display = 'none';
+        tabContentCreated.style.display = 'none';
+        if (isOrganizer) {
+        tabContentAllPolls.style.display = 'none';
+        }
+
+        // Remove active class from all tab buttons
+        tabBtn1.classList.remove('active');
+        tabBtn2.classList.remove('active');
+        if (isOrganizer) {
+        tabBtn3.classList.remove('active');
+        }
+
+        // Show the selected tab content and add active class to its button
+        if (tabId === "pending") {
+            tabContentPending.style.display = 'block';
+            tabBtn1.classList.add('active');
+        } else if (tabId === "created") {
+            tabContentCreated.style.display = 'block';
+            tabBtn2.classList.add('active');
+        } else if (isOrganizer && tabId === "allPolls") {
+            tabContentAllPolls.style.display = 'block';
+            tabBtn3.classList.add('active');
+        }
+    
+        // Update the active tab variable in sessionStorage
+        activeTabId = sessionStorage.setItem('active', tabId);
+    }
+    </script>
 </body>
 
 </html>

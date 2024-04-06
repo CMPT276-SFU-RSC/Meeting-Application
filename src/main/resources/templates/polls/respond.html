@@ -42,8 +42,9 @@
 
                 <label class="col-form-label" for="users">List Attendees</label>
                 <fieldset class="overflow-auto overflow-x-hidden" style="height: 100px; border-style: solid; display: flex; flex-direction: column;" id="allUsersList">
-                    <fieldset th:each="invited : ${invited} ">
+                    <fieldset th:each="invited, iterStat : ${invited} ">
                         <input class="special-input" th:placeholder="${'&#40' + invited.uid + '&#41 - ' + invited.first_name + ' ' + invited.last_name}" disabled readonly>
+                        <span th:if="${iterStat.last}" th:text="${iterStat.index + 1}" class="attendee-count" style="display: none;"></span>
                     </fieldset>
                 </fieldset>
             </fieldset>
