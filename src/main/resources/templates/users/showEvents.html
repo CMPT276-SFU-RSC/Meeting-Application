@@ -15,15 +15,14 @@
 </head>
 <body>
     <header>
-      <!--  <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav> -->
+      <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
 
     <section class="container-fluid justify-content-between">
-            <h1 class="d-flex justify-content-center m-5" th:text="${poll.title}"></h1>
+            <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;" th:text="${poll.title}"></h1>
                 <div class="card-group">
                     <div th:each="medium:${mediums}" >
                         <div class="event-box">
-                            <div class="event-box-divider"></div>
                             <label for="details">Description: </label>
                             <div class="description" th:text="${poll.description}"></div>
                             <div class="event-box-divider"></div>
@@ -48,14 +47,5 @@
             <!-- add maybe a footer with copywrite info or smthn? -->
     <footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
-
-<!-- This is for the DarkMode button. -->
-<script> document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('darkModeBtn').addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-    });
-});
-</script>
-
 </html>
 

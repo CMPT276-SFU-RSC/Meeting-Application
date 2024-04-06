@@ -8,12 +8,6 @@ function redirectAfterDelay() {
     }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('darkModeBtn').addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-    });
-});
-
 /**
  * checkPasswordMatch() is called when the user types in the password fields.
  * It checks if the passwords match and if they do, it checks if the password
@@ -93,14 +87,8 @@ function togglePasswordVisibility() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('darkModeBtn').addEventListener('click', function() {
-        document.body.classList.toggle('dark-mode');
-    });
-});
 
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const dateTimeRangeInput = document.getElementById('dateTimeRange');
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
@@ -112,23 +100,40 @@ document.addEventListener('DOMContentLoaded', function() {
         time_24hr: false, // Use 24-hour time format
         mode: 'range', // Enable range mode for selecting a date and time range
         dateFormat: "Y-m-d H:i",
-        onClose: function(selectedDates, dateStr, instance) {
+        onClose: function (selectedDates, dateStr, instance) {
             // Update input labels with selected date and time range values
             if (selectedDates.length === 2) {
                 // Get the date parts
                 let startDate = selectedDates[0];
                 let endDate = selectedDates[1];
-    
+
                 // Format date parts with leading zero for single-digit days
                 let startDateStr = formatDate(startDate);
                 let endDateStr = formatDate(endDate);
-    
+
                 startDateInput.value = startDateStr;
                 endDateInput.value = endDateStr;
-    
-                // Format time parts in 24-hour format using toLocaleTimeString
-                startTimeInput.value = selectedDates[0].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                endTimeInput.value = selectedDates[1].toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                let startTime = selectedDates[0];
+                let endTime = selectedDates[1];
+                
+                let startTimeFormatted = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                let endTimeFormatted = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                
+                if (startTimeFormatted.substring(0, 2) === '24') {
+                    startTimeInput.value = '00' + startTimeFormatted.substring(2);
+                }
+                else {
+                    startTimeInput.value = startTimeFormatted;
+                }
+
+                if (endTimeFormatted.substring(0, 2) === '24') {
+                    endTimeInput.value = '00' + endTimeFormatted.substring(2);
+                }
+                else {
+                    endTimeInput.value = endTimeFormatted;
+                }
+
             } else {
                 startDateInput.value = '';
                 endDateInput.value = '';
@@ -137,7 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+
     function formatDate(date) {
         let year = date.getFullYear();
         let month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero to month if needed
@@ -147,15 +152,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //code for creating poll
-function addMedium(){
+function addMedium() {
     let mediumName = document.getElementById("mediumInput").value.trim();
-    if (mediumName==""){
+    if (mediumName == "") {
         return;
     }
     let par = document.getElementById("mediumsList");
     let node = document.createElement("p");
     node.classList.add('singleMedium');
-    if (document.getElementById("mediumRemote").checked){
+    if (document.getElementById("mediumRemote").checked) {
         node.innerHTML = "(R) " + mediumName;
     }
     else {
@@ -163,55 +168,57 @@ function addMedium(){
     }
     node.onclick = function () {
         this.parentElement.removeChild(this);
+
     };
+    document.getElementById("mediumInput").value = "";
     par.appendChild(node);
 }
 
-function addMediumsUsersToForm(){
+function addMediumsUsersToForm() {
     //add mediums
     let mediums = document.getElementsByClassName("singleMedium");
-    if (mediums.length == 0){
+    if (mediums.length == 0) {
         alert("Please add a medium");
         return;
     }
     let users = document.getElementsByClassName("singleUser");
-    if (users.length == 0){
+    if (users.length == 0) {
         alert("Please add a user");
         return;
     }
-    
+
     // add from our list
-    for (var i = 0; i < mediums.length; i++){
+    for (var i = 0; i < mediums.length; i++) {
         let node = document.createElement("input");
-        node.name = "m"+i;
+        node.name = "m" + i;
         node.value = mediums[i].innerHTML;// "(r) __" or "___"
         node.hidden = true;
         document.getElementById("inputField").append(node);
     }
 
     //add users
-    for (var i = 0; i < users.length; i++){
+    for (var i = 0; i < users.length; i++) {
         let node = document.createElement("input");
-        node.name = "u"+i;
+        node.name = "u" + i;
         node.value = users[i].innerHTML;// "(x) fName lName"
         node.hidden = true;
         document.getElementById("inputField").append(node);
     }
 
-    
+
     //send
     document.getElementById("inputField").requestSubmit();
 }
 
 function getUsersList() {
     fetch('./userAll', {
-        method: 'GET', 
-        headers:{
-        'Content-Type': 'application/json'
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
-    .then(data => updateAll(data));
+        .then(response => response.json())
+        .then(data => updateAll(data));
 
 }
 
@@ -221,9 +228,9 @@ function updateAll(data) {
     var html = '';
 
     // Assuming data is an array of objects with properties you want to display
-    data.forEach(function(item) {
+    data.forEach(function (item) {
         html += '<div>';
-        html += '<p>UID: ' +  item.uid + '</p>';
+        html += '<p>UID: ' + item.uid + '</p>';
         html += '<p>Name: ' + item.firstName + '</p>';
         html += '<p>Age: ' + item.lastName + '</p>';
         // Add more properties as needed
@@ -233,34 +240,34 @@ function updateAll(data) {
     div.innerHTML = html;
 }
 
-function getUsers(){
+function getUsers() {
     //get partial search
     let search = document.getElementById("usersInput").value.trim();
-    if (search == ""){
+    if (search == "") {
         document.getElementById("usersSearchResults").replaceChildren();
         return;
     }
     //send partial search
     fetch('./userSearch', {
-        method: 'POST', 
-        body: search, 
-        headers:{
-        'Content-Type': 'application/json'
+        method: 'POST',
+        body: search,
+        headers: {
+            'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
-    .then(data => updateUsers(data));
+        .then(response => response.json())
+        .then(data => updateUsers(data));
 }
 
-function updateUsers(data){
+function updateUsers(data) {
     //update list
 
     //clear old list
     document.getElementById("usersSearchResults").replaceChildren();
 
     //add search results
-    for (let i = 0; i < data.length; i++){
-        if (document.getElementById("uid" + data[i].uid) != null){
+    for (let i = 0; i < data.length; i++) {
+        if (document.getElementById("uid" + data[i].uid) != null) {
             //already on page somewhere (in search res, or selected)
             continue;
         }
@@ -279,7 +286,7 @@ function updateUsers(data){
             document.getElementById("usersSearchResults").replaceChildren();
             //clear search box
             document.getElementById("usersInput").value = "";
-            
+
             //add to selected list
             document.getElementById("usersList").appendChild(node);
 
@@ -291,15 +298,15 @@ function updateUsers(data){
         par.appendChild(node);
     }
     // This is to hide the dropdown Searchbox once the user clicks outside of it.
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (!event.target.matches('#userInput')) {
-          var dropdowns = document.getElementsByClassName('dropdown-content');
-          for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-              openDropdown.classList.remove('show');
+            var dropdowns = document.getElementsByClassName('dropdown-content');
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
             }
-          }
         }
-      }
+    }
 }

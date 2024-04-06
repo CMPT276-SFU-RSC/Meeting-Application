@@ -101,6 +101,7 @@ public class PollController {
             return "redirect:/login";
         }
 
+        model.addAttribute("user", user);
         return "users/pollcreate";
     }
 
@@ -176,40 +177,56 @@ public class PollController {
             } catch (Exception e) {
                 break;
             }
-            //create and save invited list
-            i = 0;
-            while (true){
-                try {
-                    // getting json users
-                    String uid = pollData.get("u" + (Integer.toString(i)));
-                    int end = uid.indexOf(')');
-                    uid = uid.substring(1, end);
-                    
-                    //add to database
-                    Invited invited = new Invited();
-                    invited.setPid(newPoll.getPid());
-                    invited.setUid(Integer.parseInt(uid));
-                    invitedRepo.save(invited);
-                    i++;
-                }
-                catch(Exception e){
-                    break;
-                }
+        }
+        // create and save invited list
+        i = 0;
+        while (true) {
+            try {
+                // getting json users
+                String uid = pollData.get("u" + (Integer.toString(i)));
+                int end = uid.indexOf(')');
+                uid = uid.substring(1, end);
+
+                // add to database
+                Invited invited = new Invited();
+                invited.setPid(newPoll.getPid());
+                invited.setUid(Integer.parseInt(uid));
+                invitedRepo.save(invited);
+                i++;
+            } catch (Exception e) {
+                break;
             }
         }
         return "redirect:/dashboard";
     }
 
     @GetMapping("/getPolls/{pid}")
-    public String displayEvents(@PathVariable int pid, Model model)  {
+    public String displayEvents(@PathVariable int pid, Model model, HttpSession session) {
         List<Poll> polls = pollRepo.findBypid(pid);
         List<Medium> mediums = mediumRepo.findBypid(pid);
-        if(polls.isEmpty()) {
+        if (polls.isEmpty()) {
             return "";
         }
         Poll poll = polls.get(0);
         model.addAttribute("poll", poll);
         model.addAttribute("mediums", mediums);
+
+        // Check if the user is logged in
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        } // End of session check
+        model.addAttribute("user", user);
         return "users/showEvents";
     }
 }
