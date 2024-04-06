@@ -41,7 +41,7 @@
                         <label for="dateTimeRange">
                             Select Dates and Time:
                         </label>
-                        <input class="text-center" id="dateTimeRange" placeholder="click to select" 
+                        <input step ="1800" class="text-center" id="dateTimeRange" placeholder="click to select" 
                         title="Select start-day then adjust time, then select end-day and adjust time. 
 If you wish to select one day, select that day by clicking once and adjust time then click the date again and adjust time.
 otherwise, manually adjust to your needs using the labels below. (strictly follow the format)" readonly>
@@ -55,7 +55,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     </div>
                     <div class="form-group col-md-6">
                         <label class="col-form-label" for="startTime">Earliest Start Time: </label>
-                        <input class="form-control form-control-lg mb-3" type="text" maxlength="5" start="0" step="1800" id="startTime" name="startTime" placeholder="--:--" title="00:00 TO 23:59" required>
+                        <input class="form-control form-control-lg mb-3" type="time" maxlength="5" start="0" step="1800" id="startTime" name="startTime" placeholder="--:--" title="00:00 TO 23:30" required>
                     </div>
 
                     <!-- end time/date -->
@@ -65,7 +65,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     </div>
                     <div class="form-group col-md-6">
                         <label class="col-form-label" for="endTime">Latest End Time: </label>
-                        <input class="form-control form-control-lg mb-3" type="text" maxlength="5" id="endTime" start="0" step="1800" name="endTime" placeholder="--:--" title="00:00 TO 23:59" required>
+                        <input class="form-control form-control-lg mb-3" type="time" maxlength="5" id="endTime" start="0" step="1800" name="endTime" placeholder="--:--" title="00:00 TO 23:30" required>
                     </div>
                     <label class="col-form-label" for="expirary">Expiry Date</label>
                     <input class="form-control form-control-lg" type="date" id="expirary" name="expirary" required>
