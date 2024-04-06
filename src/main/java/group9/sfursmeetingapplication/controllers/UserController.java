@@ -221,7 +221,31 @@ public class UserController {
     }
 
     @GetMapping("/delete")
-    public String deletepage(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
+    public String deletepage(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
+        // Check if the user is logged in
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        } // End of session check
+
+        model.addAttribute("user", user);
         return "users/delete";
     }
 
@@ -242,11 +266,60 @@ public class UserController {
     public String userpage(Model model, HttpServletRequest request, HttpSession session) {
         List<User> u1 = userRepo1.findall();
         model.addAttribute("u1", u1);
+
+        // Check if the user is logged in
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        } // End of session check
+
+        model.addAttribute("user", user);
         return "users/display";
     }
 
     @GetMapping("/deleteuser")
-    public String deleteuser1(@RequestParam Map<String, String> newuser, HttpServletResponse response) {
+    public String deleteuser1(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
+         // Check if the user is logged in
+         session = request.getSession(false);
+         if (session == null) {
+             System.out.println("Redirecting because there's no session");
+             // If the user is not logged in, redirect them to the login page
+             return "redirect:/login";
+         }
+ 
+         Long userId = (Long) session.getAttribute("user_id");
+         if (userId == null) {
+             System.out.println("Redirecting because there's no user ID in the session");
+             return "redirect:/login";
+         }
+ 
+         User user = userService.getUserById(userId);
+         if (user == null) {
+             System.out.println("Redirecting because the user doesn't exist");
+             // If the user doesn't exist, end the session and redirect the user to the login
+             // page
+             session.invalidate();
+             return "redirect:/login";
+         } // End of session check
+ 
+         model.addAttribute("user", user);
         return "users/userdelete";
     }
 
