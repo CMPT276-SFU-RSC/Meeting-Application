@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import group9.sfursmeetingapplication.models.Confirmation;
+import group9.sfursmeetingapplication.models.ResetPassword;
+import group9.sfursmeetingapplication.repositories.*;
 import group9.sfursmeetingapplication.models.User;
-import group9.sfursmeetingapplication.repositories.ConfirmationRepository;
-import group9.sfursmeetingapplication.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service // This annotation is used to mark the class as a service provider
@@ -30,6 +30,7 @@ public class UserServiceImplementation implements UserService {
     @Autowired // This annotation is used to mark the field as autowired
     private final UserRepository userRepository;
     private final ConfirmationRepository confirmationRepository;
+    private final ResetPasswordRepository resetPasswordRepository;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -55,6 +56,21 @@ public class UserServiceImplementation implements UserService {
         return user;
     }
 
+    @Override
+    public void sendPasswordEmail(String email) {
+
+        User foundUser = userRepository.findByEmailIgnoreCase(email);
+        if (foundUser != null) {
+            ResetPassword reset = new ResetPassword(foundUser);
+            resetPasswordRepository.save(reset);
+            emailService.sendSimplePasswordMailMessage(foundUser.getFirstName(), foundUser.getEmail(), reset.getToken());
+           }
+        
+    }
+
+
+    
+
     /**
      * This method gets a user from the database.
      * 
@@ -77,7 +93,7 @@ public class UserServiceImplementation implements UserService {
     public Boolean verifyToken(String token) {
         Confirmation confirmation = confirmationRepository.findByToken(token);
         if (confirmation == null) {
-            throw new IllegalArgumentException("Token does not exist. Try Logging in.");
+            throw new IllegalArgumentException("Token does not exist. Try again.");
         }
 
         User user = userRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
@@ -93,6 +109,28 @@ public class UserServiceImplementation implements UserService {
         user.setEnabled(true);
         userRepository.save(user);
         confirmationRepository.delete(confirmation);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean verifyPasswordToken(String token) {
+        ResetPassword confirmation = resetPasswordRepository.findByToken(token);
+        if (confirmation == null) {
+            throw new IllegalArgumentException("Token does not exist. Try Logging in.");
+        }
+
+        User user = userRepository.findByEmailIgnoreCase(confirmation.getUser().getEmail());
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist.");
+        }
+
+        // Check user enabled status
+        if (user.isEnabled()) {
+            throw new IllegalArgumentException("User is already enabled.");
+        }
+
+        user.setEnabled(true);
+        resetPasswordRepository.delete(confirmation);
         return Boolean.TRUE;
     }
 

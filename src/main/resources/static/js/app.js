@@ -1,3 +1,10 @@
+function preventBack(){window.history.forward();}
+  setTimeout("preventBack()", 0);
+  window.onunload=function(){null};
+
+
+
+
 /**
  * This function is called to all pages where the user is notified
  * of a successful operation or a failed operation.
@@ -20,6 +27,56 @@ function redirectAfterDelay() {
  * If the password does not contain at least one number, a message is displayed.
  * 
  */
+function checkPasswordMatch() {
+    let password1 = document.getElementById("password1").value;
+    let password2 = document.getElementById("password2").value;
+    let element = document.getElementById("registration-validation");
+
+    if (password1 !== password2) {
+        errorMessage.textContent = 'Passwords do not match';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+    } else {
+        errorMessage.textContent = '';
+    }
+
+    // Check password validity
+    if (password1.length >= 5) {
+        validityMessageLength.textContent = '';
+    } else {
+        validityMessageLength.textContent = 'Password must be at least 5 characters long';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+    }
+
+    if (/[a-z]/.test(password1)) {
+        validityMessageLowerCase.textContent = '';
+    } else {
+        validityMessageLowerCase.textContent = 'Password must contain at least one lowercase letter';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+    }
+
+    if (/[A-Z]/.test(password1)) {
+        validityMessageUpperCase.textContent = '';
+    } else {
+        validityMessageUpperCase.textContent = 'Password must contain at least one uppercase letter';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+    }
+
+    if (/[0-9]/.test(password1)) {
+        validityMessageNumber.textContent = '';
+
+    } else {
+        validityMessageNumber.textContent = 'Password must contain at least one number';
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+    }
+    element.style.display = 'none';
+    return true;
+}
+
 function checkPasswordMatch() {
     let password1 = document.getElementById("password1").value;
     let password2 = document.getElementById("password2").value;

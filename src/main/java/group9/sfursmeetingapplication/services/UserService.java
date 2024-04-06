@@ -16,12 +16,15 @@ public interface UserService {
      */
     User saveUser(User user); // Possible to decouple from the database using DTOs.
 
+    void sendPasswordEmail(String email); 
     /**
      * Verifies a token.
      * 
      * @param token The token to verify.
      */
     Boolean verifyToken(String token);
+
+    Boolean verifyPasswordToken(String token);
 
     /**
      * Gets a User from form data.

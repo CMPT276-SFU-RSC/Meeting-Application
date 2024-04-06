@@ -21,6 +21,14 @@ public class EmailUtils {
                 + "The SFURS Meeting Application Team";
     }
 
+    public static String getEmailPasswordMessage(String name, String host, String token) {
+        return "Dear " + name + ",\n\n"
+                + "This is an email to reset your password. Please click on the link below:\n\n"
+                + getResetPasswordUrl(host, token) + "\n\n"
+                + "Best regards,\n"
+                + "The SFURS Meeting Application Team";
+    }
+
     /**
      * Gererates the verification URL for the user.
      * 
@@ -30,6 +38,10 @@ public class EmailUtils {
      */
     public static String getVerificationUrl(String host, String token) {
         return host + "/email/verified?token=" + token;
+    }
+
+    public static String getResetPasswordUrl(String host, String token) {
+        return host + "/email/verifiedForgotPassword?token=" + token;
     }
 
 }
