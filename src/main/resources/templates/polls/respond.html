@@ -11,10 +11,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="js/app.js"></script>
+    <script th:src="@{/js/app.js}"></script>
 </head>
 
-<body>
+<body onload="tableOnLoad()">
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
@@ -34,11 +34,11 @@
                 <input class="form-control form-control-lg mb-3" id="description" th:value="${poll.description}" style="font-style: italic;"
                     readonly disabled></input>
 
-                <label class="col-form-label" for="start">Start Time</label>
-                <input class="form-control form-control-lg mb-3" id="start" th:value="${poll.start}" style="font-style: italic;" readonly disabled>
+                <label class="col-form-label" for="startDateTimeString">Date</label>
+                <input class="form-control form-control-lg mb-3" id="startDateTimeString" th:value="${poll.startDateTimeString}" style="font-style: italic;" readonly disabled>
 
-                <label class="col-form-label" for="end">End Time</label>
-                <input class="form-control form-control-lg mb-3" id="end" th:value="${poll.end}" style="font-style: italic;"  readonly disabled>
+                <label class="col-form-label" for="endDateTimeString">End Time</label>
+                <input class="form-control form-control-lg mb-3" id="endDateDateTimeString" th:value="${poll.endDateTimeString}" style="font-style: italic;"  readonly disabled>
 
                 <label class="col-form-label" for="users">List Attendees</label>
                 <fieldset class="overflow-auto overflow-x-hidden" style="height: 100px; border-style: solid; display: flex; flex-direction: column;" id="allUsersList">
@@ -50,8 +50,15 @@
         </section>
 
         <section class="col-md-5">
-            <!-- mediums -->
-
+            <article class="col-md-8">
+                <fieldset th:each="medium : ${mediums}">
+                <label class="col-form-label " for="medium-name">Medium</label>
+                <input class="form-control form-control-lg mb-3 " id="medium-name" th:placeholder=" ${medium.remote ? '&#40' + 'R' + '&#41 ' + medium.name : medium.name}" readonly disabled>
+                <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}" hidden>
+                <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}" hidden>
+                <table class="timeBlocks" id="timeBlocks + ${medium.mid}"></table>
+            </fieldset>
+            </article>
         </section>
     </main>
     <footer th:replace="~{universals/footer :: footer}"></footer>

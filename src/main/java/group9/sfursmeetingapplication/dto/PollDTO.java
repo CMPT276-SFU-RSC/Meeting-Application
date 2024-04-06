@@ -21,20 +21,45 @@ public class PollDTO {
     private String creatorName;
     private String title;
     private String description;
-    private String start;
-    private String end;
-    private String expire;
     private java.time.Instant startDate;
     private java.time.Instant endDate;
     private java.time.Instant expirary;
+    private String startDateTimeString;
+    private String endDateTimeString;
+    private String startDateString;
+    private String endDateString;
+    private String startTimeString;
+    private String endTimeString;
     
+    /**
+     * This method is used to format the date and time.
+     * @param date The date to be formatted.
+     * @return The formatted date.
+     */
+    public String formatDateTime(java.time.Instant date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd',' uuuu 'at' hh:mm a")
+            .withZone(ZoneId.of("UTC"));
+        return formatter.format(date);
+    }
+
+    /**
+     * This method is used to format the date.
+     * @param date The date to be formatted.
+     * @return The formatted date.
+     */
+    public String formatDate(java.time.Instant date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd',' uuuu")
+            .withZone(ZoneId.of("UTC"));
+        return formatter.format(date);
+    }
+
     /**
      * This method is used to format the time.
      * @param date The date to be formatted.
      * @return The formatted date.
      */
     public String formatTime(java.time.Instant date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd',' uuuu 'at' hh:mm a")
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm")
             .withZone(ZoneId.of("UTC"));
         return formatter.format(date);
     }

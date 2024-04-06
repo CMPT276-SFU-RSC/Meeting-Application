@@ -30,9 +30,12 @@ public class PollServiceImplementation implements PollService {
         pollDTO.setStartDate(poll.getStartDate());
         pollDTO.setEndDate(poll.getEndDate());
         pollDTO.setExpirary(poll.getExpirary());
-        pollDTO.setStart(pollDTO.formatTime(poll.getStartDate()));
-        pollDTO.setEnd(pollDTO.formatTime(poll.getEndDate()));
-        pollDTO.setExpire(pollDTO.formatTime(poll.getExpirary()));
+        pollDTO.setStartDateTimeString(pollDTO.formatDateTime(poll.getStartDate()));
+        pollDTO.setEndDateTimeString(pollDTO.formatDateTime(poll.getEndDate()));
+        pollDTO.setStartDateString(pollDTO.formatDate(poll.getStartDate()));
+        pollDTO.setEndDateString(pollDTO.formatDate(poll.getEndDate()));
+        pollDTO.setStartTimeString(pollDTO.formatTime(poll.getStartDate()));
+        pollDTO.setEndTimeString(pollDTO.formatTime(poll.getEndDate()));
         return pollDTO;
     }
 }

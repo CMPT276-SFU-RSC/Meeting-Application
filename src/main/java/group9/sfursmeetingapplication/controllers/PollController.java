@@ -280,16 +280,16 @@ public class PollController {
             Poll poll = pollRepo.findByPid(pid);
             // Get the user who created the poll
             User creator = userService.getUserById(poll.getCreator_id());
-     
             String fullName = creator.getFirstName() + " " + creator.getLastName();
             // Create a Poll DTO.
             PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
-    
             // Get the list of users that are invited to the poll.
-            // invitedService.createListOfInvitedFromDTO(invitedRepo.findByPid(pid));
             List<Object[]> queryResults = invitedRepo.findByPid(pid);
             List<InvitedDTO> invitedDTOs = invitedService.createListOfInvitedFromDTO(queryResults);
-    
+            // Get the list of mediums for the poll.
+            List<Medium> mediums = mediumRepo.findBypid(pid);
+
+            model.addAttribute("mediums", mediums);
             model.addAttribute("invited", invitedDTOs);
             model.addAttribute("poll", pollDTO);
             model.addAttribute("user", user);

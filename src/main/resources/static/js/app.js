@@ -370,3 +370,95 @@ window.addEventListener('load', displayActiveTab);
 function refresh() {
     location.reload();
 }
+
+/**
+ * Parases the datetime string and returns a date object.
+ * @param {*} datetime The datetime string to parse.
+ * @returns Date object with only the date part.
+ */
+function getDatePart(datetime) {
+    return new Date(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
+}
+
+/**
+ * Parases the datetime string and returns a time object.
+ * @param {*} datetime  The datetime string to parse.
+ * @returns Date object with only the time part.
+ */
+function getTimePart(datetime) {
+    return new Date(datetime.getHours(), datetime.getMinutes(), datetime.getSeconds());
+}
+
+/**
+ * TODO: Add a description of the function
+ */
+function tableOnLoad() {
+    let start = new Date(document.getElementById('startDate').value);
+    let end = new Date(document.getElementById('endDate').value);
+    let isMouseDown = false;
+
+    // Get all tables
+    let tables = document.querySelectorAll('[id^="timeBlocks"]');
+    // Loop over each table
+    for (let i = 0; i < tables.length; i++) {
+        let table = tables[i];
+        let headerRow = document.createElement('tr');
+
+        // Create a header for each day
+        for (let day = new Date(start.getTime()); day <= end; day.setDate(day.getDate() + 1)) {
+            let dateHeader = document.createElement('th');
+            dateHeader.textContent = (day.getMonth() + 1) + '/' + day.getDate(); // Display only month and day
+            headerRow.appendChild(dateHeader);
+        }
+        table.appendChild(headerRow);
+
+        // Create a row for each half-hour block
+        let startTime = new Date(start.getTime());
+        let endTime = new Date(start.getTime());
+        endTime.setHours(end.getHours(), end.getMinutes()); // Set the hours and minutes to match the end time
+
+        while (startTime <= endTime) { // Adjust this condition to set the end time
+            let row = document.createElement('tr');
+
+            // Create a cell for each day
+            for (let day = new Date(start.getTime()); day <= end; day.setDate(day.getDate() + 1)) {
+                // If the current time is after the end time, break the loop
+                if (startTime > endTime) {
+                    break;
+                }
+                let cell = document.createElement('td');
+                cell.textContent = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
+                cell.style.border = '1px solid black'; // Add border to each cell
+
+                cell.addEventListener('mousedown', function() { // Add mousedown event listener
+                    isMouseDown = true;
+                    this.classList.toggle('selected'); // Toggle 'selected' class
+                    return false; // Prevent text selection
+                });
+
+                cell.addEventListener('mouseover', function() { // Add mouseover event listener
+                    if (isMouseDown) {
+                        this.classList.toggle('selected'); // Toggle 'selected' class
+                    }
+                });
+
+                cell.addEventListener('mouseup', function() { // Add mouseup event listener
+                    if (isMouseDown) {
+                        isMouseDown = false;
+                    }
+                });
+                row.appendChild(cell);
+
+                // If the current day is the end day, break the loop
+                if (day.getTime() === end.getTime()) {
+                    break;
+                }
+            }
+            table.appendChild(row);
+            startTime.setUTCMinutes(startTime.getUTCMinutes() + 30);
+        }
+        // Update start and end times for the next table
+        start.setDate(start.getDate() + 1);
+        end.setDate(end.getDate() + 1);
+    }
+};

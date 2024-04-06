@@ -810,3 +810,19 @@ input {
   transform: translateY(5px) translateX(5px);
 }
 
+.selected {
+  background-color: #00ff00; /* Change this to the color you want for selected cells */
+}
+
+/* Add border to table headers */
+th {
+  border: 1px solid black;
+}
+
+/* Disable user selection on the table */
+.timeBlocks {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
