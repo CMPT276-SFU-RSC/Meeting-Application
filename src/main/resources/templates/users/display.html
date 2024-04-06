@@ -20,7 +20,7 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-    
+    <div class="secondary-body">
     <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Users Display</h1>
     <main class="container-fluid justify-content-between">
         <div>
@@ -46,5 +46,6 @@
         </section>
     </main>
     <footer th:replace="~{universals/footer :: footer}"></footer>
+    </div>
 </body>
 </html>

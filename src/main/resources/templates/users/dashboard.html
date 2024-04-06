@@ -19,7 +19,7 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-
+<div class="secondary-body">
     <div class="secondary-navbar">
         <div class="tab-btn1" onclick="refresh(); openTab('pending')" >Pending Polls</div>
         <div class="tab-btn2" onclick="refresh(); openTab('created')" >Created Polls</div>
@@ -133,7 +133,9 @@
                     </div>
                 </div>
             </div>
+        </div>
     </section>
+</div>
 </section>
 
     <footer th:replace="~{universals/footer :: footer}"></footer>
