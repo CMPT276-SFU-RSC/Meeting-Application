@@ -15,7 +15,6 @@ public interface UserService {
      * @param user The User to save.
      */
     User saveUser(User user); // Possible to decouple from the database using DTOs.
-
     /**
      * Verifies a token.
      * 

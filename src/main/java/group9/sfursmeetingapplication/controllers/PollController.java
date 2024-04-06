@@ -29,7 +29,6 @@ public class PollController {
 
     @Autowired
     private PollRepository pollRepo;
-    // private UserRepository userRepo1;
 
     @Autowired
     private MediumRepository mediumRepo;
