@@ -150,6 +150,9 @@ public class PollController {
         String endTimeString = pollData.get("endTime");
         String expiraryDateString = pollData.get("expirary");
 
+        if (startDateString.compareTo(endDateString) >= 0 || startTimeString.compareTo(endTimeString) >= 0){
+            return "redirect:/pollcreate";
+        } 
         // Parse dates
         java.time.Instant startDate = java.time.Instant.parse(startDateString + "T" + startTimeString + ":00.00Z");
         java.time.Instant endDate = java.time.Instant.parse(endDateString + "T" + endTimeString + ":00.00Z");
