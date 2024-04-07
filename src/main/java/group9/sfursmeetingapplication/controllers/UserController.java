@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.repositories.UserRepository;
+import group9.sfursmeetingapplication.repositories.ConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import group9.sfursmeetingapplication.models.Poll;
@@ -32,6 +33,8 @@ public class UserController {
     private PollRepository pollRepo;
     @Autowired
     private UserRepository userRepo1;
+    @Autowired
+    private ConfirmationRepository CRepo1;
 
     /**
      * Handles a POST request to login a user.
@@ -330,6 +333,7 @@ public class UserController {
         Integer snumberr = Integer.parseInt(poll.get("snumber"));
         List<User> usersToDelete1 = userRepo1.findname(snumberr);
         for (User user : usersToDelete1) {
+            //CRepo1.delete(user);
             userRepo1.delete(user);
         }
 
