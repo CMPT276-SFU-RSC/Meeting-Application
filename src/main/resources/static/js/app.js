@@ -116,10 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 let startTime = selectedDates[0];
                 let endTime = selectedDates[1];
-                
+
                 let startTimeFormatted = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
                 let endTimeFormatted = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                
+
                 if (startTimeFormatted.substring(0, 2) === '24') {
                     startTimeInput.value = '00' + startTimeFormatted.substring(2);
                 }
@@ -186,11 +186,11 @@ function addMediumsUsersToForm() {
         alert("Please add a user");
         return;
     }
-    if (document.getElementById("startTime").value >= document.getElementById("endTime").value){
+    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
         alert("Please make your start time before your end time");
         return;
     }
-    if (document.getElementById("startDate").value >= document.getElementById("endDate").value){
+    if (document.getElementById("startDate").value >= document.getElementById("endDate").value) {
         alert("Please make your start date before your end date");
         return;
     }
@@ -319,7 +319,7 @@ function updateUsers(data) {
 }
 
 // Function to open the selected tab
-function openTab(tabId) { 
+function openTab(tabId) {
     // Get the active tab from sessionStorage
     var activeTabId = sessionStorage.getItem("active");
 
@@ -397,13 +397,14 @@ function getTimePart(datetime) {
 }
 
 /**
- * TODO: Add a description of the function
+ * Loads the table with the given start and end date.
+ * Allows the user to select multiple cells by clicking and dragging the mouse.
  */
-function tableOnLoad() {
+function tableOnLoad(timeArray) {
     let start = new Date(document.getElementById('startDate').value);
     let end = new Date(document.getElementById('endDate').value);
     let isMouseDown = false;
-
+    
     // Get all tables
     let tables = document.querySelectorAll('[id^="timeBlocks"]');
     // Loop over each table
@@ -412,9 +413,9 @@ function tableOnLoad() {
         let headerRow = document.createElement('tr');
 
         // Create a header for each day
-        for (let day = new Date(start.getTime()); day <= end; day.setDate(day.getDate() + 1)) {
+        for (let day = new Date(start.getTime()); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
             let dateHeader = document.createElement('th');
-            dateHeader.textContent = (day.getMonth() + 1) + '/' + day.getDate(); // Display only month and day
+            dateHeader.textContent = (day.getUTCMonth() + 1) + '/' + day.getUTCDate(); // Display only month and day
             headerRow.appendChild(dateHeader);
         }
         table.appendChild(headerRow);
@@ -422,50 +423,128 @@ function tableOnLoad() {
         // Create a row for each half-hour block
         let startTime = new Date(start.getTime());
         let endTime = new Date(start.getTime());
-        endTime.setHours(end.getHours(), end.getMinutes()); // Set the hours and minutes to match the end time
+        endTime.setUTCHours(end.getUTCHours(), end.getUTCMinutes()); // Set the hours and minutes to match the end time
 
         while (startTime <= endTime) { // Adjust this condition to set the end time
             let row = document.createElement('tr');
 
             // Create a cell for each day
-            for (let day = new Date(start.getTime()); day <= end; day.setDate(day.getDate() + 1)) {
-                // If the current time is after the end time, break the loop
-                if (startTime > endTime) {
-                    break;
-                }
+            for (let day = new Date(start.getTime()); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
                 let cell = document.createElement('td');
                 cell.textContent = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
                 cell.style.border = '1px solid black'; // Add border to each cell
 
-                cell.addEventListener('mousedown', function() { // Add mousedown event listener
+                cell.addEventListener('mousedown', function () { // Add mousedown event listener
                     isMouseDown = true;
                     this.classList.toggle('selected'); // Toggle 'selected' class
                     return false; // Prevent text selection
                 });
 
-                cell.addEventListener('mouseover', function() { // Add mouseover event listener
+                cell.addEventListener('mouseover', function () { // Add mouseover event listener
                     if (isMouseDown) {
-                        this.classList.toggle('selected'); // Toggle 'selected' class
+                        this.classList.add('selected'); // Toggle 'selected' class
                     }
                 });
 
-                cell.addEventListener('mouseup', function() { // Add mouseup event listener
+                cell.addEventListener('mouseup', function () { // Add mouseup event listener
                     if (isMouseDown) {
                         isMouseDown = false;
                     }
                 });
                 row.appendChild(cell);
-
-                // If the current day is the end day, break the loop
-                if (day.getTime() === end.getTime()) {
-                    break;
-                }
             }
             table.appendChild(row);
             startTime.setUTCMinutes(startTime.getUTCMinutes() + 30);
         }
-        // Update start and end times for the next table
-        start.setDate(start.getDate() + 1);
-        end.setDate(end.getDate() + 1);
     }
+    populateCells(timeArray);
 };
+
+/**
+ * Populates the cells in the table with the selected times.
+ */
+function populateCells(array) {
+    if (array == null) {
+        return;
+    }
+    const string = array;
+    const allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                
+                if (string[index][((table.rows.length - 1) * j) + (k - 1)] === '1') {
+                    cell.classList.add('selected');
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Finalizes the poll by converting the selected cells into a string.
+ */
+function finalizePoll() {
+    let responses = [];
+    let tableArray = [];
+    let allTables = document.querySelectorAll('[id^="timeBlocks"]');
+
+    /**
+     * Convert the NodeList to an array.
+     */
+    allTables.forEach(element => {
+        tableArray.push(element);
+    });
+
+
+    for (let i = 0; i < tableArray.length; i++) {
+        let response = {
+            uid: Number,
+            mid: Number,
+            pid: Number,
+            availabletime: String,
+            remote: Boolean,
+            medium: String,
+        }
+        let table = tableArray[i]; // Get the table
+        let numColumns = table.rows[0].cells.length; // Get the number of columns
+        let selectedCells = "";
+    
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                let cell = table.rows[k].cells[j];
+                if (cell.classList.contains('selected')) {
+                    selectedCells += '1';
+                } else {
+                    selectedCells += '0';
+                }
+            }
+        }
+        console.log(selectedCells);
+        response['uid'] = Number(table.getAttribute('data-uid'));
+        response['mid'] = Number(table.getAttribute('data-mid'));
+        response['pid'] = Number(table.getAttribute('data-pid'));
+        response['availabletime'] = selectedCells;
+        response['remote'] = Boolean(table.getAttribute('data-remote'));
+        response['medium'] = table.getAttribute('data-name');
+        responses.push(response);
+    }
+    console.log(JSON.stringify(responses))
+    fetch('/submit-url', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(responses),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
