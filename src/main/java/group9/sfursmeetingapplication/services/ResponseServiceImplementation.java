@@ -3,6 +3,7 @@
  */
 package group9.sfursmeetingapplication.services;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import group9.sfursmeetingapplication.models.Response;
@@ -32,5 +33,19 @@ public class ResponseServiceImplementation implements ResponseService {
         }
         responseRepository.save(response);
     }
+
+    /**
+     * This method gets all the responses by the user's UID.
+     * @param uid The user's UID.
+     * @return List<Response> The list of responses.
+     */
+    @Override
+    public List<Response> getAllResponsesByUid(Long uid) {
+        User user = userService.getUserById(uid);
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+        return responseRepository.findByUid(uid);
+    }  
     
 }

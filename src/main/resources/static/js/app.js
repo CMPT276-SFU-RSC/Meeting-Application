@@ -403,7 +403,7 @@ function tableOnLoad(timeArray) {
 
                 cell.addEventListener('mouseover', function () { // Add mouseover event listener
                     if (isMouseDown) {
-                        this.classList.add('selected'); // Toggle 'selected' class
+                        this.classList.toggle('selected'); // Toggle 'selected' class
                     }
                 });
 
@@ -460,7 +460,7 @@ function finalizePoll() {
         tableArray.push(element);
     });
 
-
+    // Iterate over each table
     for (let i = 0; i < tableArray.length; i++) {
         let response = {
             uid: Number,
@@ -484,6 +484,8 @@ function finalizePoll() {
                 }
             }
         }
+
+        // Add the response to the responses array
         response['uid'] = Number(table.getAttribute('data-uid'));
         response['mid'] = Number(table.getAttribute('data-mid'));
         response['pid'] = Number(table.getAttribute('data-pid'));
@@ -492,26 +494,33 @@ function finalizePoll() {
         response['medium'] = table.getAttribute('data-name');
         responses.push(response);
     }
-    console.log(JSON.stringify(responses))
     fetch(`/poll/respond`, {
+        // Sends a POST request to the PostControllerRest.java
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(responses),
     })
-    .then(response => response.json())
+    .then(response => {
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
     .then(data => {
+        // If the response is ok, redirect to the success page
         console.log('Success:', data);
-        window.location.href = './templates/success.html';
+        window.location.href = '/success.html';
         
     })
     .catch((error) => {
+        // If there is an error, log the error and redirect to the poll page
         console.error('Error:', error);
         window.location.href = `/polls/respond/${tableArray[0].getAttribute('data-pid')}`;
     });
 }
-
 
 function clearSession() {
     sessionStorage.clear();

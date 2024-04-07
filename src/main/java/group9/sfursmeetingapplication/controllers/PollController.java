@@ -1,22 +1,24 @@
 package group9.sfursmeetingapplication.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import group9.sfursmeetingapplication.dto.InvitedDTO;
 import group9.sfursmeetingapplication.dto.PollDTO;
 import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
 import group9.sfursmeetingapplication.models.Poll;
+import group9.sfursmeetingapplication.models.Response;
 import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.InvitedRepository;
 import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.services.PollService;
+import group9.sfursmeetingapplication.services.ResponseService;
 import group9.sfursmeetingapplication.services.UserService;
 import group9.sfursmeetingapplication.services.InvitedService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,8 +34,9 @@ import java.util.Map;
 public class PollController {
     private final UserService userService; // This is a final variable, so it must be initialized in the constructor
     private final PollService pollService; // This is a final variable, so it must be initialized in the constructor
-    private final InvitedService invitedService; // This is a final variable, so it must be initialized in the
-                                                 // constructor
+    private final InvitedService invitedService; // This is a final variable, so it must be initialized in the constructor
+    private final ResponseService responseService; // This is a final variable, so it must be initialized in the constructor
+     
     @Autowired
     private PollRepository pollRepo;
     // private UserRepository userRepo1;
@@ -79,6 +82,15 @@ public class PollController {
         List<Poll> polls1 = pollRepo.find();
         // Gets a list of all the polls the user has created.
         List<Poll> createdPolls = pollRepo.findByCreator_id(user.getUid());
+        // Get all the use responses
+        List<Response> responses = responseService.getAllResponsesByUid(user.getUid());
+        // Get's just the pid for the responses
+        List<Integer> pids = new ArrayList<>();
+        for (Response response : responses) {
+            pids.add(response.getPid());
+        }
+
+        model.addAttribute("responses", pids);
         model.addAttribute("polls1", polls1);
         model.addAttribute("polls", polls);
         model.addAttribute("user", user);

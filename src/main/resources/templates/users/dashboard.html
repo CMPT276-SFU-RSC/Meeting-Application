@@ -128,7 +128,8 @@
                         <label for="details">Poll ID: </label>
                         <label class="description" th:text="${poll.pid}"></label>
                         <div class="d-flex">
-                            <a class="btn btn-primary redButton" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
+                            <a class="btn btn-primary redButton" th:unless="${responses.contains(poll.pid)}" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
+                            <a class="btn btn-primary redButton" th:if="${responses.contains(poll.pid)}" th:href="@{/}">Edit</a>
                         </div>
                     </div>
                 </div>

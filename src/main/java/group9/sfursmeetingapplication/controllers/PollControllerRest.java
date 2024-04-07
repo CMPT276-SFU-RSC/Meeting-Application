@@ -3,7 +3,10 @@
  */
 package group9.sfursmeetingapplication.controllers;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,18 +31,17 @@ public class PollControllerRest {
      * @return ResponseEntity<String> The response entity.
      */
     @PostMapping("/poll/respond")
-    public ResponseEntity<String> respondToPoll(@RequestBody List<Response> responses,
+    public ResponseEntity<Map<String, String>> respondToPoll(@RequestBody List<Response> responses,
     HttpServletRequest request, HttpServletResponse response) {
         try {
             System.out.println("Saving Poll Responses....");
             for (Response oneResponse : responses) {
                 responseService.saveUserResponse(oneResponse);
-
             }
-            return new ResponseEntity<>("Responses saved successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>(Collections.singletonMap("message", "Responses saved successfully"), HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            return new ResponseEntity<>("Error saving responses", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Collections.singletonMap("error", "Error saving responses"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

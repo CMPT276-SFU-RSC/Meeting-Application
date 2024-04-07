@@ -50,8 +50,11 @@
                     </fieldset>
                 </fieldset>
             </fieldset>
+            <button id="finalize-poll" class="btn btn-primary" onclick="finalizePoll()">
+                Finalize Poll
+            </button>
         </section>
-
+        
         <section class="col-md-5">
             <article class="col-md-8">
                 <fieldset th:each="medium : ${mediums}">
@@ -61,14 +64,11 @@
                     <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}" hidden>
                     <table class="timeBlocks" th:id="timeBlocks + ${medium.mid}"
                     th:attr="data-name=${medium.name}, data-remote=${medium.remote}, data-mid=${medium.mid},
-                    data-pid=${poll.pid}, data-uid=${user.uid}"
+                        data-pid=${poll.pid}, data-uid=${user.uid}"
                     ></table>
             </fieldset>
             </article>
 
-            <button id="finalize-poll" onclick="finalizePoll()">
-                Finalize Poll
-            </button>
         </section>
     </main>
     <footer th:replace="~{universals/footer :: footer}"></footer>
