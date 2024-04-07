@@ -160,7 +160,7 @@ public class UserController {
 
     @GetMapping("/forgotPassword")
     public String forgotPassword() {
-        return "users/forgotPassword";
+        return "emails/forgotPassword";
     }
 
     /**

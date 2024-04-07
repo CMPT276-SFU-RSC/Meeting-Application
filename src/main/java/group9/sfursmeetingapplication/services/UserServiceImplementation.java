@@ -61,10 +61,13 @@ public class UserServiceImplementation implements UserService {
 
         User foundUser = userRepository.findByEmailIgnoreCase(email);
         if (foundUser != null) {
+            if(resetPasswordRepository.findByUser(foundUser) != null) {
+                resetPasswordRepository.delete(resetPasswordRepository.findByUser(foundUser));
+            }
             ResetPassword reset = new ResetPassword(foundUser);
             resetPasswordRepository.save(reset);
             emailService.sendSimplePasswordMailMessage(foundUser.getFirstName(), foundUser.getEmail(), reset.getToken());
-           }
+        }
         
     }
 
@@ -124,12 +127,6 @@ public class UserServiceImplementation implements UserService {
             throw new IllegalArgumentException("User does not exist.");
         }
 
-        // Check user enabled status
-        if (user.isEnabled()) {
-            throw new IllegalArgumentException("User is already enabled.");
-        }
-
-        user.setEnabled(true);
         resetPasswordRepository.delete(confirmation);
         return Boolean.TRUE;
     }

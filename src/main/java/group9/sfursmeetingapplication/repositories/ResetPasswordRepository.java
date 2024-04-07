@@ -31,4 +31,5 @@ public interface ResetPasswordRepository extends JpaRepository<ResetPassword, Lo
      */
     ResetPassword findByUser(User user);
 
+
 }

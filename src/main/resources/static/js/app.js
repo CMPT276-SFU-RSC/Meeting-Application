@@ -2,7 +2,33 @@ function preventBack(){window.history.forward();}
   setTimeout("preventBack()", 0);
   window.onunload=function(){null};
 
+  
+  
+  window.addEventListener("beforeunload", function(event) {
+    // Create an XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
 
+    // Define the callback function when the request is complete
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            // Handle the response if needed
+            if (xhr.status === 200) {
+                console.log("Session invalidated successfully");
+            } else {
+                console.error("Failed to invalidate session");
+            }
+        }
+    };
+
+    // Open a POST request to invalidate the session
+    xhr.open("POST", "/invalidateSession", true);
+
+    // Set the Content-Type header if needed
+    // xhr.setRequestHeader("Content-Type", "application/json");
+
+    // Send the request
+    xhr.send();
+});
 
 
 /**
