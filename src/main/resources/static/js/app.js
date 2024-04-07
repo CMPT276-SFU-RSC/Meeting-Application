@@ -318,45 +318,6 @@ function updateUsers(data) {
     }
 }
 
-// Function to open the selected tab
-function openTab(tabId) {
-    // Get the active tab from sessionStorage
-    var activeTabId = sessionStorage.getItem("active");
-
-    // Get references to tab buttons and tab contents
-    var tabBtn1 = document.querySelector('.tab-btn1');
-    var tabBtn2 = document.querySelector('.tab-btn2');
-    var tabBtn3 = document.querySelector('.tab-btn3');
-    var tabContentPending = document.getElementById('pending');
-    var tabContentCreated = document.getElementById('created');
-    var tabContentAllPolls = document.getElementById('allPolls');
-
-    // Hide all tab contents
-    tabContentPending.style.display = 'none';
-    tabContentCreated.style.display = 'none';
-    tabContentAllPolls.style.display = 'none';
-
-    // Remove active class from all tab buttons
-    tabBtn1.classList.remove('active');
-    tabBtn2.classList.remove('active');
-    tabBtn3.classList.remove('active');
-
-    // Show the selected tab content and add active class to its button
-    if (tabId === "pending") {
-        tabContentPending.style.display = 'block';
-        tabBtn1.classList.add('active');
-    } else if (tabId === "created") {
-        tabContentCreated.style.display = 'block';
-        tabBtn2.classList.add('active');
-    } else if (tabId === "allPolls") {
-        tabContentAllPolls.style.display = 'block';
-        tabBtn3.classList.add('active');
-    }
-
-    // Update the active tab variable in sessionStorage
-    activeTabId = sessionStorage.setItem('active', tabId);
-}
-
 // Function to display the active tab content on page load
 function displayActiveTab() {
     // Get the active tab from sessionStorage
@@ -547,4 +508,7 @@ function finalizePoll() {
     .catch((error) => {
         console.error('Error:', error);
     });
+}
+function clearSession() {
+    sessionStorage.clear();
 }
