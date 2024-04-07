@@ -484,17 +484,16 @@ function finalizePoll() {
                 }
             }
         }
-        console.log(selectedCells);
         response['uid'] = Number(table.getAttribute('data-uid'));
         response['mid'] = Number(table.getAttribute('data-mid'));
         response['pid'] = Number(table.getAttribute('data-pid'));
-        response['availabletime'] = selectedCells;
+        response['available_time'] = selectedCells;
         response['remote'] = Boolean(table.getAttribute('data-remote'));
         response['medium'] = table.getAttribute('data-name');
         responses.push(response);
     }
     console.log(JSON.stringify(responses))
-    fetch('/submit-url', {
+    fetch(`/poll/respond`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -504,11 +503,16 @@ function finalizePoll() {
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
+        window.location.href = './templates/success.html';
+        
     })
     .catch((error) => {
         console.error('Error:', error);
+        window.location.href = `/polls/respond/${tableArray[0].getAttribute('data-pid')}`;
     });
 }
+
+
 function clearSession() {
     sessionStorage.clear();
 }
