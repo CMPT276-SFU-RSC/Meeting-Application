@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor // Lombok annotation for generating a constructor with required arguments
 public class EmailServiceImplementation implements EmailService {
     private static final String NEW_USER_ACCOUNT_VERIFICATION = "New User Account Verification";
+    private static final String NEW_EVENT = "New Event";
 
     @Value("${spring.mail.properties.verify.host}") // Spring Framework annotation for injecting a value from a property
                                                     // file.
@@ -54,6 +55,26 @@ public class EmailServiceImplementation implements EmailService {
         String sendGridSubject = NEW_USER_ACCOUNT_VERIFICATION;
         Email sendGridTo = new Email(to);
         Content sendGridContent = new Content("text/plain", EmailUtils.getEmailMessage(name, host, token));
+        Mail sendGridMail = new Mail(sendGridFrom, sendGridSubject, sendGridTo, sendGridContent);
+        sendGrid = new SendGrid(apiKey);
+        Request request = new Request();
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(sendGridMail.build());
+            Response response = sendGrid.api(request);
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+            System.out.println(response.getHeaders());
+        } catch (IOException ex) {
+            throw new RuntimeException("Error: " + ex.getMessage());
+        }
+    }
+    public void sendEventMessage(String name, String to) {
+        Email sendGridFrom = new Email(fromEmail);
+        String sendGridSubject = NEW_EVENT;
+        Email sendGridTo = new Email(to);
+        Content sendGridContent = new Content("text/plain", EmailUtils.getEventMessage(name));
         Mail sendGridMail = new Mail(sendGridFrom, sendGridSubject, sendGridTo, sendGridContent);
         sendGrid = new SendGrid(apiKey);
         Request request = new Request();

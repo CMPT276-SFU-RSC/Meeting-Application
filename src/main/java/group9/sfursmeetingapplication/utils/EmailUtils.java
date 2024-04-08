@@ -20,6 +20,12 @@ public class EmailUtils {
                 + "Best regards,\n"
                 + "The SFURS Meeting Application Team";
     }
+    public static String getEventMessage(String name ) {
+        return "Dear " + name + ",\n\n"
+                + "You have been invited to event!:\n\n"
+                + "Best regards,\n"
+                + "The SFURS Meeting Application Team";
+    }
 
     /**
      * Gererates the verification URL for the user.

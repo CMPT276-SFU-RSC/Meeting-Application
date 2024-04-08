@@ -37,6 +37,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Void deleteuser(Integer uid);
     //delete from users where uid =?1
 
+    @Query(
+        value = "SELECT uid FROM invited WHERE pid = ?1",
+        nativeQuery = true
+    )
+
+    List<Integer> findusers1(Integer pid);
+
+
 
   
     /**
