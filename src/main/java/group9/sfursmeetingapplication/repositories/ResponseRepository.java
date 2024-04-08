@@ -5,6 +5,7 @@ package group9.sfursmeetingapplication.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.Response;
 import java.util.Optional;
@@ -27,4 +28,18 @@ public interface ResponseRepository extends JpaRepository<Response, Integer>{
      * @return Optional<Response> String of JSON
      */
     Optional<Response> findByUidAndMidAndPid(long uid, long mid, long pid);
+
+    @Query(value = "SELECT user_responses.* " +
+        "FROM user_responses " +
+        "WHERE user_responses.mid = ?1 AND user_responses.uid = ?2 ;", 
+        nativeQuery = true)
+    List<Response> findByMidAndUid(int mid, int uid);
+
+
+    @Query(value = "SELECT user_responses.* " +
+        "FROM user_responses " +
+        "WHERE user_responses.mid = ?1 ;", 
+        nativeQuery = true)
+    List<Response> findByMid(int mid);
+        
 }

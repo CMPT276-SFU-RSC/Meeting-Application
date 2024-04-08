@@ -14,7 +14,7 @@
     <script th:src="@{/js/app.js}"></script>
 </head>
 
-<body onload="tableOnLoad()">
+<body onload="tableOnLoad(undefined, true)">
 <body>
     <div class="secondary-body">
     <header>
@@ -56,15 +56,22 @@
             <div class="col-form-label">Select Vote View: </div>
             <fieldset>
                 <div>
-                    <select class="form-select-lg" id="dropdownMenu" onchange="updateDisplay(this)">
-                        <option value="">Select Option</option>
+                    <select class="form-select-lg" id="dropdownMenuInvite" onchange="updateDisplay()">
+                        <option value="">All Users</option>
                         <div th:each="invite : ${invited}">
-                            <div th:each="medium : ${mediums}">
-                                <option th:value="${invite.uid + '-' + medium.mid}"
-                                        th:attr="data-mid=${medium.mid}, data-pid=${poll.pid}, data-uid=${invite.uid}">
-                                    Here for <span th:text="${invite.first_name}"></span> - <span th:text="${medium.name}"></span>
-                                </option>
-                            </div>
+                            <option th:value="${invite.uid}"
+                                    th:attr="data-pid=${poll.pid}, data-uid=${invite.uid}">
+                                    <span th:text="${invite.first_name}"></span>
+                            </option>
+                    </div>
+                    </select>
+                    <select class="form-select-lg" id="dropdownMenuMedium" onchange="updateDisplay()">
+                        <option value="">Select Medium</option>
+                        <div th:each="medium : ${mediums}">
+                            <option th:value="${medium.mid}"
+                                    th:attr="data-mid=${medium.mid}, data-pid=${poll.pid}">
+                                    <span th:text="${medium.name}"></span>
+                            </option>
                         </div>
                     </select>
                 </div>
@@ -73,23 +80,14 @@
                 <span class="attendee-count" th:text="${invited.size()}" style="display: none;"></span>
             </fieldset>
             
-            <div th:each="invite : ${invited}">
-                <div th:each="medium : ${mediums}">
-                    <div class="blocks" th:attr="data-mid=${medium.mid}, data-pid=${poll.pid}, data-uid=${invite.uid}">
-                        <button th:id="responseDisplay" th:text="'Here for ' + ${'&#40' + invite.uid + '&#41 - ' + invite.first_name + ' ' + invite.last_name} + ' - ' + ${medium.name}" onclick="getResponse(this)"></button>
-                    </div>
-                </div>
-            </div>
-            
                       
             <article class="col-md-8">
-                <fieldset th:each="medium : ${mediums}">
-                    <label class="col-form-label " for="medium-name">Medium</label>
-                    <input class="form-control form-control-lg mb-3 " id="medium-name" th:placeholder=" ${medium.remote ? '&#40' + 'R' + '&#41 ' + medium.name : medium.name}" readonly disabled>
+                <fieldset>
+                    <label class="col-form-label " id="mediumName" for="medium-name">No Medium</label>
                     <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}" hidden>
                     <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}" hidden>
-                    <table class="timeBlocks" th:id="timeBlocks + ${medium.mid}"
-                    th:attr="data-name=${medium.name}, data-remote=${medium.remote}, data-mid=${medium.mid},
+                    <table class="timeBlocks" th:id="timeBlocks + ${mediums[0].mid}"
+                    th:attr="data-name=${mediums[0].name}, data-remote=${mediums[0].remote}, data-mid=${mediums[0].mid},
                     data-pid=${poll.pid}, data-uid=${user.uid}">
                 </table>
             </fieldset>

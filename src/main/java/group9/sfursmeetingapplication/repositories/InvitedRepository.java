@@ -22,4 +22,5 @@ public interface InvitedRepository extends JpaRepository<Invited, Integer> {
             "WHERE invited.pid = :pid ", nativeQuery = true)
     List<Object[]> findByPid(@Param("pid") Integer pid);
 
+
 }
