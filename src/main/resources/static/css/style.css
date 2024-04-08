@@ -441,8 +441,7 @@ input {
 
 
 .event-box {
-  width: 300px;
-  padding-right: 5px;
+  width: 320px;
   background-color: #fdfafa;
   border-top: 10px solid #c70a0a;
   border-top-right-radius: 10px;
@@ -450,8 +449,10 @@ input {
   border-top-left-radius: 40px;
   border-bottom-right-radius: 40px;
   padding: 20px;
-  margin-right: 10px;
-  margin-bottom: 20px;
+  margin: 10px;
+  margin-right: 17px;
+  margin-bottom: 15px;
+  margin-left: 17px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   display: inline-block;
@@ -717,8 +718,7 @@ input {
 }
 
 .dark-mode .event-box {
-  width: 300px;
-  margin: 50px auto;
+  width: 320px;
   background-color: #242424;
   border-top: 10px solid #8d1313;
   color: #d8d8d8;
@@ -727,13 +727,15 @@ input {
   border-top-left-radius: 40px;
   border-bottom-right-radius: 40px;
   padding: 20px;
-  margin: 5px;
-  margin-bottom: 20px;
+  margin: 10px;
+  margin-right: 17px;
+  margin-bottom: 15px;
+  margin-left: 17px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   display: inline-block;
   position: relative;
-  box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.705);
+  box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.658);
 }
 
 .dark-mode .event-box .description {

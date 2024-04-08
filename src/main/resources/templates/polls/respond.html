@@ -63,10 +63,12 @@
                     <input class="form-control form-control-lg mb-3 " id="medium-name" th:placeholder=" ${medium.remote ? '&#40' + 'R' + '&#41 ' + medium.name : medium.name}" readonly disabled>
                     <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}" hidden>
                     <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}" hidden>
+                    <section class="container-fluid overflow-auto">
                     <table class="timeBlocks" th:id="timeBlocks + ${medium.mid}"
                     th:attr="data-name=${medium.name}, data-remote=${medium.remote}, data-mid=${medium.mid},
                         data-pid=${poll.pid}, data-uid=${user.uid}"
                     ></table>
+                </section>
             </fieldset>
             </article>
 
