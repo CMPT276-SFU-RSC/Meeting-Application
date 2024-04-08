@@ -29,6 +29,14 @@ public class EmailUtils {
                 + "The SFURS Meeting Application Team";
     }
 
+    public static String getPollReadyMessage(String name) {
+        return "Dear " + name + ",\n\n"
+                + "This is an email to confirm at least 80% of invitees have responded to your poll.\n\n"
+                + "\n\n"
+                + "Best regards,\n"
+                + "The SFURS Meeting Application Team";
+    }
+
     /**
      * Gererates the verification URL for the user.
      * 

@@ -21,6 +21,25 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
     )
 
     List<Poll> findByUID(Long uid);
+
+    @Query(
+        value = "SELECT DISTINCT uid" + 
+                "FROM user_responses, polls" + 
+                "WHERE pid = ?1 AND polls.pid = user_responses.pid",
+        nativeQuery = true
+    )
+ 
+    List<Integer> findResponseByPID(Integer pid);
+
+    @Query(
+        value = "SELECT DISTINCT uid" + 
+                "FROM invited, polls" + 
+                "WHERE pid = ?1 AND polls.pid = invited.pid",
+        nativeQuery = true
+    )
+ 
+    List<Integer> findInvitedByPID(Integer pid);
+
     @Query(
         value = "SELECT * FROM polls",
         nativeQuery = true
@@ -28,6 +47,15 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
     
 
     List<Poll> find();
+
+    @Query(
+        value = "SELECT DISTINCT pid" + 
+                "FROM polls",
+        nativeQuery = true
+    )
+    
+
+    List<Poll> findDistinctPID();
 
     @Query(
         value = "SELECT * FROM polls WHERE pid = ?1",

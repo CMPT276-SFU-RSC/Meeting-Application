@@ -71,6 +71,14 @@ public class UserServiceImplementation implements UserService {
         
     }
 
+    @Override
+    public void sendPollReadyEmail(User user) {
+
+            emailService.sendPollReadyMessage(user.getFirstName(), user.getEmail());
+            
+        }
+    
+
 
     
 
@@ -233,3 +241,4 @@ public class UserServiceImplementation implements UserService {
         return user;
     }
 }
+

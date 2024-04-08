@@ -18,4 +18,6 @@ public interface EmailService {
     // String content, String token);
 
     public void sendSimplePasswordMailMessage(String name, String to, String token);
+
+    public void sendPollReadyMessage(String name, String to);
 }
