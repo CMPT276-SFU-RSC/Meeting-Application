@@ -10,6 +10,7 @@ import group9.sfursmeetingapplication.models.Response;
 import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.ResponseRepository;
 import lombok.RequiredArgsConstructor;
+import java.util.Optional;
 
 @Service // This annotation is used to mark the class as a service provider
 @RequiredArgsConstructor // This annotation is used to generate a constructor with required fields
@@ -34,6 +35,7 @@ public class ResponseServiceImplementation implements ResponseService {
         responseRepository.save(response);
     }
 
+
     /**
      * This method gets all the responses by the user's UID.
      * @param uid The user's UID.
@@ -48,4 +50,16 @@ public class ResponseServiceImplementation implements ResponseService {
         return responseRepository.findByUid(uid);
     }  
     
+    /**
+     * This method gets response by the user's UID + MID + PID.
+     * @param uid The user's UID.
+     * @param mid medium ID.
+     * @param pid poll ID.
+     * @return Optional<Response> String of JSON
+     */
+    @Override
+    public Optional<Response> getUserResponseByUidMidPid(long uid, long mid, long pid) {
+        return responseRepository.findByUidAndMidAndPid(uid, mid, pid);
+    }
+
 }

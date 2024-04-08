@@ -5,6 +5,7 @@ package group9.sfursmeetingapplication.services;
 
 import java.util.List;
 import group9.sfursmeetingapplication.models.Response;
+import java.util.Optional;
 
 public interface ResponseService {
 
@@ -21,4 +22,12 @@ public interface ResponseService {
      */
     List<Response> getAllResponsesByUid(Long uid);
 
+    /**
+     * Get response by uid+mid+pid
+     * @param uid The user id
+     * @param mid The medium id
+     * @param pid The poll id
+     * @return Optional<Response> string of JSON
+     */
+    Optional<Response> getUserResponseByUidMidPid(long uid, long mid, long pid);
 }
