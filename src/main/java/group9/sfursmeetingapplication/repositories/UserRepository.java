@@ -83,4 +83,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAll();
 
+    @Query(
+        value = "SELECT users.* " + 
+                "FROM users, invited, polls " +
+                "WHERE polls.pid = ?1 AND users.uid = invited.uid AND polls.pid = invited.pid;",
+        nativeQuery = true
+    )
+    List<User> findByPollPid(int pid);
 }
