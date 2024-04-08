@@ -29,15 +29,13 @@
     </div>
 
     <section th:if="${user.isOrganizer}">
-        <div class="card-group">
-            <div class="event-box">
+            <div class="event-box-custom">
                 <div class="card-header" style="font-weight: bolder;">Admin Privelages</div>
                 <div class="card-body">
                     <h5 class="card-title"></h5>
                     <a href="/userdisplay" class="btn btn-secondary">Display users</a>
                 </div>
             </div>
-        </div>
     </section>
 
     <main id="allPolls" th:if="${user.isOrganizer}" style="display: none;">
