@@ -27,8 +27,8 @@
         </h1>
     </header>
     <main class="container-fluid d-flex justify-content-around mb-3">
-        <section class="col-md-4">
-            <fieldset class="mt-3 form-group row">
+        <section class="col-md-3">
+            <fieldset class="mt-1 form-group row">
                 <label class="col-form-label" for="pid">Poll ID</label>
                 <input class="form-control form-control-lg mb-3" id="pid" th:value="${poll.pid}" style="font-style: italic;" readonly disabled>
 
@@ -52,7 +52,7 @@
             </fieldset>
         </section>
 
-        <section class="col-md-4">
+        <section class="col-md-7">
             <div class="col-form-label">Select Vote View: </div>
             <fieldset>
                 <div>
@@ -81,7 +81,7 @@
             </fieldset>
             
                       
-            <article class="col-md-8">
+            <article class="container-fluid overflow-auto">
                 <fieldset>
                     <label class="col-form-label " id="mediumName" for="medium-name">No Medium Selected</label>
                     <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}" hidden>
