@@ -21,10 +21,10 @@
     </header>
 <div class="secondary-body">
     <div class="secondary-navbar">
-        <div class="tab-btn1" onclick="refresh(); openTab('pending')" >Pending Polls</div>
-        <div class="tab-btn2" onclick="refresh(); openTab('created')" >Created Polls</div>
+        <div class="tab-btn1" onclick="openTab('pending')" >Pending Polls</div>
+        <div class="tab-btn2" onclick="openTab('created')" >Created Polls</div>
         <div th:if="${user.isOrganizer}">
-            <div class="tab-btn3" onclick="refresh(); openTab('allPolls')">All Polls</div>
+            <div class="tab-btn3" onclick="openTab('allPolls')">All Polls</div>
         </div>
     </div>
 

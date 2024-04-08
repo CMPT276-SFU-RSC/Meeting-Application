@@ -52,7 +52,7 @@
             </fieldset>
         </section>
 
-        <section class="col-md-5">
+        <section class="col-md-4">
             <div class="col-form-label">Select Vote View: </div>
             <fieldset>
                 <div>
@@ -75,7 +75,7 @@
                         </div>
                     </select>
                 </div>
-                <div id="displayArea"></div>
+                <div class="col-form-label" id="displayArea"></div>
                 
                 <span class="attendee-count" th:text="${invited.size()}" style="display: none;"></span>
             </fieldset>
@@ -83,7 +83,7 @@
                       
             <article class="col-md-8">
                 <fieldset>
-                    <label class="col-form-label " id="mediumName" for="medium-name">No Medium</label>
+                    <label class="col-form-label " id="mediumName" for="medium-name">No Medium Selected</label>
                     <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}" hidden>
                     <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}" hidden>
                     <table class="timeBlocks" th:id="timeBlocks + ${mediums[0].mid}"

@@ -382,6 +382,7 @@ function tableOnLoad(timeArray, readonly) {
             let dateHeader = document.createElement('th');
             dateHeader.textContent = (day.getUTCMonth() + 1) + '/' + day.getUTCDate(); // Display only month and day
             headerRow.appendChild(dateHeader);
+            dateHeader.style.border = 'none';
         }
         table.appendChild(headerRow);
 
@@ -397,7 +398,7 @@ function tableOnLoad(timeArray, readonly) {
             for (let day = new Date(start.getTime()); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
                 let cell = document.createElement('td');
                 cell.textContent = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
-                cell.style.border = '1px solid black'; // Add border to each cell
+                cell.style.padding = '7px';
 
                 if (readonly == false){
                     cell.addEventListener('mousedown', function () { // Add mousedown event listener
@@ -633,7 +634,7 @@ function heatMap(data){
             for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
                 const cell = table.rows[k].cells[j];
                 //G value from 100-255, can be changed later
-                cell.style.background ="rgb(0, " + (( str[j*(table.rows.length-1) + k-1]/(max) )*155+100) +" , 0)";
+                cell.style.background ="rgb(120, " + (( str[j*(table.rows.length-1) + k-1]/(max) )*225+15) +" , 7)";
             }
         }
     });
