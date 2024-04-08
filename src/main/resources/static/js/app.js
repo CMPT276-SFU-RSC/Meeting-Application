@@ -116,10 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 let startTime = selectedDates[0];
                 let endTime = selectedDates[1];
-                
+
                 let startTimeFormatted = startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
                 let endTimeFormatted = endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-                
+
                 if (startTimeFormatted.substring(0, 2) === '24') {
                     startTimeInput.value = '00' + startTimeFormatted.substring(2);
                 }
@@ -186,7 +186,14 @@ function addMediumsUsersToForm() {
         alert("Please add a user");
         return;
     }
-
+    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
+        alert("Please make your start time before your end time");
+        return;
+    }
+    if (document.getElementById("startDate").value >= document.getElementById("endDate").value) {
+        alert("Please make your start date before your end date");
+        return;
+    }
     // add from our list
     for (var i = 0; i < mediums.length; i++) {
         let node = document.createElement("input");
@@ -309,4 +316,212 @@ function updateUsers(data) {
             }
         }
     }
+}
+
+// Function to display the active tab content on page load
+function displayActiveTab() {
+    // Get the active tab from sessionStorage
+    var activeTabId = sessionStorage.getItem("active");
+
+    // If there's an active tab, display its content
+    if (activeTabId) {
+        openTab(activeTabId);
+    } else {
+        // If no active tab is set, default to displaying the first tab
+        openTab("pending");
+    }
+}
+
+// Call the displayActiveTab function when the page loads
+window.addEventListener('load', displayActiveTab);
+
+function refresh() {
+    location.reload();
+}
+
+/**
+ * Parases the datetime string and returns a date object.
+ * @param {*} datetime The datetime string to parse.
+ * @returns Date object with only the date part.
+ */
+function getDatePart(datetime) {
+    return new Date(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
+}
+
+/**
+ * Parases the datetime string and returns a time object.
+ * @param {*} datetime  The datetime string to parse.
+ * @returns Date object with only the time part.
+ */
+function getTimePart(datetime) {
+    return new Date(datetime.getHours(), datetime.getMinutes(), datetime.getSeconds());
+}
+
+/**
+ * Loads the table with the given start and end date.
+ * Allows the user to select multiple cells by clicking and dragging the mouse.
+ */
+function tableOnLoad(timeArray) {
+    let start = new Date(document.getElementById('startDate').value);
+    let end = new Date(document.getElementById('endDate').value);
+    let isMouseDown = false;
+    
+    // Get all tables
+    let tables = document.querySelectorAll('[id^="timeBlocks"]');
+    // Loop over each table
+    for (let i = 0; i < tables.length; i++) {
+        let table = tables[i];
+        let headerRow = document.createElement('tr');
+
+        // Create a header for each day
+        for (let day = new Date(start.getTime()); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
+            let dateHeader = document.createElement('th');
+            dateHeader.textContent = (day.getUTCMonth() + 1) + '/' + day.getUTCDate(); // Display only month and day
+            headerRow.appendChild(dateHeader);
+        }
+        table.appendChild(headerRow);
+
+        // Create a row for each half-hour block
+        let startTime = new Date(start.getTime());
+        let endTime = new Date(start.getTime());
+        endTime.setUTCHours(end.getUTCHours(), end.getUTCMinutes()); // Set the hours and minutes to match the end time
+
+        while (startTime <= endTime) { // Adjust this condition to set the end time
+            let row = document.createElement('tr');
+
+            // Create a cell for each day
+            for (let day = new Date(start.getTime()); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
+                let cell = document.createElement('td');
+                cell.textContent = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
+                cell.style.border = '1px solid black'; // Add border to each cell
+
+                cell.addEventListener('mousedown', function () { // Add mousedown event listener
+                    isMouseDown = true;
+                    this.classList.toggle('selected'); // Toggle 'selected' class
+                    return false; // Prevent text selection
+                });
+
+                cell.addEventListener('mouseover', function () { // Add mouseover event listener
+                    if (isMouseDown) {
+                        this.classList.toggle('selected'); // Toggle 'selected' class
+                    }
+                });
+
+                cell.addEventListener('mouseup', function () { // Add mouseup event listener
+                    if (isMouseDown) {
+                        isMouseDown = false;
+                    }
+                });
+                row.appendChild(cell);
+            }
+            table.appendChild(row);
+            startTime.setUTCMinutes(startTime.getUTCMinutes() + 30);
+        }
+    }
+    populateCells(timeArray);
+};
+
+/**
+ * Populates the cells in the table with the selected times.
+ */
+function populateCells(array) {
+    if (array == null) {
+        return;
+    }
+    const string = array;
+    const allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                
+                if (string[index][((table.rows.length - 1) * j) + (k - 1)] === '1') {
+                    cell.classList.add('selected');
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Finalizes the poll by converting the selected cells into a string.
+ */
+function finalizePoll() {
+    let responses = [];
+    let tableArray = [];
+    let allTables = document.querySelectorAll('[id^="timeBlocks"]');
+
+    /**
+     * Convert the NodeList to an array.
+     */
+    allTables.forEach(element => {
+        tableArray.push(element);
+    });
+
+    // Iterate over each table
+    for (let i = 0; i < tableArray.length; i++) {
+        let response = {
+            uid: Number,
+            mid: Number,
+            pid: Number,
+            availabletime: String,
+            remote: Boolean,
+            medium: String,
+        }
+        let table = tableArray[i]; // Get the table
+        let numColumns = table.rows[0].cells.length; // Get the number of columns
+        let selectedCells = "";
+    
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                let cell = table.rows[k].cells[j];
+                if (cell.classList.contains('selected')) {
+                    selectedCells += '1';
+                } else {
+                    selectedCells += '0';
+                }
+            }
+        }
+
+        // Add the response to the responses array
+        response['uid'] = Number(table.getAttribute('data-uid'));
+        response['mid'] = Number(table.getAttribute('data-mid'));
+        response['pid'] = Number(table.getAttribute('data-pid'));
+        response['available_time'] = selectedCells;
+        response['remote'] = Boolean(table.getAttribute('data-remote'));
+        response['medium'] = table.getAttribute('data-name');
+        responses.push(response);
+    }
+    fetch(`/poll/respond`, {
+        // Sends a POST request to the PostControllerRest.java
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(responses),
+    })
+    .then(response => {
+        // If the response is not ok, throw an error
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // If the response is ok, redirect to the success page
+        console.log('Success:', data);
+        window.location.href = '/success.html';
+        
+    })
+    .catch((error) => {
+        // If there is an error, log the error and redirect to the poll page
+        console.error('Error:', error);
+        window.location.href = `/polls/respond/${tableArray[0].getAttribute('data-pid')}`;
+    });
+}
+
+function clearSession() {
+    sessionStorage.clear();
 }

@@ -8,9 +8,7 @@ public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pid;
-
     private long creator_id;
-
     private String title;
     private String description;
 
