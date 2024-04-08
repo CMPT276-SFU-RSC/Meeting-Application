@@ -1,19 +1,27 @@
 package group9.sfursmeetingapplication.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import group9.sfursmeetingapplication.dto.InvitedDTO;
+import group9.sfursmeetingapplication.dto.PollDTO;
 import group9.sfursmeetingapplication.models.Invited;
 import group9.sfursmeetingapplication.models.Medium;
 import group9.sfursmeetingapplication.models.Poll;
+import group9.sfursmeetingapplication.models.Response;
 import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.InvitedRepository;
 import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
+import group9.sfursmeetingapplication.services.PollService;
+import group9.sfursmeetingapplication.services.ResponseService;
+import group9.sfursmeetingapplication.repositories.UserRepository;
 import group9.sfursmeetingapplication.services.UserService;
+import group9.sfursmeetingapplication.services.InvitedService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +34,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PollController {
     private final UserService userService; // This is a final variable, so it must be initialized in the constructor
-
+    private final PollService pollService; // This is a final variable, so it must be initialized in the constructor
+    private final InvitedService invitedService; // This is a final variable, so it must be initialized in the constructor
+    private final ResponseService responseService; // This is a final variable, so it must be initialized in the constructor
+     
     @Autowired
     private PollRepository pollRepo;
-    // private UserRepository userRepo1;
+    private UserRepository userRepo1;
 
     @Autowired
     private MediumRepository mediumRepo;
@@ -70,9 +81,22 @@ public class PollController {
         // List<Poll> polls = pollRepo.findByUID(user.uid);
         List<Poll> polls = pollRepo.findByUID(user.getUid());
         List<Poll> polls1 = pollRepo.find();
+        // Gets a list of all the polls the user has created.
+        List<Poll> createdPolls = pollRepo.findByCreator_id(user.getUid());
+        // Get all the use responses
+        List<Response> responses = responseService.getAllResponsesByUid(user.getUid());
+        // Get's just the pid for the responses
+        List<Integer> pids = new ArrayList<>();
+        for (Response response : responses) {
+            pids.add(response.getPid());
+        }
+
+        model.addAttribute("responses", pids);
         model.addAttribute("polls1", polls1);
         model.addAttribute("polls", polls);
         model.addAttribute("user", user);
+        model.addAttribute("createdPolls", createdPolls);
+
         return "users/dashboard";
     }
 
@@ -139,6 +163,9 @@ public class PollController {
         String endTimeString = pollData.get("endTime");
         String expiraryDateString = pollData.get("expirary");
 
+        if (startDateString.compareTo(endDateString) >= 0 || startTimeString.compareTo(endTimeString) >= 0){
+            return "redirect:/pollcreate";
+        } 
         // Parse dates
         java.time.Instant startDate = java.time.Instant.parse(startDateString + "T" + startTimeString + ":00.00Z");
         java.time.Instant endDate = java.time.Instant.parse(endDateString + "T" + endTimeString + ":00.00Z");
@@ -191,12 +218,17 @@ public class PollController {
                 Invited invited = new Invited();
                 invited.setPid(newPoll.getPid());
                 invited.setUid(Integer.parseInt(uid));
+                
                 invitedRepo.save(invited);
                 i++;
+                User user1 = userService.getUserById(Long.parseLong(uid));
+                userService.sendEV(user1);
+                
             } catch (Exception e) {
                 break;
             }
         }
+        userService.sendEV(user);
         return "redirect:/dashboard";
     }
 
@@ -228,5 +260,64 @@ public class PollController {
         } // End of session check
         model.addAttribute("user", user);
         return "users/showEvents";
+    }
+
+    /**
+     * Respond to a poll
+     * 
+     * @param pid
+     * @param model
+     * @param session
+     * @param request
+     * @return
+     */
+    @GetMapping("/polls/respond/{pid}")
+    public String respondPoll(@PathVariable int pid, Model model, HttpSession session,
+            HttpServletRequest request) {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+        
+        try {
+            // Get the poll
+            Poll poll = pollRepo.findByPid(pid);
+            // Get the user who created the poll
+            User creator = userService.getUserById(poll.getCreator_id());
+            String fullName = creator.getFirstName() + " " + creator.getLastName();
+            // Create a Poll DTO.
+            PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
+            // Get the list of users that are invited to the poll.
+            List<Object[]> queryResults = invitedRepo.findByPid(pid);
+            List<InvitedDTO> invitedDTOs = invitedService.createListOfInvitedFromDTO(queryResults);
+            // Get the list of mediums for the poll.
+            List<Medium> mediums = mediumRepo.findBypid(pid);
+
+            model.addAttribute("mediums", mediums);
+            model.addAttribute("invited", invitedDTOs);
+            model.addAttribute("poll", pollDTO);
+            model.addAttribute("user", user);
+    
+            return "polls/respond";
+        } catch (Exception e) {
+            return "redirect:/dashboard";
+        }
     }
 }
