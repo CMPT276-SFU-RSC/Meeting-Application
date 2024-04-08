@@ -10,13 +10,16 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import group9.sfursmeetingapplication.models.Response;
 import group9.sfursmeetingapplication.services.ResponseService;
 import lombok.RequiredArgsConstructor;
+import java.util.Optional;
 
 @RequiredArgsConstructor // Lombok annotation to generate the required constructor
 @RestController // This annotation is used to mark the class as a REST controller.
@@ -42,6 +45,16 @@ public class PollControllerRest {
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return new ResponseEntity<>(Collections.singletonMap("error", "Error saving responses"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/poll/response/{uid}/{mid}/{pid}")
+    public ResponseEntity<Response> getUserResponse(@PathVariable long uid, @PathVariable long mid, @PathVariable long pid) {
+        Optional<Response> responseOptional = responseService.getUserResponseByUidMidPid(uid, mid, pid);
+        if (responseOptional.isPresent()) {
+            return ResponseEntity.ok(responseOptional.get());
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }

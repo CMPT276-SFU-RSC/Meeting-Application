@@ -525,3 +525,35 @@ function finalizePoll() {
 function clearSession() {
     sessionStorage.clear();
 }
+
+function getResponse(blocks) {
+
+    var dataMid = blocks.parentElement.getAttribute("data-mid");
+    var dataPid = blocks.parentElement.getAttribute("data-pid");
+    var dataUid = blocks.parentElement.getAttribute("data-uid");
+
+    getResponseHelper(dataUid, dataMid, dataPid, select);
+}
+
+function updateDisplay(select) {
+    var selectedOption = select.options[select.selectedIndex];
+    var dataMid = selectedOption.getAttribute("data-mid");
+    var dataPid = selectedOption.getAttribute("data-pid");
+    var dataUid = selectedOption.getAttribute("data-uid");
+
+    getResponseHelper(dataUid, dataMid, dataPid, select);
+}
+
+
+function getResponseHelper(uid, mid, pid, button) {
+    var columnName = "available_time";
+    fetch(`/poll/response/${uid}/${mid}/${pid}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            var times = data[columnName];
+            document.getElementById('displayArea').innerText = times;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
