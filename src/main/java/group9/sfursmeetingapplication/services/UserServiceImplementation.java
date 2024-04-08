@@ -54,6 +54,17 @@ public class UserServiceImplementation implements UserService {
         emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), confirmation.getToken());
         return user;
     }
+    @Override
+    public User sendEV(User user) {
+        
+        
+        // Send an email to the user
+        emailService.sendEventMessage(user.getFirstName(), user.getEmail());
+        
+        return user;
+       
+    }
+
 
     /**
      * This method gets a user from the database.

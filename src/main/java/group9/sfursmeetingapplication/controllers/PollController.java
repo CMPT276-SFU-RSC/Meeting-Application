@@ -19,6 +19,7 @@ import group9.sfursmeetingapplication.repositories.MediumRepository;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.services.PollService;
 import group9.sfursmeetingapplication.services.ResponseService;
+import group9.sfursmeetingapplication.repositories.UserRepository;
 import group9.sfursmeetingapplication.services.UserService;
 import group9.sfursmeetingapplication.services.InvitedService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class PollController {
      
     @Autowired
     private PollRepository pollRepo;
-    // private UserRepository userRepo1;
+    private UserRepository userRepo1;
 
     @Autowired
     private MediumRepository mediumRepo;
@@ -217,12 +218,17 @@ public class PollController {
                 Invited invited = new Invited();
                 invited.setPid(newPoll.getPid());
                 invited.setUid(Integer.parseInt(uid));
+                
                 invitedRepo.save(invited);
                 i++;
+                User user1 = userService.getUserById(Long.parseLong(uid));
+                userService.sendEV(user1);
+                
             } catch (Exception e) {
                 break;
             }
         }
+        userService.sendEV(user);
         return "redirect:/dashboard";
     }
 
