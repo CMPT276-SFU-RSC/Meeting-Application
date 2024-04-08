@@ -19,6 +19,7 @@ public class PeriodicTask {
         // Create a scheduled executor service with a single thread
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
+        /* 
         // Schedule the task to run every few hours 
         int hoursInterval = 12;
         executor.scheduleAtFixedRate(() -> {
@@ -26,7 +27,7 @@ public class PeriodicTask {
             checkVotingPercentage(PollsList);
         }, 0, hoursInterval, TimeUnit.HOURS);
 
-        /* 
+        
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             executor.shutdown();
             try {
