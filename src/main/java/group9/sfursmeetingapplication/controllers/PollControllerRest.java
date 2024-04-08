@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import group9.sfursmeetingapplication.repositories.ResponseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,10 @@ import java.util.Optional;
 public class PollControllerRest {
     private final ResponseService responseService;
 
+
+    @Autowired
+    private ResponseRepository responseRepo;
+    
     /**
      * This method is used to respond to a poll.
      * @param responses The list of responses.
@@ -48,13 +54,14 @@ public class PollControllerRest {
         }
     }
 
-    @GetMapping("/poll/response/{uid}/{mid}/{pid}")
-    public ResponseEntity<Response> getUserResponse(@PathVariable long uid, @PathVariable long mid, @PathVariable long pid) {
-        Optional<Response> responseOptional = responseService.getUserResponseByUidMidPid(uid, mid, pid);
-        if (responseOptional.isPresent()) {
-            return ResponseEntity.ok(responseOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/poll/response/{uid}/{mid}")
+    public List<Response> getUserResponse(@PathVariable long uid, @PathVariable long mid) {
+        List<Response> res = responseRepo.findByMidAndUid(Math.toIntExact(mid), Math.toIntExact(uid));
+        return res;
+    }
+    @GetMapping("/poll/response/{mid}")
+    public List<Response> getMediumResponse(@PathVariable long mid) {
+        List<Response> res = responseRepo.findByMid(Math.toIntExact(mid));
+        return res;
     }
 }

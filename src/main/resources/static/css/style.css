@@ -65,6 +65,7 @@ body {
   background-color: #c7c7c7;
   background-size: cover;
   min-height: 80vh;
+  min-width: auto;
 }
 
 .col-form-label {
@@ -297,7 +298,7 @@ body {
   border: none;
   cursor: pointer;
   font-weight: bolder;
-  background: #af0000c7;
+  background: #af000096;
   font-size: 20px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   border-radius: 15px;
@@ -359,6 +360,11 @@ body {
 }
 
 input::placeholder {
+  font-style: italic;
+  font-weight: 600;
+}
+
+textarea::placeholder {
   font-style: italic;
   font-weight: 600;
 }
@@ -433,25 +439,50 @@ input {
   display: block;
 }
 
+.card-group {
+  padding-left: 47px;
+}
 
 .event-box {
-  width: 300px;
-  margin: 50px auto;
-  background-color: #fff6f6;
+  width: 320px;
+  background-color: #fdfafa;
   border-top: 10px solid #c70a0a;
   border-top-right-radius: 10px;
   border-bottom-left-radius: 10px;
   border-top-left-radius: 40px;
   border-bottom-right-radius: 40px;
   padding: 20px;
-  margin: 5px;
-  margin-bottom: 20px;
+  margin: 10px;
+  margin-right: 17px;
+  margin-bottom: 15px;
+  margin-left: 17px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   display: inline-block;
   position: relative;
   box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.658);
 }
+
+.event-box-custom {
+    width: auto;
+    background-color: #fdfafa;
+    border-top: 10px solid #000000;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    padding: 20px;
+    margin: 10px;
+    margin-right: 17px;
+    margin-bottom: 15px;
+    margin-left: 17px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: inline-block;
+    position: relative;
+    box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.658);
+}
+
 
 .event-box .title {
   font-size: 25px;
@@ -711,8 +742,7 @@ input {
 }
 
 .dark-mode .event-box {
-  width: 300px;
-  margin: 50px auto;
+  width: 320px;
   background-color: #242424;
   border-top: 10px solid #8d1313;
   color: #d8d8d8;
@@ -721,13 +751,21 @@ input {
   border-top-left-radius: 40px;
   border-bottom-right-radius: 40px;
   padding: 20px;
-  margin: 5px;
-  margin-bottom: 20px;
+  margin: 10px;
+  margin-right: 17px;
+  margin-bottom: 15px;
+  margin-left: 17px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   display: inline-block;
   position: relative;
-  box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.705);
+  box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.658);
+}
+
+.dark-mode .event-box-custom {
+  background-color: #1d1d1d;
+  color: #d8d8d8;
+  border-top: 10px solid #ffffff;
 }
 
 .dark-mode .event-box .description {
@@ -772,6 +810,12 @@ input {
 }
 
 .dark-mode input::placeholder {
+  font-style: italic;
+  font-weight: 600;
+  color: rgb(202, 202, 202);
+}
+
+.dark-mode textarea::placeholder {
   font-style: italic;
   font-weight: 600;
   color: rgb(202, 202, 202);
@@ -824,12 +868,25 @@ input {
 }
 
 .selected {
-  background-color: #00ff00; /* Change this to the color you want for selected cells */
+  background-color: #00ff00;
+  color: white; /* Change this to the color you want for selected cells */
+  font-weight: bolder;
 }
 
 /* Add border to table headers */
 th {
-  border: 1px solid black;
+  padding: 15px;
+  padding-top: -2px;
+  font-size: 20px;
+  font-weight: bold;
+  font-style: italic;
+  font-family: 'Tahoma', sans-serif;
+  color: #ffffff;
+}
+
+.dark-mode th {
+  border: 3px solid rgb(255, 255, 255);
+  color: white;
 }
 
 /* Disable user selection on the table */
@@ -838,6 +895,22 @@ th {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
+  font-family: 'Tahoma', sans-serif;
+  border: 2px solid rgb(0, 0, 0);
+  margin: 5px;
+  color: #ffffff;
+  background-color: #a8a8a8;
+  font-weight: bolder;
+  text-shadow: 
+            -1px -1px 0 #000,  
+             1px -1px 0 #000,
+            -1px  1px 0 #000,
+             1px  1px 0 #000;
+}
+
+.dark-mode .timeBlocks {
+  border: 2px solid rgb(255, 255, 255);
+  background-color: #868686;
 }
 
 .dark-mode .secondary-body {

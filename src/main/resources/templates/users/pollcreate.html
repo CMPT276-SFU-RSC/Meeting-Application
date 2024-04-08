@@ -74,6 +74,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     <a class="btn btn-secondary btn-lg" href="/">Cancel</a>
                     <button class="btn btn-primary btn-lg" type="button" id="pollSubmit" onclick="addMediumsUsersToForm()">Create Poll</button>
                 </fieldset>
+                <br>
             </form>
         </section>
         <section class="col-md-5">
@@ -105,12 +106,9 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
 
             <br>
 
-            <label class="col-form-label" for="users">List of All Users</label>
-            <div class="overflow-auto" style="height: 100px; border-style: solid;" id="allUsersList"> <!--List of users, which the form will read from-->
-            </div>
         </section>
     </main>
-    <footer th:replace="~{universals/footer :: footer}"></footer>
+<footer th:replace="~{universals/footer :: footer}"></footer>
 </div>
 </body>
 </html>

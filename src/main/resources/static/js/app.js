@@ -361,7 +361,11 @@ function getTimePart(datetime) {
  * Loads the table with the given start and end date.
  * Allows the user to select multiple cells by clicking and dragging the mouse.
  */
-function tableOnLoad(timeArray) {
+function tableOnLoad(timeArray, readonly) {
+    if (readonly === undefined) {
+        readonly = false;
+      }
+
     let start = new Date(document.getElementById('startDate').value);
     let end = new Date(document.getElementById('endDate').value);
     let isMouseDown = false;
@@ -378,6 +382,7 @@ function tableOnLoad(timeArray) {
             let dateHeader = document.createElement('th');
             dateHeader.textContent = (day.getUTCMonth() + 1) + '/' + day.getUTCDate(); // Display only month and day
             headerRow.appendChild(dateHeader);
+            dateHeader.style.border = 'none';
         }
         table.appendChild(headerRow);
 
@@ -393,25 +398,27 @@ function tableOnLoad(timeArray) {
             for (let day = new Date(start.getTime()); day <= end; day.setUTCDate(day.getUTCDate() + 1)) {
                 let cell = document.createElement('td');
                 cell.textContent = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
-                cell.style.border = '1px solid black'; // Add border to each cell
+                cell.style.padding = '7px';
 
-                cell.addEventListener('mousedown', function () { // Add mousedown event listener
-                    isMouseDown = true;
-                    this.classList.toggle('selected'); // Toggle 'selected' class
-                    return false; // Prevent text selection
-                });
-
-                cell.addEventListener('mouseover', function () { // Add mouseover event listener
-                    if (isMouseDown) {
+                if (readonly == false){
+                    cell.addEventListener('mousedown', function () { // Add mousedown event listener
+                        isMouseDown = true;
                         this.classList.toggle('selected'); // Toggle 'selected' class
-                    }
-                });
+                        return false; // Prevent text selection
+                    });
 
-                cell.addEventListener('mouseup', function () { // Add mouseup event listener
-                    if (isMouseDown) {
-                        isMouseDown = false;
-                    }
-                });
+                    cell.addEventListener('mouseover', function () { // Add mouseover event listener
+                        if (isMouseDown) {
+                            this.classList.toggle('selected'); // Toggle 'selected' class
+                        }
+                    });
+
+                    cell.addEventListener('mouseup', function () { // Add mouseup event listener
+                        if (isMouseDown) {
+                            isMouseDown = false;
+                        }
+                    });
+                }
                 row.appendChild(cell);
             }
             table.appendChild(row);
@@ -437,8 +444,12 @@ function populateCells(array) {
             for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
                 const cell = table.rows[k].cells[j];
                 
-                if (string[index][((table.rows.length - 1) * j) + (k - 1)] === '1') {
+                if (string[j*(table.rows.length-1) + k-1] == '1') {
                     cell.classList.add('selected');
+                }
+                else {
+                    cell.classList.remove('selected');
+                    cell.style.background = null;
                 }
             }
         }
@@ -535,24 +546,116 @@ function getResponse(blocks) {
     getResponseHelper(dataUid, dataMid, dataPid, select);
 }
 
-function updateDisplay(select) {
-    var selectedOption = select.options[select.selectedIndex];
-    var dataMid = selectedOption.getAttribute("data-mid");
-    var dataPid = selectedOption.getAttribute("data-pid");
-    var dataUid = selectedOption.getAttribute("data-uid");
+function updateDisplay() {
+    var inv = document.getElementById("dropdownMenuInvite")[document.getElementById("dropdownMenuInvite").selectedIndex];
+    var med = document.getElementById("dropdownMenuMedium")[document.getElementById("dropdownMenuMedium").selectedIndex];
 
-    getResponseHelper(dataUid, dataMid, dataPid, select);
+    if (document.getElementById("dropdownMenuMedium").value != ""){
+        //medium selected
+        if (document.getElementById("dropdownMenuInvite").value == ""){
+            //output all in heatmap for medium
+            var dataMid = med.getAttribute("data-mid");
+
+            getResForMid(dataMid);
+        }
+        else {
+            //output individual
+            var dataMid = med.getAttribute("data-mid");
+            var dataUid = inv.getAttribute("data-uid");
+
+            getResForMidUid(dataUid, dataMid);
+        }
+
+    }
+    else {
+        //clear table
+        const allTables = document.querySelectorAll('[id^="timeBlocks"]');
+        allTables.forEach((table, index) => {
+            const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+            for (let j = 0; j < numColumns; j++) { // Iterate over each column
+                for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                    const cell = table.rows[k].cells[j];
+                    cell.classList.remove('selected');
+                    cell.style.background = null;
+                }
+            }
+        });
+    }
+
+
+
+}
+function heatMap(data){
+    //clear highlights
+    var allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                cell.classList.remove('selected');
+                cell.style.background = null;
+            }
+        }
+    });
+
+    //build up the list
+    //  add all the strings together, to end with an available_time like structure
+    //  ex [010], [100], [111], [001], [001], [101]
+    //  would result in [324]
+    var str = [];
+    for (var i = 0; i < data.length; i++){
+        for (var j = 0; j < data[i].available_time.length; j++){
+            if (str[j] === undefined){
+                str[j] = 0;
+            }
+
+            if (data[i].available_time[j] == "1"){
+                str[j]++;
+            }
+        }
+    }
+
+    var max = 0;
+    var min = 0;
+    for (var i = 0; i < str.length; i++){
+        max = Math.max(str[i], max);
+        min = Math.min(str[i], min);
+    }
+
+    
+    allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                //G value from 100-255, can be changed later
+                cell.style.background ="rgb(120, " + (( str[j*(table.rows.length-1) + k-1]/(max) )*225+15) +" , 7)";
+            }
+        }
+    });
+
 }
 
-
-function getResponseHelper(uid, mid, pid, button) {
-    var columnName = "available_time";
-    fetch(`/poll/response/${uid}/${mid}/${pid}`)
+function getResForMidUid(uid, mid) {
+    fetch("/poll/response/" + uid + "/" + mid)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
-            var times = data[columnName];
-            document.getElementById('displayArea').innerText = times;
+            populateCells(data[0].available_time);
+            document.getElementById("mediumName").innerHTML = data[0].medium;
+        })
+        .catch(error => console.error('Error:', error));
+}
+function getResForMid(mid){
+    fetch("/poll/response/" + mid)
+        .then(response => response.json())
+        .then(data => {
+            heatMap(data);
+            document.getElementById("mediumName").innerHTML = data[0].medium;
         })
         .catch(error => console.error('Error:', error));
 }

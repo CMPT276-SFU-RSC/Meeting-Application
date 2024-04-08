@@ -16,16 +16,17 @@
   
 </head>
 <body>
-
+    <div class="secondary-body">
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-    <div class="secondary-body">
+    <div class="event-box-custom">
+        <a class="btn btn-secondary m-2" aria-current="page" href="/deleteuser"> Delete a User</a>
+        <a href="/" class="btn btn-primary redButton mt-3">Back</a>
+    </div>
+
     <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Users Display</h1>
     <main class="container-fluid justify-content-between">
-        <div>
-        <a class="btn btn-secondary m-2" aria-current="page" href="/deleteuser"> Delete a User</a>
-    </div>
         <section >
             <div class="card-group">
                     <div th:each="poll : ${u1}">
