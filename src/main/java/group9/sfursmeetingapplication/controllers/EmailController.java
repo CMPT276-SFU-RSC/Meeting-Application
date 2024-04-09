@@ -1,7 +1,6 @@
 package group9.sfursmeetingapplication.controllers;
 
 import java.util.*;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import group9.sfursmeetingapplication.models.ResetPassword;
 import group9.sfursmeetingapplication.models.User;
 import group9.sfursmeetingapplication.repositories.*;
@@ -27,7 +25,7 @@ public class EmailController {
     private final UserRepository userRepo; 
     private final BCryptPasswordEncoder passwordEncoder;
 
-        /**
+    /**
      * Handles a POST request to resend a confirmation email.
      * 
      * @param user               The user to resend the confirmation email to.
@@ -74,7 +72,6 @@ public class EmailController {
         }
     } 
     
-    
     /**
      * Handles a GET request to confirm a user's account.
      * 
@@ -83,7 +80,7 @@ public class EmailController {
      */
     @GetMapping("/email/verified") // Spring annotation to map HTTP GET requests onto specific handler methods
     public String confirmUserAccount(@RequestParam("token") String token, HttpServletResponse response,
-    RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes) {
         // Check if the token is null or empty
         if (token == null || token.isEmpty()) {
             return "redirect:/email/resendConfirmation";

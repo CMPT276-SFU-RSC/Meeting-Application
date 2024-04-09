@@ -8,9 +8,11 @@ package group9.sfursmeetingapplication.repositories;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.User;
+import jakarta.transaction.Transactional;
 
 @Repository // Spring annotation to indicate that the class is a repository.
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -44,7 +46,31 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteuser(Long uid);
     //delete from users where uid =?1
 
+    @Query(
+        value = "SELECT uid FROM invited WHERE pid = ?1",
+        nativeQuery = true
+    )
 
+    List<Integer> findusers1(Integer pid);
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = "DELETE FROM users " + 
+                "WHERE users.uid = ?1 ;",
+        nativeQuery = true
+    )
+    void deleteByUID(long uid);
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = "DELETE FROM confirmations " + 
+                "WHERE confirmations.uid = ?1 ;",
+        nativeQuery = true
+    )
+    void deleteConfirmation(long uid);
+    
   
     /**
      * Finds a User by email (ignoring case).
@@ -90,4 +116,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAll();
 
+    @Query(
+        value = "SELECT users.* " + 
+                "FROM users, invited, polls " +
+                "WHERE polls.pid = ?1 AND users.uid = invited.uid AND polls.pid = invited.pid;",
+        nativeQuery = true
+    )
+    List<User> findByPollPid(int pid);
 }

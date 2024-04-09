@@ -24,6 +24,8 @@ public class AppConfig {
         noCacheFilterRegistration.setFilter(new NoCacheFilter());
         noCacheFilterRegistration.addUrlPatterns("/dashboard/*");
         noCacheFilterRegistration.addUrlPatterns("/users/*");
+        noCacheFilterRegistration.addUrlPatterns("/polls/*");
+        noCacheFilterRegistration.addUrlPatterns("/admins/*");
         noCacheFilterRegistration.addUrlPatterns("/pollcreate/*");
         return noCacheFilterRegistration;
     }

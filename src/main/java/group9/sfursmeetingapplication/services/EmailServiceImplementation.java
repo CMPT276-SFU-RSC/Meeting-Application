@@ -5,10 +5,7 @@
 package group9.sfursmeetingapplication.services;
 
 import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Value;
-// import org.springframework.mail.SimpleMailMessage;
-// import org.springframework.mail.javamail.JavaMailSender;
 import com.sendgrid.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Content;
@@ -24,6 +21,7 @@ public class EmailServiceImplementation implements EmailService {
     private static final String NEW_USER_ACCOUNT_VERIFICATION = "New User Account Verification";
     private static final String RESET_PASSWORD_EMAIL = "Reset Password Email";
     private static final String POLL_READY = "Poll Ready";
+    private static final String NEW_EVENT = "New Event";
 
     @Value("${spring.mail.properties.verify.host}") // Spring Framework annotation for injecting a value from a property
                                                     // file.
@@ -72,7 +70,7 @@ public class EmailServiceImplementation implements EmailService {
         }
     }
 
-        /**
+    /**
      * Sends a simple mail message to the specified email address.
      * 
      * @param name  the name of the user
@@ -104,7 +102,7 @@ public class EmailServiceImplementation implements EmailService {
         }
     }
 
-            /**
+    /**
      * Sends a simple mail message to the specified email address.
      * 
      * @param name  the name of the user
@@ -120,6 +118,27 @@ public class EmailServiceImplementation implements EmailService {
         String sendGridSubject = POLL_READY;
         Email sendGridTo = new Email(to);
         Content sendGridContent = new Content("text/plain", EmailUtils.getPollReadyMessage(name));
+        Mail sendGridMail = new Mail(sendGridFrom, sendGridSubject, sendGridTo, sendGridContent);
+        sendGrid = new SendGrid(apiKey);
+        Request request = new Request();
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(sendGridMail.build());
+            Response response = sendGrid.api(request);
+            System.out.println(response.getStatusCode());
+            System.out.println(response.getBody());
+            System.out.println(response.getHeaders());
+        } catch (IOException ex) {
+            throw new RuntimeException("Error: " + ex.getMessage());
+        }
+    }
+
+    public void sendEventMessage(String name, String to) {
+        Email sendGridFrom = new Email(fromEmail);
+        String sendGridSubject = NEW_EVENT;
+        Email sendGridTo = new Email(to);
+        Content sendGridContent = new Content("text/plain", EmailUtils.getEventMessage(name));
         Mail sendGridMail = new Mail(sendGridFrom, sendGridSubject, sendGridTo, sendGridContent);
         sendGrid = new SendGrid(apiKey);
         Request request = new Request();

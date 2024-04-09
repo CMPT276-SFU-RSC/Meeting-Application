@@ -6,6 +6,7 @@ package group9.sfursmeetingapplication.services;
 public interface EmailService {
 
     void sendSimpleMailMessage(String name, String to, String token);
+    void sendEventMessage(String name, String to);
     // void sendMimeMessageWithAttachments(String name, String to, String subject,
     // String content, String token);
     // void sendMimeMessageWithEmbeddedImage(String name, String to, String subject,

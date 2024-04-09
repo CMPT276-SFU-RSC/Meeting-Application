@@ -16,10 +16,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import group9.sfursmeetingapplication.repositories.PollRepository;
+import group9.sfursmeetingapplication.repositories.ResponseRepository;
 import group9.sfursmeetingapplication.repositories.UserRepository;
+import group9.sfursmeetingapplication.repositories.ConfirmationRepository;
+import group9.sfursmeetingapplication.repositories.InvitedRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import group9.sfursmeetingapplication.models.Poll;
@@ -32,7 +37,12 @@ public class UserController {
     private PollRepository pollRepo;
     @Autowired
     private UserRepository userRepo1;
-
+    @Autowired
+    private ConfirmationRepository CRepo1;
+    @Autowired
+    private ResponseRepository responseRepo;
+    @Autowired
+    private InvitedRepository invitedRepo;
     /**
      * Handles a POST request to login a user.
      * 
@@ -225,7 +235,7 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("admins/polldelete")
     public String deletepage(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
         // Check if the user is logged in
         session = request.getSession(false);
@@ -251,14 +261,13 @@ public class UserController {
         } // End of session check
 
         model.addAttribute("user", user);
-        return "users/delete";
+        return "admins/polldelete";
     }
 
-    @PostMapping("/users/delete")
-    public String deleteuser(@RequestParam Map<String, String> poll, HttpServletResponse response) {
+    @GetMapping("/polls/delete/{pid}")
+    public String deleteuser(@PathVariable int pid, HttpServletResponse response) {
         // TODO: process POST request
-        Integer snumberr = Integer.parseInt(poll.get("snumber"));
-        List<Poll> usersToDelete = pollRepo.findname(snumberr);
+        List<Poll> usersToDelete = pollRepo.findname(pid);
         for (Poll user : usersToDelete) {
             pollRepo.delete(user);
         }
@@ -267,7 +276,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/userdisplay")
+    @GetMapping("admins/userdisplay")
     public String userpage(Model model, HttpServletRequest request, HttpSession session) {
         List<User> u1 = userRepo1.findall();
         model.addAttribute("u1", u1);
@@ -296,36 +305,25 @@ public class UserController {
         } // End of session check
 
         model.addAttribute("user", user);
-        return "users/display";
+        return "admins/display";
     }
 
-    @GetMapping("/deleteuser")
-    public String deleteuser1(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
-         // Check if the user is logged in
-         session = request.getSession(false);
-         if (session == null) {
-             System.out.println("Redirecting because there's no session");
-             // If the user is not logged in, redirect them to the login page
-             return "redirect:/login";
-         }
- 
-         Long userId = (Long) session.getAttribute("user_id");
-         if (userId == null) {
-             System.out.println("Redirecting because there's no user ID in the session");
-             return "redirect:/login";
-         }
- 
-         User user = userService.getUserById(userId);
-         if (user == null) {
-             System.out.println("Redirecting because the user doesn't exist");
-             // If the user doesn't exist, end the session and redirect the user to the login
-             // page
-             session.invalidate();
-             return "redirect:/login";
-         } // End of session check
- 
-         model.addAttribute("user", user);
-        return "users/userdelete";
+    @GetMapping("/users/delete/{uid}")
+    public String deleteUsers(@PathVariable long uid, HttpServletResponse response) {
+        //delete confirmations
+
+        //delete their responses
+        responseRepo.deleteByUid(uid);
+        //delete their invited
+        invitedRepo.deleteByUid(uid);
+        //delete their polls
+        pollRepo.deleteByCreatoruid(uid);
+        //delete them
+        userRepo1.deleteConfirmation(uid);
+        userRepo1.deleteByUID(uid);
+        response.setStatus(200);
+        return "redirect:/dashboard";
+
     }
 
     @PostMapping("/users/d")
@@ -335,6 +333,7 @@ public class UserController {
         Integer snumberr = Integer.parseInt(poll.get("snumber"));
         List<User> usersToDelete1 = userRepo1.findname(snumberr);
         for (User user : usersToDelete1) {
+            //CRepo1.delete(user);
             userRepo1.delete(user);
         }
 

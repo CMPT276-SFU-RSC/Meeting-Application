@@ -8,11 +8,11 @@ public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pid;
-
     private long creator_id;
-
     private String title;
     private String description;
+    private boolean finalized;
+
 
     private java.time.Instant startDate;
     private java.time.Instant endDate;
@@ -45,6 +45,14 @@ public class Poll {
 
 
 
+    public boolean isFinalized() {
+        return finalized;
+    }
+
+
+    public void setFinalized(boolean finalized) {
+        this.finalized = finalized;
+    }
     public java.time.Instant getExpirary() {
         return expirary;
     }
