@@ -20,10 +20,6 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-    <div class="event-box-custom">
-        <a class="btn btn-secondary m-2" aria-current="page" href="/admins/deleteuser"> Delete a User</a>
-        <a href="/" class="btn btn-primary redButton mt-3">Back</a>
-    </div>
 
     <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Users Display</h1>
     <main class="container-fluid justify-content-between">
@@ -40,6 +36,7 @@
                             <label class="description" th:text="${poll.uid}" ></label><br>
                             <label for="details">User Title: </label>
                            <label class="description" th:text="${poll.title}" ></label>
+                           <a th:href="@{../users/delete/{uid}(uid=${poll.uid})}" class="btn btn-secondary">Delete</a>
                         </div>
                     </div>
             </div>

@@ -32,6 +32,15 @@ public interface ResponseRepository extends JpaRepository<Response, Integer>{
     @Transactional
     @Query(
         value = "DELETE FROM user_responses " + 
+                "WHERE user_responses.uid = ?1 ;",
+        nativeQuery = true
+    )
+    void deleteByUid(long uid);
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = "DELETE FROM user_responses " + 
                 "WHERE user_responses.pid = ?1 AND user_responses.uid = ?2 ;",
         nativeQuery = true
     )
