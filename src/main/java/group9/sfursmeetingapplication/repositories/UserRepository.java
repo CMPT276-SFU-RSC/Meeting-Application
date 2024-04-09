@@ -44,6 +44,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<Integer> findusers1(Integer pid);
 
+    @Query(
+        value = "SELECT * FROM users WHERE uid = ?1",
+        nativeQuery = true
+    )
+    
+    List<User> findUserByUID(Long uid);
+
 
 
   

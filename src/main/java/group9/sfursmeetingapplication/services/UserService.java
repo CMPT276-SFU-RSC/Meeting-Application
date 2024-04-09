@@ -22,6 +22,9 @@ public interface UserService {
      */
     User sendEV(User user); // Possible to decouple from the database using DTOs.
     
+    void sendPasswordEmail(String email); 
+
+    void sendPollReadyEmail(User user);
     
     /**
      * Verifies a token.

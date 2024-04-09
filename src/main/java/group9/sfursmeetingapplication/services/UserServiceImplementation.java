@@ -8,10 +8,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import group9.sfursmeetingapplication.models.Confirmation;
-import group9.sfursmeetingapplication.models.User;
-import group9.sfursmeetingapplication.repositories.ConfirmationRepository;
-import group9.sfursmeetingapplication.repositories.UserRepository;
+import group9.sfursmeetingapplication.models.*;
+import group9.sfursmeetingapplication.repositories.*;
 import lombok.RequiredArgsConstructor;
 
 @Service // This annotation is used to mark the class as a service provider
@@ -30,9 +28,9 @@ public class UserServiceImplementation implements UserService {
     @Autowired // This annotation is used to mark the field as autowired
     private final UserRepository userRepository;
     private final ConfirmationRepository confirmationRepository;
+    private final ResetPasswordRepository resetPasswordRepository;
     private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder;
-
     /**
      * This method saves a user to the database.
      * 
@@ -54,6 +52,32 @@ public class UserServiceImplementation implements UserService {
         emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), confirmation.getToken());
         return user;
     }
+
+    @Override
+    public void sendPasswordEmail(String email) {
+
+        User foundUser = userRepository.findByEmailIgnoreCase(email);
+        if (foundUser != null) {
+            if(resetPasswordRepository.findByUser(foundUser) != null) {
+                resetPasswordRepository.delete(resetPasswordRepository.findByUser(foundUser));
+            }
+            ResetPassword reset = new ResetPassword(foundUser);
+            resetPasswordRepository.save(reset);
+            emailService.sendSimplePasswordMailMessage(foundUser.getFirstName(), foundUser.getEmail(), reset.getToken());
+        }
+        
+    }
+
+    @Override
+    public void sendPollReadyEmail(User user) {
+
+            emailService.sendPollReadyMessage(user.getFirstName(), user.getEmail());
+            
+        }
+    
+
+
+
     @Override
     public User sendEV(User user) {
         
