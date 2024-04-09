@@ -63,9 +63,15 @@
                             <label for="details">Poll ID: </label>
                             <label class="description" th:text="${poll1.pid}"></label>
                             <div class="d-flex">
+                                <div th:if="${poll1.isFinalized}">
+                                <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}" class="btn btn-primary redButton">View</a>
+                                <a th:href="@{polls/delete/{pid}(pid=${poll1.pid})}" class="btn btn-secondary">Delete</a>
+                                </div>
+                                <div th:unless="${poll1.isFinalized}">
                                 <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}" class="btn btn-primary redButton">View</a>
                                 <a th:href="@{polls/edit/{pid}(pid=${poll1.pid})}" class="btn btn-primary redButton">Edit</a>
                                 <a th:href="@{polls/delete/{pid}(pid=${poll1.pid})}" class="btn btn-secondary">Delete</a>
+                                </div>
                             </div>
                         </div>
                     </div>
