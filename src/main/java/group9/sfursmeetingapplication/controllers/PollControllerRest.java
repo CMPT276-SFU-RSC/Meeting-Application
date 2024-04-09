@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import group9.sfursmeetingapplication.models.*;
-import group9.sfursmeetingapplication.services.ResponseService;
-import group9.sfursmeetingapplication.services.UserServiceImplementation;
+import group9.sfursmeetingapplication.services.*;
 import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
@@ -28,12 +27,16 @@ import java.util.Optional;
 @RestController // This annotation is used to mark the class as a REST controller.
 public class PollControllerRest {
     private final ResponseService responseService;
-    private final UserServiceImplementation userServiceImplementation; 
+    private final UserService userService; 
 
 
     @Autowired
     private ResponseRepository responseRepo;
+
+    @Autowired
     private PollRepository pollRepo; 
+
+    @Autowired
     private UserRepository userRepo; 
     
     /**
@@ -53,20 +56,28 @@ public class PollControllerRest {
             }
             
             List<Integer> InvitedUsersList = pollRepo.findInvitedByPID(responses.get(0).getPid());
-            List<Integer> UserResponsesList = pollRepo.findResponseByPID(responses.get(0).getPid());
+            List<Integer> RespondedUsersList = pollRepo.findResponseByPID(responses.get(0).getPid());
     
-            int userResponsesSizeInt = UserResponsesList.size();
-            Double userResponsesSize = Double.valueOf(userResponsesSizeInt);
-    
-            int invitedUsersSizeInt = InvitedUsersList.size();
-            Double invitedUsersSize = Double.valueOf(invitedUsersSizeInt);
-            
-            if((userResponsesSize - 1)/invitedUsersSize < 0.80 && userResponsesSize/invitedUsersSize >= 0.80) {
+            Double respondedUsersSize = Double.valueOf(RespondedUsersList.size());
+            Double invitedUsersSize = Double.valueOf(InvitedUsersList.size());
 
+            System.out.println("000000000000000000000000000000000000000000000000");
+            System.out.println(respondedUsersSize);
+            System.out.println(invitedUsersSize);
+
+            Double preResponse = (respondedUsersSize - 1.0)/invitedUsersSize;
+            Double withResponse = respondedUsersSize/invitedUsersSize;
+
+            System.out.println("1111111111111111111111111111111111111111111111111");
+            System.out.println(preResponse);
+            System.out.println(withResponse);
+
+            if(preResponse < 0.80 && withResponse >= 0.80) {
                 Poll poll = pollRepo.findByPid(responses.get(0).getPid());
                 List<User> usersList = userRepo.findUserByUID(poll.getCreator_id());
                 User foundUser = usersList.get(0);
-                userServiceImplementation.sendPollReadyEmail(foundUser);
+                System.out.print(foundUser.getEmail());
+                userService.sendPollReadyEmail(foundUser);
             }
 
 
