@@ -538,7 +538,10 @@ public class PollController {
             session.invalidate();
             return "redirect:/login";
         }
-
+        List <Poll> polls = pollRepo.findBypid(pid);
+        if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
+            return "redirect:/dashboard";
+        }
         try {
             // Get the poll
             Poll poll = pollRepo.findByPid(pid);
