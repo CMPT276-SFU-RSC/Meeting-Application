@@ -874,4 +874,3 @@ function getResForMid(mid) {
         })
         .catch(error => console.error('Error:', error));
 }
-

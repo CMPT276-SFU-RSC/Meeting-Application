@@ -16,7 +16,7 @@
 </head>
 
 <body class="pollcreate">
-    
+    <div class="secondary-body">
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
@@ -38,10 +38,10 @@
                     <textarea class="form-control form-control-lg mb-3" type="text" id="description" placeholder="Poll Description" name="description"  th:text="${poll.description}" required></textarea>
 
                     <div>
-                        <label for="dateTimeRange">
+                        <label class="col-form-label" for="dateTimeRange">
                             Select Dates and Time:
                         </label>
-                        <input class="text-center" id="dateTimeRange" placeholder="click to select" 
+                        <input step ="1800" class="text-center" id="dateTimeRange" placeholder="click to select" 
                         title="Select start-day then adjust time, then select end-day and adjust time. 
 If you wish to select one day, select that day by clicking once and adjust time then click the date again and adjust time.
 otherwise, manually adjust to your needs using the labels below. (strictly follow the format)" readonly>
@@ -111,11 +111,72 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
 
             <br>
 
-            <label class="col-form-label" for="users">List of All Users</label>
-            <div class="overflow-auto" style="height: 100px; border-style: solid;" id="allUsersList"> <!--List of users, which the form will read from-->
+            <div class="weather-container">
+                <label class="col-form-label" for="city-input">Check the Weather for the Week</label>
+                <input class="form-control form-control-lg mb-3" type="text" id="city-input" placeholder="Enter city name">
+                <button class="btn btn-primary btn-lg" id="search-btn">Search</button>
+                <div id="weather-display" class="event-box-custom" style="display: none;">
+                    <div class="weather-info"></div>
+                </div>
             </div>
+
         </section>
     </main>
-    <footer th:replace="~{universals/footer :: footer}"></footer>
+</div>
+
+<script>
+    const apiKey = 'c5d0b846005f48a1aad4287d8099c482';
+    const apiUrl = 'https://api.weatherbit.io/v2.0/forecast/daily';
+
+const searchBtn = document.getElementById('search-btn');
+const cityInput = document.getElementById('city-input');
+const weatherInfo = document.querySelector('.weather-info');
+const weatherDisplay = document.getElementById('weather-display')
+
+searchBtn.addEventListener('click', async () => {
+    const city = cityInput.value.trim();
+
+    if (city !== '') {
+        try {
+            const response = await fetch(`${apiUrl}?city=${city}&days=7&units=M&key=${apiKey}`);
+            const data = await response.json();
+
+            weatherInfo.innerHTML = ''; // Clear previous weather data
+
+            const currentDate = new Date();
+            const endDate = new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const filteredData = data.data.filter(day => {
+                const forecastDate = new Date(day.valid_date);
+                return forecastDate >= currentDate && forecastDate <= endDate;
+            });
+
+            filteredData.forEach(day => {
+                const forecastDate = new Date(day.valid_date);
+                const dayOfMonth = forecastDate.getDate();
+                const dayName = forecastDate.toLocaleDateString('en-US', { weekday: 'long' });
+                const temperature = `${day.temp.toFixed(1)} °C`;
+                const description = day.weather.description;
+
+                const weatherItem = document.createElement('div');
+                weatherItem.classList.add('weather-item');
+                weatherItem.innerHTML = `
+                    <label class="description"><strong>Date:</strong> ${dayName}, ${dayOfMonth}</label>
+                    <label class="description"><strong>Temperature:</strong> ${temperature}</label>
+                    <label class="description"><strong>Description:</strong> ${description}</label>
+                `;
+
+                weatherInfo.appendChild(weatherItem);
+            });
+            weatherDisplay.style.display = "block";
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+            alert('An error occurred while fetching weather data. Please try again.');
+        }
+    } else {
+        alert('Please enter a city name.');
+    }
+});
+</script>
+<footer th:replace="~{universals/footer :: footer}"></footer>
 </body>
 </html>
