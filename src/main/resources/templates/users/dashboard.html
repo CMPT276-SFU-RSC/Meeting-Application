@@ -97,9 +97,13 @@
                                 <label for="details">Poll ID: </label>
                                 <label class="description" th:text="${createdPolls.pid}"></label>
                                 <div class="d-flex">
+                                    <a class="btn btn-primary redButton" th:if="${createdPolls.finalized}"
+                                       style="pointer-events: none;" disabled>Finalized</a>
                                     <a class="btn btn-primary redButton"
+                                        th:if="${!createdPolls.finalized}"
                                         th:href="@{polls/viewVotes/{pid}(pid=${createdPolls.pid})}">Responses</a>
                                     <a class="btn btn-primary redButton"
+                                        th:if="${!createdPolls.finalized}"
                                         th:href="@{polls/edit/{pid}(pid=${createdPolls.pid})}">Edit</a>
                                 </div>
                             </div>
@@ -132,10 +136,12 @@
                                 <label for="details">Poll ID: </label>
                                 <label class="description" th:text="${poll.pid}"></label>
                                 <div class="d-flex">
-                                    <a class="btn btn-primary redButton" th:unless="${responses.contains(poll.pid)}"
-                                        th:href="@{/polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
-                                    <a class="btn btn-primary redButton" th:if="${responses.contains(poll.pid)}"
-                                        th:href="@{/polls/updateResponse/{pid}(pid=${poll.pid})}">Update</a>
+                                    <a class="btn btn-primary redButton" th:if="${poll.finalized}"
+                                       th:href="@{/polls/respond/{pid}(pid=${poll.pid})}" style="pointer-events: none;" disabled>Finalized</a>
+                                    <a class="btn btn-primary redButton" th:if="${!poll.finalized and !responses.contains(poll.pid)}"
+                                       th:href="@{/polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
+                                    <a class="btn btn-primary redButton" th:if="${!poll.finalized and responses.contains(poll.pid)}"
+                                       th:href="@{/polls/updateResponse/{pid}(pid=${poll.pid})}">Update</a>
                                 </div>
                             </div>
                         </div>
