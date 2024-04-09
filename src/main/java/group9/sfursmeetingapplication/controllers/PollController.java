@@ -271,7 +271,6 @@ public class PollController {
         }
 
         Poll targetPoll = polls.get(0);
-        ;
 
         String title = pollData.get("title");
         String description = pollData.get("description");
@@ -385,6 +384,7 @@ public class PollController {
         return "redirect:/dashboard";
     }
 
+    // Not sure what this does
     @GetMapping("/getPolls/{pid}")
     public String displayEvents(@PathVariable int pid, Model model, HttpSession session) {
         List<Poll> polls = pollRepo.findBypid(pid);
@@ -414,15 +414,16 @@ public class PollController {
         model.addAttribute("user", user);
         return "users/showEvents";
     }
+    // Not sure what this does
 
     /**
-     * Respond to a poll
+     * This method is used to respond to a poll.
      * 
-     * @param pid
-     * @param model
-     * @param session
-     * @param request
-     * @return
+     * @param pid     The poll ID.
+     * @param model   The model.
+     * @param session The session.
+     * @param request The HTTP request.
+     * @return The view for the user to respond to the poll.
      */
     @GetMapping("/polls/respond/{pid}")
     public String respondPoll(@PathVariable int pid, Model model, HttpSession session,
@@ -469,6 +470,65 @@ public class PollController {
             model.addAttribute("user", user);
 
             return "polls/respond";
+        } catch (Exception e) {
+            return "redirect:/dashboard";
+        }
+    }
+
+    /**
+     * This method is used to update the response to a poll.
+     * 
+     * @param pid     The poll ID.
+     * @param model   The model.
+     * @param session The session.
+     * @param request The HTTP request.
+     * @return The view for the user to update their response to the poll.
+     */
+    @GetMapping("/polls/updateResponse/{pid}")
+    public String updatePollResponse(@PathVariable int pid, Model model, HttpSession session,
+            HttpServletRequest request) {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        try {
+            // Get the poll
+            Poll poll = pollRepo.findByPid(pid);
+            // Get the user who created the poll
+            User creator = userService.getUserById(poll.getCreator_id());
+            String fullName = creator.getFirstName() + " " + creator.getLastName();
+            // Create a Poll DTO.
+            PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
+            // Get the list of users that are invited to the poll.
+            List<Object[]> queryResults = invitedRepo.findByPid(pid);
+            List<InvitedDTO> invitedDTOs = invitedService.createListOfInvitedFromDTO(queryResults);
+            // Get the list of mediums for the poll.
+            List<Medium> mediums = mediumRepo.findBypid(pid);
+
+            model.addAttribute("mediums", mediums);
+            model.addAttribute("invited", invitedDTOs);
+            model.addAttribute("poll", pollDTO);
+            model.addAttribute("user", user);
+
+            return "polls/updateResponse";
         } catch (Exception e) {
             return "redirect:/dashboard";
         }
@@ -563,4 +623,5 @@ public class PollController {
             return "redirect:/dashboard";
         }
     }
+
 }
