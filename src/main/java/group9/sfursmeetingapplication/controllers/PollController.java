@@ -27,6 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.text.ParseException;
 import java.util.Map;
@@ -262,7 +263,7 @@ public class PollController {
         }
         // add update
         List<Poll> polls = pollRepo.findBypid(pid);
-        if (polls.get(0).getCreator_id() != userId) {
+        if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
         if (polls.size() == 0) {
@@ -271,7 +272,6 @@ public class PollController {
         }
 
         Poll targetPoll = polls.get(0);
-        ;
 
         String title = pollData.get("title");
         String description = pollData.get("description");
@@ -506,7 +506,7 @@ public class PollController {
         } // End of session check
 
         // check we made this account
-        if (poll.getCreator_id() != userId) {
+        if (poll.getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
 
@@ -562,5 +562,68 @@ public class PollController {
         } catch (Exception e) {
             return "redirect:/dashboard";
         }
+    }
+    @PostMapping("/finalize/{pid}/{mid}/{startTime}/{endTime}/{date}/{date2}/{date3}")
+    public String finalizePoll(@PathVariable int pid, @PathVariable int mid, @PathVariable String startTime, 
+            @PathVariable String endTime, @PathVariable String date, @PathVariable String date2, @PathVariable String date3, 
+            HttpSession session,
+            HttpServletRequest request) throws ParseException {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+        // add update
+        List<Poll> polls = pollRepo.findBypid(pid);
+        if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
+            return "redirect:/dashboard";
+        }
+        if (polls.size() == 0) {
+            // cant find poll
+            return "redirect:/dashboard";
+        }
+        Poll targetPoll = polls.get(0);
+
+
+        // Parse dates
+        if (date2.length() == 1){
+            date2 = "0" + date2;
+        }
+        if (date3.length() == 1){
+            date3 = "0" + date3;
+        }
+        java.time.Instant startDate = java.time.Instant.parse(date + '-' + date2 + '-' + date3 + "T" + startTime + ":00.00Z");
+        java.time.Instant endDate = java.time.Instant.parse(date + '-' + date2 + '-' + date3 + "T" + endTime + ":00.00Z");
+
+
+        // Create and save Poll object
+        targetPoll.setStartDate(startDate);
+        targetPoll.setEndDate(endDate);
+        targetPoll.setFinalized(true);
+        pollRepo.save(targetPoll);
+
+        //trim mediums/responses
+        mediumRepo.trimBypid(pid, Integer.valueOf(mid));
+        responseRepo.deleteByPid(pid);
+        
+
+
+        return "redirect:/dashboard";
     }
 }
