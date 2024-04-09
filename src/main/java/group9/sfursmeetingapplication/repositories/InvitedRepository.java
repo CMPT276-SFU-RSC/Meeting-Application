@@ -6,10 +6,17 @@ package group9.sfursmeetingapplication.repositories;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
 import group9.sfursmeetingapplication.models.Invited;
 
 public interface InvitedRepository extends JpaRepository<Invited, Integer> {
+
+    List<Invited> findByPidAndUid(int pid, int uid);
+
+    @Transactional
+    void deleteBypid(Integer pid);
+
     /**
      * This method finds all the invited users for a specific meeting.
      * 
@@ -21,6 +28,5 @@ public interface InvitedRepository extends JpaRepository<Invited, Integer> {
             "INNER JOIN users ON invited.uid = users.uid " +
             "WHERE invited.pid = :pid ", nativeQuery = true)
     List<Object[]> findByPid(@Param("pid") Integer pid);
-
 
 }

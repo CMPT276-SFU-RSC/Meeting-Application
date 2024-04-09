@@ -157,6 +157,16 @@ function addMedium() {
     if (mediumName == "") {
         return;
     }
+
+    //verify we dont already have it
+    var mediums = document.getElementsByClassName('singleMedium');
+    for (var i = 0; i < mediums.length; i++){
+        if (!document.getElementById("mediumRemote").checked && mediums[i].innerHTML == mediumName ||
+        document.getElementById("mediumRemote").checked && mediums[i].innerHTML == "(R) " +mediumName){
+            document.getElementById("mediumInput").value = "";
+            return;
+        }
+    }
     let par = document.getElementById("mediumsList");
     let node = document.createElement("p");
     node.classList.add('singleMedium');
@@ -216,7 +226,53 @@ function addMediumsUsersToForm() {
     //send
     document.getElementById("inputField").requestSubmit();
 }
-
+function sendUpdatePollForm(){
+        //add mediums
+        let mediums = document.getElementsByClassName("singleMedium");
+        if (mediums.length == 0) {
+            alert("Please add a medium");
+            return;
+        }
+        let users = document.getElementsByClassName("singleUser");
+        if (users.length == 0) {
+            alert("Please add a user");
+            return;
+        }
+    
+        // add from our list
+        var newMed = 0;
+        var oldMed = 0;
+        for (var i = 0; i < mediums.length; i++) {
+            let node = document.createElement("input");
+            if (mediums[i].getAttribute("mid") != undefined){
+                node.name = "o" + oldMed ; //o[id]
+                //set its title to it's id, rather than storing it
+                node.value = mediums[i].getAttribute("mid");
+                oldMed++;
+            }
+            else {
+                node.name = "n" + newMed;
+                node.value = mediums[i].innerHTML;// "(r) __" or "___"
+                newMed++;
+            }
+            
+            node.hidden = true;
+            document.getElementById("inputField").append(node);
+        }
+    
+        //add users
+        for (var i = 0; i < users.length; i++) {
+            let node = document.createElement("input");
+            node.name = "u" + i;
+            node.value = users[i].innerHTML;// "(x) fName lName"
+            node.hidden = true;
+            document.getElementById("inputField").append(node);
+        }
+    
+    
+        //send
+        document.getElementById("inputField").requestSubmit();
+}
 function getUsersList() {
     fetch('./userAll', {
         method: 'GET',
@@ -255,7 +311,7 @@ function getUsers() {
         return;
     }
     //send partial search
-    fetch('./userSearch', {
+    fetch('../userSearch', {
         method: 'POST',
         body: search,
         headers: {
