@@ -160,9 +160,9 @@ function addMedium() {
 
     //verify we dont already have it
     var mediums = document.getElementsByClassName('singleMedium');
-    for (var i = 0; i < mediums.length; i++){
+    for (var i = 0; i < mediums.length; i++) {
         if (!document.getElementById("mediumRemote").checked && mediums[i].innerHTML == mediumName ||
-        document.getElementById("mediumRemote").checked && mediums[i].innerHTML == "(R) " +mediumName){
+            document.getElementById("mediumRemote").checked && mediums[i].innerHTML == "(R) " + mediumName) {
             document.getElementById("mediumInput").value = "";
             return;
         }
@@ -226,53 +226,55 @@ function addMediumsUsersToForm() {
     //send
     document.getElementById("inputField").requestSubmit();
 }
-function sendUpdatePollForm(){
-        //add mediums
-        let mediums = document.getElementsByClassName("singleMedium");
-        if (mediums.length == 0) {
-            alert("Please add a medium");
-            return;
+
+function sendUpdatePollForm() {
+    //add mediums
+    let mediums = document.getElementsByClassName("singleMedium");
+    if (mediums.length == 0) {
+        alert("Please add a medium");
+        return;
+    }
+    let users = document.getElementsByClassName("singleUser");
+    if (users.length == 0) {
+        alert("Please add a user");
+        return;
+    }
+
+    // add from our list
+    var newMed = 0;
+    var oldMed = 0;
+    for (var i = 0; i < mediums.length; i++) {
+        let node = document.createElement("input");
+        if (mediums[i].getAttribute("mid") != undefined) {
+            node.name = "o" + oldMed; //o[id]
+            //set its title to it's id, rather than storing it
+            node.value = mediums[i].getAttribute("mid");
+            oldMed++;
         }
-        let users = document.getElementsByClassName("singleUser");
-        if (users.length == 0) {
-            alert("Please add a user");
-            return;
+        else {
+            node.name = "n" + newMed;
+            node.value = mediums[i].innerHTML;// "(r) __" or "___"
+            newMed++;
         }
-    
-        // add from our list
-        var newMed = 0;
-        var oldMed = 0;
-        for (var i = 0; i < mediums.length; i++) {
-            let node = document.createElement("input");
-            if (mediums[i].getAttribute("mid") != undefined){
-                node.name = "o" + oldMed ; //o[id]
-                //set its title to it's id, rather than storing it
-                node.value = mediums[i].getAttribute("mid");
-                oldMed++;
-            }
-            else {
-                node.name = "n" + newMed;
-                node.value = mediums[i].innerHTML;// "(r) __" or "___"
-                newMed++;
-            }
-            
-            node.hidden = true;
-            document.getElementById("inputField").append(node);
-        }
-    
-        //add users
-        for (var i = 0; i < users.length; i++) {
-            let node = document.createElement("input");
-            node.name = "u" + i;
-            node.value = users[i].innerHTML;// "(x) fName lName"
-            node.hidden = true;
-            document.getElementById("inputField").append(node);
-        }
-    
-    
-        //send
-        document.getElementById("inputField").requestSubmit();
+
+        node.hidden = true;
+        document.getElementById("inputField").append(node);
+    }
+
+    //add users
+    for (var i = 0; i < users.length; i++) {
+        let node = document.createElement("input");
+        node.name = "u" + i;
+        node.value = users[i].innerHTML;// "(x) fName lName"
+        node.hidden = true;
+        document.getElementById("inputField").append(node);
+    }
+
+
+    //send
+    document.getElementById("inputField").requestSubmit();
 }
+
 function getUsersList() {
     fetch('./userAll', {
         method: 'GET',
@@ -396,36 +398,18 @@ function refresh() {
 }
 
 /**
- * Parases the datetime string and returns a date object.
- * @param {*} datetime The datetime string to parse.
- * @returns Date object with only the date part.
- */
-function getDatePart(datetime) {
-    return new Date(datetime.getFullYear(), datetime.getMonth(), datetime.getDate());
-}
-
-/**
- * Parases the datetime string and returns a time object.
- * @param {*} datetime  The datetime string to parse.
- * @returns Date object with only the time part.
- */
-function getTimePart(datetime) {
-    return new Date(datetime.getHours(), datetime.getMinutes(), datetime.getSeconds());
-}
-
-/**
  * Loads the table with the given start and end date.
  * Allows the user to select multiple cells by clicking and dragging the mouse.
  */
-function tableOnLoad(timeArray, readonly) {
+function tableOnLoad(readonly) {
     if (readonly === undefined) {
         readonly = false;
-      }
+    }
 
     let start = new Date(document.getElementById('startDate').value);
     let end = new Date(document.getElementById('endDate').value);
     let isMouseDown = false;
-    
+
     // Get all tables
     let tables = document.querySelectorAll('[id^="timeBlocks"]');
     // Loop over each table
@@ -456,7 +440,7 @@ function tableOnLoad(timeArray, readonly) {
                 cell.textContent = startTime.getUTCHours().toString().padStart(2, '0') + ":" + startTime.getUTCMinutes().toString().padStart(2, '0');
                 cell.style.padding = '7px';
 
-                if (readonly == false){
+                if (readonly == false) {
                     cell.addEventListener('mousedown', function () { // Add mousedown event listener
                         isMouseDown = true;
                         this.classList.toggle('selected'); // Toggle 'selected' class
@@ -481,8 +465,41 @@ function tableOnLoad(timeArray, readonly) {
             startTime.setUTCMinutes(startTime.getUTCMinutes() + 30);
         }
     }
-    populateCells(timeArray);
+    returnTime();
 };
+
+/**
+ * Highlights the 'selected' class of the updated poll table cells from the database.
+ */
+function returnTime() {
+    // Get all tables with the class "timeBlocks"
+    let tables = document.querySelectorAll('.timeBlocks');
+    tables.forEach(table => {
+        // Extract the necessary data attributes from the table
+        let mid = table.getAttribute('data-mid');
+        let uid = table.getAttribute('data-uid');
+
+        // Use the Fetch API to get the data
+        fetch(`/poll/response/${uid}/${mid}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let string = data[0].available_time;
+
+                const numColumns = table.rows[0].cells.length; // Get the number of columns
+                for (let j = 0; j < numColumns; j++) { // Iterate over each column
+                    for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                        const cell = table.rows[k].cells[j];
+
+                        if (string[j * (table.rows.length - 1) + k - 1] == '1') {
+                            cell.classList.add('selected');
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+}
 
 /**
  * Populates the cells in the table with the selected times.
@@ -499,12 +516,13 @@ function populateCells(array) {
         for (let j = 0; j < numColumns; j++) { // Iterate over each column
             for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
                 const cell = table.rows[k].cells[j];
-                
-                if (string[j*(table.rows.length-1) + k-1] == '1') {
+
+                if (string[j * (table.rows.length - 1) + k - 1] == '1') {
                     cell.classList.add('selected');
                 }
                 else {
                     cell.classList.remove('selected');
+
                     cell.style.background = null;
                 }
             }
@@ -514,8 +532,9 @@ function populateCells(array) {
 
 /**
  * Finalizes the poll by converting the selected cells into a string.
+ * @param {*} action The action to be performed (update or post)
  */
-function finalizePoll() {
+function finalizePoll(action) {
     let responses = [];
     let tableArray = [];
     let allTables = document.querySelectorAll('[id^="timeBlocks"]');
@@ -540,7 +559,7 @@ function finalizePoll() {
         let table = tableArray[i]; // Get the table
         let numColumns = table.rows[0].cells.length; // Get the number of columns
         let selectedCells = "";
-    
+
         for (let j = 0; j < numColumns; j++) { // Iterate over each column
             for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
                 let cell = table.rows[k].cells[j];
@@ -561,6 +580,55 @@ function finalizePoll() {
         response['medium'] = table.getAttribute('data-name');
         responses.push(response);
     }
+    if (action == "update") {
+        updateTable(tableArray, responses);
+    }
+    if (action == "post") {
+        postTable(tableArray, responses);
+    }
+
+}
+
+/**
+ * POST request to update the selected cells in the database.
+ * @param {*} tableArray The array of tables
+ * @param {*} responses The array of responses
+ */
+function updateTable(tableArray, responses) {
+    fetch(`/poll/update`, {
+        // Sends a POST request to the PostControllerRest.java
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(responses),
+    })
+        .then(response => {
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // If the response is ok, redirect to the success page
+            console.log('Success:', data);
+            window.location.href = '/success.html';
+
+        })
+        .catch((error) => {
+            // If there is an error, log the error and redirect to the poll page
+            console.error('Error:', error);
+            window.location.href = `/polls/update/${tableArray[0].getAttribute('data-pid')}`;
+        });
+}
+
+/**
+ * Posts the selected cells to the database.
+ * @param {*} tableArray  The array of tables 
+ * @param {*} responses  The array of responses
+ */
+function postTable(tableArray, responses) {
     fetch(`/poll/respond`, {
         // Sends a POST request to the PostControllerRest.java
         method: 'POST',
@@ -569,46 +637,37 @@ function finalizePoll() {
         },
         body: JSON.stringify(responses),
     })
-    .then(response => {
-        // If the response is not ok, throw an error
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // If the response is ok, redirect to the success page
-        console.log('Success:', data);
-        window.location.href = '/success.html';
-        
-    })
-    .catch((error) => {
-        // If there is an error, log the error and redirect to the poll page
-        console.error('Error:', error);
-        window.location.href = `/polls/respond/${tableArray[0].getAttribute('data-pid')}`;
-    });
+        .then(response => {
+            // If the response is not ok, throw an error
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            // If the response is ok, redirect to the success page
+            console.log('Success:', data);
+            window.location.href = '/success.html';
+
+        })
+        .catch((error) => {
+            // If there is an error, log the error and redirect to the poll page
+            console.error('Error:', error);
+            window.location.href = `/polls/respond/${tableArray[0].getAttribute('data-pid')}`;
+        });
 }
 
 function clearSession() {
     sessionStorage.clear();
 }
 
-function getResponse(blocks) {
-
-    var dataMid = blocks.parentElement.getAttribute("data-mid");
-    var dataPid = blocks.parentElement.getAttribute("data-pid");
-    var dataUid = blocks.parentElement.getAttribute("data-uid");
-
-    getResponseHelper(dataUid, dataMid, dataPid, select);
-}
-
 function updateDisplay() {
     var inv = document.getElementById("dropdownMenuInvite")[document.getElementById("dropdownMenuInvite").selectedIndex];
     var med = document.getElementById("dropdownMenuMedium")[document.getElementById("dropdownMenuMedium").selectedIndex];
 
-    if (document.getElementById("dropdownMenuMedium").value != ""){
+    if (document.getElementById("dropdownMenuMedium").value != "") {
         //medium selected
-        if (document.getElementById("dropdownMenuInvite").value == ""){
+        if (document.getElementById("dropdownMenuInvite").value == "") {
             //output all in heatmap for medium
             var dataMid = med.getAttribute("data-mid");
 
@@ -642,7 +701,8 @@ function updateDisplay() {
 
 
 }
-function heatMap(data){
+
+function heatMap(data) {
     //clear highlights
     var allTables = document.querySelectorAll('[id^="timeBlocks"]');
     allTables.forEach((table, index) => {
@@ -662,13 +722,13 @@ function heatMap(data){
     //  ex [010], [100], [111], [001], [001], [101]
     //  would result in [324]
     var str = [];
-    for (var i = 0; i < data.length; i++){
-        for (var j = 0; j < data[i].available_time.length; j++){
-            if (str[j] === undefined){
+    for (var i = 0; i < data.length; i++) {
+        for (var j = 0; j < data[i].available_time.length; j++) {
+            if (str[j] === undefined) {
                 str[j] = 0;
             }
 
-            if (data[i].available_time[j] == "1"){
+            if (data[i].available_time[j] == "1") {
                 str[j]++;
             }
         }
@@ -676,12 +736,12 @@ function heatMap(data){
 
     var max = 0;
     var min = 0;
-    for (var i = 0; i < str.length; i++){
+    for (var i = 0; i < str.length; i++) {
         max = Math.max(str[i], max);
         min = Math.min(str[i], min);
     }
 
-    
+
     allTables = document.querySelectorAll('[id^="timeBlocks"]');
     allTables.forEach((table, index) => {
         const numColumns = table.rows[0].cells.length; // Get the number of columns
@@ -690,7 +750,7 @@ function heatMap(data){
             for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
                 const cell = table.rows[k].cells[j];
                 //G value from 100-255, can be changed later
-                cell.style.background ="rgb(120, " + (( str[j*(table.rows.length-1) + k-1]/(max) )*225+15) +" , 7)";
+                cell.style.background = "rgb(120, " + ((str[j * (table.rows.length - 1) + k - 1] / (max)) * 225 + 15) + " , 7)";
             }
         }
     });
@@ -706,7 +766,8 @@ function getResForMidUid(uid, mid) {
         })
         .catch(error => console.error('Error:', error));
 }
-function getResForMid(mid){
+
+function getResForMid(mid) {
     fetch("/poll/response/" + mid)
         .then(response => response.json())
         .then(data => {

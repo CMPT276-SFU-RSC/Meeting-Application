@@ -15,70 +15,86 @@
 </head>
 
 <body onload="tableOnLoad()">
-<body>
-    <div class="secondary-body">
-    <header>
-        <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
-    </header>
 
-    <header class="header-greeting">
-        <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">
-            <span th:text=" ${poll.title}"></span>
-        </h1>
-    </header>
-    <main class="container-fluid d-flex justify-content-around mb-3">
-        <section class="col-md-3">
-            <fieldset class="form-group row">
-                <label class="col-form-label" for="pid">Poll ID</label>
-                <input class="form-control form-control-lg mb-3" id="pid" th:value="${poll.pid}" style="font-style: italic;" readonly disabled>
+    <body>
+        <div class="secondary-body">
+            <header>
+                <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
+            </header>
 
-                <label class="col-form-label" for="description">Description</label>
-                <input class="form-control form-control-lg mb-3" id="description" th:value="${poll.description}" style="font-style: italic;"
-                    readonly disabled></input>
+            <header class="header-greeting">
+                <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">
+                    <span th:text=" ${poll.title}"></span>
+                </h1>
+            </header>
+            <main class="container-fluid d-flex justify-content-around mb-3">
+                <section class="col-md-3">
+                    <fieldset class="form-group row">
+                        <label class="col-form-label" for="pid">Poll</label>
+                        <input class="form-control form-control-lg mb-3" id="pid" th:value="${poll.pid}"
+                            style="font-style: italic;" readonly disabled>
 
-                <label class="col-form-label" for="startDateTimeString">Date</label>
-                <input class="form-control form-control-lg mb-3" id="startDateTimeString" th:value="${poll.startDateTimeString}" style="font-style: italic;" readonly disabled>
+                        <label class="col-form-label" for="description">Creator</label>
+                        <input class="form-control form-control-lg mb-3" id="creator" th:value="${poll.creatorName}"
+                            style="font-style: italic;" readonly disabled></input>
 
-                <label class="col-form-label" for="endDateTimeString">End Time</label>
-                <input class="form-control form-control-lg mb-3" id="endDateDateTimeString" th:value="${poll.endDateTimeString}" style="font-style: italic;"  readonly disabled>
+                        <label class="col-form-label" for="description">Description</label>
+                        <input class="form-control form-control-lg mb-3" id="description" th:value="${poll.description}"
+                            style="font-style: italic;" readonly disabled></input>
 
-                <label class="col-form-label" for="users">List Attendees</label>
-                <fieldset class="overflow-auto overflow-x-hidden" style="height: 100px; border-style: solid; display: flex; flex-direction: column;" id="allUsersList">
-                    <fieldset th:each="invited, iterStat : ${invited} ">
-                        <input class="special-input" th:placeholder="${'&#40' + invited.uid + '&#41 - ' + invited.first_name + ' ' + invited.last_name}" disabled readonly>
-                        <span th:if="${iterStat.last}" th:text="${iterStat.index + 1}" class="attendee-count" style="display: none;"></span>
+                        <label class="col-form-label" for="startDateTimeString">Start Date at Time</label>
+                        <input class="form-control form-control-lg mb-3" id="startDateTimeString"
+                            th:value="${poll.startDateTimeString}" style="font-style: italic;" readonly disabled>
+
+                        <label class="col-form-label" for="endDateTimeString">End Date at Time</label>
+                        <input class="form-control form-control-lg mb-3" id="endDateDateTimeString"
+                            th:value="${poll.endDateTimeString}" style="font-style: italic;" readonly disabled>
+
+                        <label class="col-form-label" for="users">List Attendees</label>
+                        <fieldset class="overflow-auto overflow-x-hidden"
+                            style="height: 100px; border-style: solid; display: flex; flex-direction: column;"
+                            id="allUsersList">
+                            <fieldset th:each="invited, iterStat : ${invited} ">
+                                <input class="special-input"
+                                    th:placeholder="${'&#40' + invited.uid + '&#41 - ' + invited.first_name + ' ' + invited.last_name}"
+                                    disabled readonly>
+                                <span th:if="${iterStat.last}" th:text="${iterStat.index + 1}" class="attendee-count"
+                                    style="display: none;"></span>
+                            </fieldset>
+                        </fieldset>
+                        <a href="/" class="btn btn-primary redButton mt-3">Back</a>
+                        <button id="finalize-poll" class="btn btn-primary redButton mt-3"
+                            onclick="finalizePoll('post')">
+                            Finalize Poll
+                        </button>
                     </fieldset>
-                </fieldset>
-                <a href="/" class="btn btn-primary redButton mt-3">Back</a>
-                <button id="finalize-poll" class="btn btn-primary redButton mt-3" onclick="finalizePoll()">
-                    Finalize Poll
-                </button>
-            </fieldset>
-        </section>
-        
-        <section class="col-md-7">
-            <article class="col-md-8">
-                <fieldset th:each="medium : ${mediums}">
-                    <label class="col-form-label " for="medium-name">Medium</label>
-                    <input class="form-control form-control-lg mb-3 " id="medium-name" th:placeholder=" ${medium.remote ? '&#40' + 'R' + '&#41 ' + medium.name : medium.name}" readonly disabled>
-                    <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}" hidden>
-                    <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}" hidden>
-                    <section class="container-fluid overflow-auto">
-                    <table class="timeBlocks" th:id="timeBlocks + ${medium.mid}"
-                    th:attr="data-name=${medium.name}, data-remote=${medium.remote}, data-mid=${medium.mid},
-                        data-pid=${poll.pid}, data-uid=${user.uid}"
-                    ></table>
                 </section>
-            </fieldset>
-            </article>
 
-        </section>
-    </main>
-    <div class="container d-flex justify-content-center align-items-center" style="padding-bottom: 10px;">
-        <a href="#" class="btn btn-primary redButton">Back to The top</a>
-    </div>
-    <footer th:replace="~{universals/footer :: footer}"></footer>
-</div>
-</body>
+                <section class="col-md-7">
+                    <article class="col-md-8">
+                        <fieldset th:each="medium : ${mediums}">
+                            <label class="col-form-label " for="medium-name">Medium</label>
+                            <input class="form-control form-control-lg mb-3 " id="medium-name"
+                                th:placeholder=" ${medium.remote ? '&#40' + 'R' + '&#41 ' + medium.name : medium.name}"
+                                readonly disabled>
+                            <input class="form-control form-control-lg mb-3" id="startDate" th:value="${poll.startDate}"
+                                hidden>
+                            <input class="form-control form-control-lg mb-3" id="endDate" th:value="${poll.endDate}"
+                                hidden>
+                            <section class="container-fluid overflow-auto">
+                                <table class="timeBlocks" th:id="timeBlocks + ${medium.mid}" th:attr="data-name=${medium.name}, data-remote=${medium.remote}, data-mid=${medium.mid},
+                        data-pid=${poll.pid}, data-uid=${user.uid}"></table>
+                            </section>
+                        </fieldset>
+                    </article>
+
+                </section>
+            </main>
+            <div class="container d-flex justify-content-center align-items-center" style="padding-bottom: 10px;">
+                <a href="#" class="btn btn-primary redButton">Back to The top</a>
+            </div>
+            <footer th:replace="~{universals/footer :: footer}"></footer>
+        </div>
+    </body>
 
 </html>
