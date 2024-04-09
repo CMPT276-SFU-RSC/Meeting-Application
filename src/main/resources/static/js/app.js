@@ -675,31 +675,13 @@ function sendFinalizedPoll(){
     var endTimeString = document.getElementById("timeBlocks").rows[date.endRow].cells[date.endCol].innerHTML;
 
     fetch(`/finalize/${table.getAttribute('data-pid')}/${document.getElementById("dropdownMenuMedium").value}/${startTimeString}/${endTimeString}/${DateString}`, {
-        // Sends a POST request to the PostControllerRest.java
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: null
-    })
-    .then(response => {
-        // If the response is not ok, throw an error
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        // If the response is ok, redirect to the success page
-        console.log('Success:', data);
-        window.location.href = '/success.html';
-        
-    })
-    .catch((error) => {
-        // If there is an error, log the error and redirect to the poll page
-        console.error('Error:', error);
-        //window.location.href = `/polls/viewVotes/${table.getAttribute('data-pid')}`;
     });
+    window.location.replace("../../dashboard");
 }
 function getResponse(blocks) {
 
