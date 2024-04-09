@@ -22,6 +22,7 @@ public class ResponseServiceImplementation implements ResponseService {
 
     /**
      * This method saves the user's response to the database.
+     * 
      * @param response The response object.
      * @throws IllegalArgumentException If the user does not exist.
      * 
@@ -32,12 +33,18 @@ public class ResponseServiceImplementation implements ResponseService {
         if (user == null) {
             throw new IllegalArgumentException("User does not exist");
         }
+
+        Response userResponse = responseRepository.findByUidAndPidAndMid(response.getUid(), response.getPid(),
+                response.getMid());
+        if (userResponse != null) {
+            throw new IllegalArgumentException("There's already a response for this user and poll");
+        }
         responseRepository.save(response);
     }
 
-
     /**
      * This method gets all the responses by the user's UID.
+     * 
      * @param uid The user's UID.
      * @return List<Response> The list of responses.
      */
@@ -48,10 +55,11 @@ public class ResponseServiceImplementation implements ResponseService {
             throw new IllegalArgumentException("User does not exist");
         }
         return responseRepository.findByUid(uid);
-    }  
-    
+    }
+
     /**
      * This method gets response by the user's UID + MID + PID.
+     * 
      * @param uid The user's UID.
      * @param mid medium ID.
      * @param pid poll ID.
@@ -60,6 +68,28 @@ public class ResponseServiceImplementation implements ResponseService {
     @Override
     public Optional<Response> getUserResponseByUidMidPid(long uid, long mid, long pid) {
         return responseRepository.findByUidAndMidAndPid(uid, mid, pid);
+    }
+
+    /**
+     * This method updates the user's response to the database.
+     * 
+     * @param response The response object.
+     * @throws IllegalArgumentException If the user does not exist.
+     */
+    @Override
+    public void updateUserResponse(Response response) {
+        User user = userService.getUserById(response.getUid());
+        if (user == null) {
+            throw new IllegalArgumentException("User does not exist");
+        }
+
+        Response userResponse = responseRepository.findByUidAndPidAndMid(response.getUid(), response.getPid(),
+                response.getMid());
+        if (userResponse == null) {
+            throw new IllegalArgumentException("Response does not exist");
+        }
+        userResponse.setAvailable_time(response.getAvailable_time());
+        responseRepository.save(userResponse);
     }
 
 }

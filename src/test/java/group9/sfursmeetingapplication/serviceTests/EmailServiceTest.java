@@ -2,20 +2,13 @@ package group9.sfursmeetingapplication.serviceTests;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import group9.sfursmeetingapplication.models.*;
-import group9.sfursmeetingapplication.controllers.*;
 import group9.sfursmeetingapplication.services.*;
-import group9.sfursmeetingapplication.repositories.*;
-
 import com.sendgrid.Request;
 import com.sendgrid.Response;
 import com.sendgrid.SendGrid;

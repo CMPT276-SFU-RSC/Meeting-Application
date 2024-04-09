@@ -13,8 +13,17 @@ import group9.sfursmeetingapplication.models.Response;
 import java.util.Optional;
 
 @Repository
-public interface ResponseRepository extends JpaRepository<Response, Integer>{
+public interface ResponseRepository extends JpaRepository<Response, Integer> {
     List<Response> findByPid(int pid);
+
+    /**
+     * This method gets the response by the user's UID + PID + MID.
+     * @param uid The user's UID.
+     * @param pid The poll ID.
+     * @param mid The medium ID.
+     * @return Response The response object.
+     */
+    Response findByUidAndPidAndMid(Long uid, Integer pid, Integer mid);
 
     @Transactional
     void deleteBymid(Integer mid);
@@ -30,15 +39,13 @@ public interface ResponseRepository extends JpaRepository<Response, Integer>{
 
     @Modifying
     @Transactional
-    @Query(
-        value = "DELETE FROM user_responses " + 
-                "WHERE user_responses.pid = ?1 AND user_responses.uid = ?2 ;",
-        nativeQuery = true
-    )
+    @Query(value = "DELETE FROM user_responses " +
+            "WHERE user_responses.pid = ?1 AND user_responses.uid = ?2 ;", nativeQuery = true)
     void deleteByPidAndUid(int pid, int uid);
 
     /**
      * Find all responses by UID
+     * 
      * @param uid The user's UID
      * @return List<Response> The list of responses
      */
@@ -46,6 +53,7 @@ public interface ResponseRepository extends JpaRepository<Response, Integer>{
 
     /**
      * This method gets response by the user's UID + MID + PID.
+     * 
      * @param uid The user's UID.
      * @param mid medium ID.
      * @param pid poll ID.
@@ -54,16 +62,13 @@ public interface ResponseRepository extends JpaRepository<Response, Integer>{
     Optional<Response> findByUidAndMidAndPid(long uid, long mid, long pid);
 
     @Query(value = "SELECT user_responses.* " +
-        "FROM user_responses " +
-        "WHERE user_responses.mid = ?1 AND user_responses.uid = ?2 ;", 
-        nativeQuery = true)
+            "FROM user_responses " +
+            "WHERE user_responses.mid = ?1 AND user_responses.uid = ?2 ;", nativeQuery = true)
     List<Response> findByMidAndUid(int mid, int uid);
 
-
     @Query(value = "SELECT user_responses.* " +
-        "FROM user_responses " +
-        "WHERE user_responses.mid = ?1 ;", 
-        nativeQuery = true)
+            "FROM user_responses " +
+            "WHERE user_responses.mid = ?1 ;", nativeQuery = true)
     List<Response> findByMid(int mid);
-        
+
 }
