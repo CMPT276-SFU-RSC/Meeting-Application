@@ -311,7 +311,7 @@ function getUsers() {
         return;
     }
     //send partial search
-    fetch('../userSearch', {
+    fetch('../../userSearch', {
         method: 'POST',
         body: search,
         headers: {
@@ -748,6 +748,20 @@ function updateDisplay() {
 
 
 }
+function clearTable(){
+    var allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                cell.classList.remove('selected');
+                cell.style.background = null;
+            }
+        }
+    });
+}
 function heatMap(data){
     //clear highlights
     var allTables = document.querySelectorAll('[id^="timeBlocks"]');
@@ -807,8 +821,12 @@ function getResForMidUid(uid, mid) {
     fetch("/poll/response/" + uid + "/" + mid)
         .then(response => response.json())
         .then(data => {
-            populateCells(data[0].available_time);
-            document.getElementById("mediumName").innerHTML = data[0].medium;
+            clearTable();
+            if (data.length != 0){
+                populateCells(data[0].available_time);
+            }
+            
+            document.getElementById("mediumName").innerHTML = document.getElementById("dropdownMenuMedium").options[document.getElementById("dropdownMenuMedium").selectedIndex].text;
         })
         .catch(error => console.error('Error:', error));
 }
@@ -816,8 +834,12 @@ function getResForMid(mid){
     fetch("/poll/response/" + mid)
         .then(response => response.json())
         .then(data => {
-            heatMap(data);
-            document.getElementById("mediumName").innerHTML = data[0].medium;
+            clearTable();
+            if (data.length != 0){
+                heatMap(data);
+            }
+
+            document.getElementById("mediumName").innerHTML = document.getElementById("dropdownMenuMedium").options[document.getElementById("dropdownMenuMedium").selectedIndex].text;
         })
         .catch(error => console.error('Error:', error));
 }
