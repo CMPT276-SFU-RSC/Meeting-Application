@@ -223,7 +223,7 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/delete")
+    @GetMapping("admins/polldelete")
     public String deletepage(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
         // Check if the user is logged in
         session = request.getSession(false);
@@ -249,7 +249,7 @@ public class UserController {
         } // End of session check
 
         model.addAttribute("user", user);
-        return "users/delete";
+        return "admins/polldelete";
     }
 
     @PostMapping("/users/delete")
