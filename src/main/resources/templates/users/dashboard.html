@@ -19,16 +19,18 @@
     <header>
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
-    <div class="secondary-body">
-        <div class="secondary-navbar">
-            <div class="tab-btn1" onclick="openTab('pending')">Pending Polls</div>
-            <div class="tab-btn2" onclick="openTab('created')">Created Polls</div>
-            <div th:if="${user.isOrganizer}">
-                <div class="tab-btn3" onclick="openTab('allPolls')">All Polls</div>
-            </div>
+<div class="secondary-body">
+    <div class="secondary-navbar">
+        <div class="tab-btn1" onclick="openTab('pending')" >Pending Polls</div>
+        <div class="tab-btn2" onclick="openTab('created')" >Created Polls</div>
+
+        <div class="tab-btn4" onclick="openTab('finalized')">Finalized Polls</div>
+        <div th:if="${user.isOrganizer}">
+            <div class="tab-btn3" onclick="openTab('allPolls')">All Polls</div>
         </div>
-        
-        <section th:if="${user.isOrganizer}">
+    </div>
+
+    <section th:if="${user.isOrganizer}">
             <div class="event-box-custom">
                 <div class="card-header" style="font-weight: bolder;">Admin Privelages</div>
                 <div class="card-body">
@@ -36,176 +38,197 @@
                     <a href="admins/userdisplay" class="btn btn-secondary">Display users</a>
                 </div>
             </div>
-        </section>
+    </section>
 
-        <main id="allPolls" th:if="${user.isOrganizer}" style="display: none;">
-            <header class="header-greeting">
-                <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">List Of All
-                    Polls</h1>
-            </header>
-            <section class="container-fluid justify-content-between mb-3">
-                <div class="card-group">
-                    <div th:each="poll1 : ${polls1}">
-                        <div class="event-box">
-                            <div class="title" th:text="${poll1.title}"></div>
+    <main id="allPolls" th:if="${user.isOrganizer}" style="display: none;">
+        <header class="header-greeting">
+            <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">List Of All
+                Polls</h1>
+        </header>
+        <section class="container-fluid justify-content-between mb-3">
+            <div class="card-group">
+                <div th:each="poll1 : ${polls1}">
+                    <div class="event-box">
+                        <div class="title" th:text="${poll1.title}"></div>
+                        <div class="event-box-divider"></div>
+                        <label for="details">Description: </label>
+                        <div class="description" th:text="${poll1.description}"></div>
+                        <div class="event-box-divider"></div>
+                        <div class="details">
+                            <label for="details">Start Date: </label>
+                            <label class="description" th:text="${#strings.substring(poll1.startDate, 0, 10) + ' ' + #strings.substring(poll1.startDate, 11, 16)}"></label>
+                            <label for="details">End Date: </label>
+                            <label class="description" th:text="${#strings.substring(poll1.endDate, 0, 10) + ' ' + #strings.substring(poll1.endDate, 11, 16)}"></label><br>
                             <div class="event-box-divider"></div>
-                            <label for="details">Description: </label>
-                            <div class="description" th:text="${poll1.description}"></div>
-                            <div class="event-box-divider"></div>
-                            <div class="details">
-                                <label for="details">Start Date: </label>
-                                <label class="description" th:text="${poll1.startDate}"></label>
-                                <label for="details">End Date: </label>
-                                <label class="description" th:text="${poll1.endDate}"></label><br>
-                                <div class="event-box-divider"></div>
-                                <label for="details">Poll ID: </label>
-                                <label class="description" th:text="${poll1.pid}"></label>
-                                <div class="d-flex">
-                                    <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}"
-                                        class="btn btn-primary redButton">View</a>
-                                    <a href="#" class="btn btn-primary redButton">Edit</a>
-                                    <a href="admins/polldelete" class="btn btn-secondary">Delete</a>
-                                </div>
+                            <label for="details">Poll ID: </label>
+                            <label class="description" th:text="${poll1.pid}"></label>
+                            <div class="d-flex">
+                                <a th:href="@{/getPolls/{pid}(pid=${poll1.pid})}" class="btn btn-primary redButton">View</a>
+                                <a th:href="@{polls/edit/{pid}(pid=${poll1.pid})}" class="btn btn-primary redButton">Edit</a>
+                                <a th:href="@{polls/delete/{pid}(pid=${poll1.pid})}" class="btn btn-secondary">Delete</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
-
-        <section id="created" style="display: none;">
-            <header class="header-greeting">
-                <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Created
-                    Polls
-                </h1>
-            </header>
-            <section class="container-fluid justify-content-between mb-3">
-                <div class="card-group">
-                    <div th:each="createdPolls : ${createdPolls}">
-                        <div class="event-box">
-                            <div class="title" th:text="${createdPolls.title}"></div>
-                            <div class="event-box-divider"></div>
-                            <label for="details">Description: </label>
-                            <div class="description" th:text="${createdPolls.description}"></div>
-                            <div class="event-box-divider"></div>
-                            <div class="details">
-                                <label for="details">Start Date: </label>
-                                <label class="description" th:text="${createdPolls.startDate}"></label>
-                                <label for="details">End Date: </label>
-                                <label class="description" th:text="${createdPolls.endDate}"></label><br>
-                                <div class="event-box-divider"></div>
-                                <label for="details">Poll ID: </label>
-                                <label class="description" th:text="${createdPolls.pid}"></label>
-                                <div class="d-flex">
-                                    <a class="btn btn-primary redButtonDisabled" th:if="${createdPolls.finalized}"
-                                        style="pointer-events: none;" disabled>Finalized</a>
-                                    <a class="btn btn-primary redButton" th:if="${!createdPolls.finalized}"
-                                        th:href="@{polls/viewVotes/{pid}(pid=${createdPolls.pid})}">Responses</a>
-                                    <a class="btn btn-primary redButton" th:if="${!createdPolls.finalized}"
-                                        th:href="@{polls/edit/{pid}(pid=${createdPolls.pid})}">Edit</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </section>
+            </div>
         </section>
+    </main>
 
-        <section id="pending" style="display: block;">
-            <header class="header-greeting">
-                <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Polls To
-                    Respond To
-                </h1>
-            </header>
-            <section class="container-fluid justify-content-between mb-3">
-                <div class="card-group">
-                    <div th:each="poll : ${polls}">
-                        <div class="event-box">
-                            <div class="title" th:text="${poll.title}"></div>
+    <section id="created" style="display: none;">
+        <header class="header-greeting">
+            <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Created Polls
+            </h1>
+        </header>
+        <section class="container-fluid justify-content-between mb-3">
+            <div class="card-group">
+                <div th:each="createdPolls : ${createdPolls}">
+                    <div class="event-box">
+                        <div class="title" th:text="${createdPolls.title}"></div>
+                        <div class="event-box-divider"></div>
+                        <label for="details">Description: </label>
+                        <div class="description" th:text="${createdPolls.description}"></div>
+                        <div class="event-box-divider"></div>
+                        <div class="details">
+                            <label for="details">Start Date: </label>
+                            <label class="description" th:text="${#strings.substring(createdPolls.startDate, 0, 10) + ' ' + #strings.substring(createdPolls.startDate, 11, 16)}"></label>
+                            <label for="details">End Date: </label>
+                            <label class="description" th:text="${#strings.substring(createdPolls.endDate, 0, 10) + ' ' + #strings.substring(createdPolls.endDate, 11, 16)}"></label><br>
                             <div class="event-box-divider"></div>
-                            <label for="details">Description: </label>
-                            <div class="description" th:text="${poll.description}"></div>
-                            <div class="event-box-divider"></div>
-                            <div class="details">
-                                <label for="details">Start Date: </label>
-                                <label class="description" th:text="${poll.startDate}"></label>
-                                <label for="details">End Date: </label>
-                                <label class="description" th:text="${poll.endDate}"></label><br>
-                                <div class="event-box-divider"></div>
-                                <label for="details">Poll ID: </label>
-                                <label class="description" th:text="${poll.pid}"></label>
-                                <div class="d-flex">
-                                    <a class="btn btn-primary redButtonDisabled" th:if="${poll.finalized}"
-                                        th:href="@{/polls/respond/{pid}(pid=${poll.pid})}" style="pointer-events: none;"
-                                        disabled>Finalized</a>
-                                    <a class="btn btn-primary redButton"
-                                        th:if="${!poll.finalized and !responses.contains(poll.pid)}"
-                                        th:href="@{/polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
-                                    <a class="btn btn-primary redButton"
-                                        th:if="${!poll.finalized and responses.contains(poll.pid)}"
-                                        th:href="@{/polls/updateResponse/{pid}(pid=${poll.pid})}">Update</a>
-                                </div>
+                            <label for="details">Poll ID: </label>
+                            <label class="description" th:text="${createdPolls.pid}"></label>
+                            <div class="d-flex">
+                                <a class="btn btn-primary redButton" th:href="@{polls/viewVotes/{pid}(pid=${createdPolls.pid})}">Responses</a>
+                                <a class="btn btn-primary redButton" th:href="@{polls/edit/{pid}(pid=${createdPolls.pid})}">Edit</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
         </section>
-        <div class="container d-flex justify-content-center align-items-center" style="padding-bottom: 10px;">
-            <a href="#" class="btn btn-primary redButton">Back to The top</a>
+    </section>
+
+    <section id="pending" style="display: block;">
+    <header class="header-greeting">
+        <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Polls To Respond To
+        </h1>
+    </header>
+    <section class="container-fluid justify-content-between mb-3">
+        <div class="card-group">
+            <div th:each="poll : ${polls}">
+                <div class="event-box">
+                    <div class="title" th:text="${poll.title}"></div>
+                    <div class="event-box-divider"></div>
+                    <label for="details">Description: </label>
+                    <div class="description" th:text="${poll.description}"></div>
+                    <div class="event-box-divider"></div>
+                    <div class="details">
+                        <label for="details">Start Date: </label>
+                        <label class="description" th:text="${#strings.substring(poll.startDate, 0, 10) + ' ' + #strings.substring(poll.startDate, 11, 16)}"></label>
+                        <label for="details">End Date: </label>
+                        <label class="description" th:text="${#strings.substring(poll.endDate, 0, 10) + ' ' + #strings.substring(poll.endDate, 11, 16)}"></label><br>
+                        <div class="event-box-divider"></div>
+                        <label for="details">Poll ID: </label>
+                        <label class="description" th:text="${poll.pid}"></label>
+                        <div class="d-flex">
+                            <a class="btn btn-primary redButton" th:unless="${responses.contains(poll.pid)}" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
+                            <a class="btn btn-primary redButton" th:if="${responses.contains(poll.pid)}" th:href="@{/}">Edit Response</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+</section>
+    <section id="finalized" style="display: none;">
+        <header class="header-greeting">
+            <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Finalized Polls
+            </h1>
+        </header>
+        <section class="container-fluid justify-content-between mb-3">
+            <div class="card-group">
+                <div th:each="i : ${invitedPollsFinals}">
+                    <div class="event-box">
+                        <div class="title" th:text="${i.title}"></div>
+                        <div class="event-box-divider"></div>
+                        <label for="details">Description: </label>
+                        <div class="description" th:text="${i.description}"></div>
+                        <div class="event-box-divider"></div>
+                        <div class="details">
+                            <label for="details">Date: </label>
+                            <label class="description" th:text="${#strings.substring(i.startDate, 0, 10)}"></label><br>
+                            <label for="details">Time: </label>
+                            <label class="description" th:text="${#strings.substring(i.startDate, 11, 16) + '-' + #strings.substring(i.endDate, 11, 16)}"></label>
+                            <div class="event-box-divider"></div>
+                            <label for="details">Poll ID: </label>
+                            <label class="description" th:text="${i.pid}"></label>
+                        </div>
+                    </div>
+                </div>
+        </section>
+    </section>
+<div class="container d-flex justify-content-center align-items-center" style="padding-bottom: 10px;">
+    <a href="#" class="btn btn-primary redButton">Back to The top</a>
+</div>
+</div>
     <footer th:replace="~{universals/footer :: footer}"></footer>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script th:inline="javascript"> // Function to open the selected tab
-        function openTab(tabId) {
-            // Get the active tab from sessionStorage
-            var activeTabId = sessionStorage.getItem("active");
-            var isOrganizer = /*[[${user.isOrganizer}]]*/ false;
-
-            // Get references to tab buttons and tab contents
-            var tabBtn1 = document.querySelector('.tab-btn1');
-            var tabBtn2 = document.querySelector('.tab-btn2');
-            if (isOrganizer) {
-                var tabBtn3 = document.querySelector('.tab-btn3');
-            }
-            var tabContentPending = document.getElementById('pending');
-            var tabContentCreated = document.getElementById('created');
-            if (isOrganizer) {
-                var tabContentAllPolls = document.getElementById('allPolls');
-            }
-
-            // Hide all tab contents
-            tabContentPending.style.display = 'none';
-            tabContentCreated.style.display = 'none';
-            if (isOrganizer) {
-                tabContentAllPolls.style.display = 'none';
-            }
-
-            // Remove active class from all tab buttons
-            tabBtn1.classList.remove('active');
-            tabBtn2.classList.remove('active');
-            if (isOrganizer) {
-                tabBtn3.classList.remove('active');
-            }
-
-            // Show the selected tab content and add active class to its button
-            if (tabId === "pending") {
-                tabContentPending.style.display = 'block';
-                tabBtn1.classList.add('active');
-            } else if (tabId === "created") {
-                tabContentCreated.style.display = 'block';
-                tabBtn2.classList.add('active');
-            } else if (isOrganizer && tabId === "allPolls") {
-                tabContentAllPolls.style.display = 'block';
-                tabBtn3.classList.add('active');
-            }
-
-            // Update the active tab variable in sessionStorage
-            activeTabId = sessionStorage.setItem('active', tabId);
+    function openTab(tabId) { 
+        // Get the active tab from sessionStorage
+        var activeTabId = sessionStorage.getItem("active");
+        var isOrganizer = /*[[${user.isOrganizer}]]*/ false;
+    
+        // Get references to tab buttons and tab contents
+        var tabBtn1 = document.querySelector('.tab-btn1');
+        var tabBtn2 = document.querySelector('.tab-btn2');
+        var tabBtn4 = document.querySelector('.tab-btn4');
+        if (isOrganizer) {
+        var tabBtn3 = document.querySelector('.tab-btn3');
         }
+        var tabContentPending = document.getElementById('pending');
+        var tabContentCreated = document.getElementById('created');
+        var tabContentFinalized = document.getElementById('finalized');
+        if (isOrganizer) {
+        var tabContentAllPolls = document.getElementById('allPolls');
+        }
+
+        // Hide all tab contents
+        tabContentPending.style.display = 'none';
+        tabContentCreated.style.display = 'none';
+        tabContentFinalized.style.display = 'none';
+        if (isOrganizer) {
+        tabContentAllPolls.style.display = 'none';
+        }
+
+        // Remove active class from all tab buttons
+        tabBtn1.classList.remove('active');
+        tabBtn2.classList.remove('active');
+        tabBtn4.classList.remove('active');
+        if (isOrganizer) {
+        tabBtn3.classList.remove('active');
+        }
+
+        // Show the selected tab content and add active class to its button
+        if (tabId === "pending") {
+            tabContentPending.style.display = 'block';
+            tabBtn1.classList.add('active');
+        } else if (tabId === "created") {
+            tabContentCreated.style.display = 'block';
+            tabBtn2.classList.add('active');
+        } else if (isOrganizer && tabId === "allPolls") {
+            tabContentAllPolls.style.display = 'block';
+            tabBtn3.classList.add('active');
+        } else if (tabId === "finalized") {
+            tabContentFinalized.style.display = 'block';
+            tabBtn4.classList.add('active');
+        }
+    
+        // Update the active tab variable in sessionStorage
+        activeTabId = sessionStorage.setItem('active', tabId);
+    }
     </script>
 </body>
+
 </html>

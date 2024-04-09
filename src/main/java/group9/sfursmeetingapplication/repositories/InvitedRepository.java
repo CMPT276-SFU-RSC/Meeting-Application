@@ -5,6 +5,7 @@ package group9.sfursmeetingapplication.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,13 @@ public interface InvitedRepository extends JpaRepository<Invited, Integer> {
             "WHERE invited.pid = :pid ", nativeQuery = true)
     List<Object[]> findByPid(@Param("pid") Integer pid);
 
+
+    @Modifying
+    @Transactional
+    @Query(
+        value = "DELETE FROM invited " + 
+                "WHERE invited.uid = ?1 ;",
+        nativeQuery = true
+    )
+    void deleteByUid(long uid);
 }

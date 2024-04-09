@@ -223,6 +223,16 @@ body {
   border-bottom: 5px solid transparent;
   /* Initially no border at the bottom */
 }
+.tab-btn4 {
+  margin-right: 35px;
+  padding-bottom: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 23px;
+  color: rgb(92, 92, 92);
+  border-bottom: 5px solid transparent;
+  /* Initially no border at the bottom */
+}
 
 /* Style for the clicked/checked state */
 .tab-btn1.active {
@@ -240,7 +250,10 @@ body {
   border-bottom-color: #c70a0a;
   transform: translateY(5px) translateX(5px);
 }
-
+.tab-btn4.active {
+  border-bottom-color: #c70a0a;
+  transform: translateY(5px) translateX(5px);
+}
 .footer.mt-auto {
   background-color: rgb(240, 240, 240);
   font-size: 15px;
@@ -886,7 +899,10 @@ input {
   border-bottom: 7px solid transparent;
   color: #cecece;
 }
-
+.dark-mode .tab-btn4 {
+  border-bottom: 7px solid transparent;
+  color: #cecece;
+}
 /* Style for the clicked/checked state */
 .dark-mode .tab-btn1.active {
   border-bottom-color: #8d1313;
@@ -900,6 +916,10 @@ input {
 }
 
 .dark-mode .tab-btn3.active {
+  border-bottom-color: #8d1313;
+  transform: translateY(5px) translateX(5px);
+}
+.dark-mode .tab-btn4.active {
   border-bottom-color: #8d1313;
   transform: translateY(5px) translateX(5px);
 }

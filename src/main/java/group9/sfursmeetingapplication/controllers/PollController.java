@@ -27,7 +27,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.text.ParseException;
 import java.util.Map;
@@ -89,10 +88,10 @@ public class PollController {
         // get all polls this user has been invited to
         // could in the future move results the user has answered
         // List<Poll> polls = pollRepo.findByUID(user.uid);
-        List<Poll> polls = pollRepo.findByUID(user.getUid());
+        List<Poll> polls = pollRepo.findByUIDopen(user.getUid());
         List<Poll> polls1 = pollRepo.find();
         // Gets a list of all the polls the user has created.
-        List<Poll> createdPolls = pollRepo.findByCreator_id(user.getUid());
+        List<Poll> createdPolls = pollRepo.findByCreator_idopen(user.getUid());
         // Get all the use responses
         List<Response> responses = responseService.getAllResponsesByUid(user.getUid());
         // Get's just the pid for the responses
@@ -101,12 +100,17 @@ public class PollController {
             pids.add(response.getPid());
         }
 
+        // Gets a list of all the polls the user has been invited to/created and are finalized.
+        List<Poll> invitedPollsFinals = pollRepo.findFinalizedViewable(user.getUid());
+        System.out.println(invitedPollsFinals.size() + "|||||||||||");
         model.addAttribute("responses", pids);
         model.addAttribute("polls1", polls1);
         model.addAttribute("polls", polls);
         model.addAttribute("user", user);
         model.addAttribute("createdPolls", createdPolls);
 
+        model.addAttribute("invitedPollsFinals", invitedPollsFinals);
+        
         return "users/dashboard";
     }
 
@@ -612,7 +616,7 @@ public class PollController {
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
-        if (polls.get(0).isFinalized()) {
+        if (polls.get(0).isFinalized()){
             return "redirect:/dashboard";
         }
         try {
