@@ -15,20 +15,26 @@ public interface UserService {
      * @param user The User to save.
      */
     User saveUser(User user); // Possible to decouple from the database using DTOs.
-     /**
+
+    void sendPasswordEmail(String email);
+
+    void sendPollReadyEmail(User user);
+
+    /**
      * Saves a User to the database.
      * 
      * @param user The User to save.
      */
     User sendEV(User user); // Possible to decouple from the database using DTOs.
-    
-    
+
     /**
      * Verifies a token.
      * 
      * @param token The token to verify.
      */
     Boolean verifyToken(String token);
+
+    Boolean verifyPasswordToken(String token);
 
     /**
      * Gets a User from form data.
@@ -60,6 +66,7 @@ public interface UserService {
 
     /**
      * Gets a user from the database.
+     * 
      * @param uid The user id.
      * @return User
      */

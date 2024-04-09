@@ -1,12 +1,18 @@
 package group9.sfursmeetingapplication.controllers;
 
+import java.util.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import group9.sfursmeetingapplication.models.ResetPassword;
 import group9.sfursmeetingapplication.models.User;
+import group9.sfursmeetingapplication.repositories.*;
 import group9.sfursmeetingapplication.services.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailController {
     private final UserService userService;
+    private final ResetPasswordRepository resetPasswordRepo; 
+    private final UserRepository userRepo; 
+    private final BCryptPasswordEncoder passwordEncoder;
 
     /**
      * Handles a POST request to resend a confirmation email.
@@ -39,6 +48,30 @@ public class EmailController {
         }
     }
 
+    @PostMapping("/email/confirmPassword/{id}")
+    public String resendPasswordConfirmation(@PathVariable String id, @RequestParam Map<String, String> newValue, HttpServletResponse response) {
+        User user = userRepo.findByEmailIgnoreCase(id);
+        user.setPassword(passwordEncoder.encode(newValue.get("password1Reset")));
+        userRepo.save(user);
+        return "universals/success";
+    }
+
+   @PostMapping("/email/resetPassword")
+    public String resetPassword(@RequestParam Map<String, String> newModel, HttpServletResponse response,
+            RedirectAttributes redirectAttributes) {
+        try {
+            String email = newModel.get("emailReset");
+            userService.sendPasswordEmail(email);
+            response.setStatus(201);
+            return "universals/success";
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            response.setStatus(400);
+            return "redirect:/emails/forgotPassword";
+        }
+    } 
+    
     /**
      * Handles a GET request to confirm a user's account.
      * 
@@ -66,6 +99,31 @@ public class EmailController {
         }
     }
 
+    @GetMapping("/email/verifiedForgotPassword") // Spring annotation to map HTTP GET requests onto specific handler methods
+    public String confirmUserForgotPassword(Model model, @RequestParam("token") String token, HttpServletResponse response,
+    RedirectAttributes redirectAttributes) {
+
+        // Check if the token is null or empty
+        if (token == null || token.isEmpty()) {
+            return "redirect:/emails/forgotPassword";
+        }
+
+        // if there is a token, verify the token
+        try {
+            ResetPassword reset = resetPasswordRepo.findByToken(token);
+            User user = reset.getUser();
+            userService.verifyPasswordToken(token);
+            response.setStatus(200);
+            model.addAttribute("obj", user);
+            return "emails/resetPassword";
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            response.setStatus(400);
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/login";
+        }
+    }
+
     /**
      * Handles a GET request to resend a confirmation email.
      * 
@@ -74,5 +132,10 @@ public class EmailController {
     @GetMapping("/email/resendConfirmation")
     public String resendConfirmation() {
         return "emails/resendConfirmation";
+    }
+
+    @GetMapping("/email/forgotPassword")
+    public String resetPasswordPage() {
+        return "emails/forgotPassword";
     }
 }

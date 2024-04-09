@@ -17,4 +17,8 @@ public interface EmailService {
     // String token);
     // void sendHtmlEmailWithEmbeddedFiles(String name, String to, String subject,
     // String content, String token);
+
+    public void sendSimplePasswordMailMessage(String name, String to, String token);
+
+    public void sendPollReadyMessage(String name, String to);
 }

@@ -15,6 +15,7 @@ public class UserServiceImplementationTest {
     private UserServiceImplementation userService;
     private UserRepository userRepository;
     private ConfirmationRepository confirmationRepository;
+    private ResetPasswordRepository resetPasswordRepository;
     private EmailService emailService;
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -24,8 +25,7 @@ public class UserServiceImplementationTest {
         confirmationRepository = mock(ConfirmationRepository.class);
         emailService = mock(EmailService.class);
         passwordEncoder = mock(BCryptPasswordEncoder.class);
-        userService = new UserServiceImplementation(userRepository, confirmationRepository, emailService,
-                passwordEncoder);
+        userService = new UserServiceImplementation(userRepository, confirmationRepository, resetPasswordRepository, emailService, passwordEncoder);
     }
 
     @Test

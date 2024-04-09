@@ -168,6 +168,11 @@ public class UserController {
         return "users/registration";
     }
 
+    @GetMapping("/forgotPassword")
+    public String forgotPassword() {
+        return "emails/forgotPassword";
+    }
+
     /**
      * Handles a GET request to login a user.
      */

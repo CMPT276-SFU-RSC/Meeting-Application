@@ -2,11 +2,10 @@
  * This interface is a repository for the Invited model.
  */
 package group9.sfursmeetingapplication.repositories;
-
-import java.util.List;
+import java.util.*;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.repository.query.Param;
 import group9.sfursmeetingapplication.models.Invited;
@@ -29,7 +28,6 @@ public interface InvitedRepository extends JpaRepository<Invited, Integer> {
             "INNER JOIN users ON invited.uid = users.uid " +
             "WHERE invited.pid = :pid ", nativeQuery = true)
     List<Object[]> findByPid(@Param("pid") Integer pid);
-
 
     @Modifying
     @Transactional

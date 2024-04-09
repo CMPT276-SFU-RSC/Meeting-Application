@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg" th:fragment="navbar">
+<nav class="navbar navbar-expand-lg" th:fragment="navbar" style="background-color: #A5192E">
     <main class="container-fluid">
         <a class="navbar-brand" href="/"> </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -8,7 +8,7 @@
         <fieldset class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="btn btn-primary ml text-danger" href="/">Home</a>
+                    <a class="btn btn-primary ml" style="color: #FFD700;" href="/">Home</a>
                 <li class="nav-item dropdown" th:if="${user.isOrganizer}">
                     <a class="btn btn-primary ml dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -25,6 +25,7 @@
                 <a class="btn btn-primary ml" href="/logout" onclick="clearSession()">Log Out</a>
                 </li>
         </fieldset>
+    
         <!--Dark Mode button, putting on navbar for more accessiblility for now-->
         <button id="darkModeBtn"><i class="fas fa-moon"></i></button>
     </main>
@@ -51,4 +52,15 @@
             toggleDarkMode();
         }
     </script>
+</nav>
+<nav id="big_navbar" class="navbar navbar-expand-lg" th:fragment="navbar" style="background-color: #E0E0E0; height: 150px; margin-bottom: 20px;">
+    <main class="container-fluid">
+        <div style="margin-right: 600px; margin-bottom: -50px;" class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div style="margin-top: 50px;" class="navbar-nav">
+              <a class="nav-item nav-link" href="#">Invited Polls</a>
+              <a class="nav-item nav-link" href="#">Scheduled Events</a>
+              <a class="nav-item nav-link" href="#">Created Polls</a>
+            </div>
+        </div>
+    </main>
 </nav>

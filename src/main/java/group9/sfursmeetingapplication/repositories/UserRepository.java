@@ -28,6 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
         value = "SELECT * FROM users WHERE uid = ?1",
         nativeQuery = true
     )
+    
+    List<User> findUserByUID(Long uid);
+
+    @Query(
+        value = "SELECT * FROM users WHERE uid = ?1",
+        nativeQuery = true
+    )
 
     List<User> findname(Integer uid);
 
@@ -36,7 +43,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
         nativeQuery = true
     )
 
-    Void deleteuser(Integer uid);
+    void deleteuser(Long uid);
     //delete from users where uid =?1
 
     @Query(
