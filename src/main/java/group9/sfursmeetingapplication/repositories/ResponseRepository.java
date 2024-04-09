@@ -19,7 +19,13 @@ public interface ResponseRepository extends JpaRepository<Response, Integer>{
     @Transactional
     void deleteBymid(Integer mid);
 
+    @Modifying
     @Transactional
+    @Query(
+        value = "DELETE FROM user_responses " + 
+                "WHERE user_responses.pid = ?1 ;",
+        nativeQuery = true
+    )
     void deleteByPid(Integer pid);
 
     @Modifying

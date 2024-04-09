@@ -869,6 +869,9 @@ input {
   border-bottom-color: #8d1313;
   transform: translateY(5px) translateX(5px);
 }
+.selectedoutline {
+  outline: 3px solid #0000FF;
+}
 
 .selected {
   background-color: #00ff00;

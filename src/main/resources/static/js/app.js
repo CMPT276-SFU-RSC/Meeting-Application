@@ -311,7 +311,7 @@ function getUsers() {
         return;
     }
     //send partial search
-    fetch('../userSearch', {
+    fetch('../../userSearch', {
         method: 'POST',
         body: search,
         headers: {
@@ -475,6 +475,25 @@ function tableOnLoad(timeArray, readonly) {
                         }
                     });
                 }
+                else if (readonly) {
+                    cell.addEventListener('mousedown', function () { // Add mousedown event listener
+                        isMouseDown = true;
+                        this.classList.toggle('selectedoutline'); // Toggle 'selected' class
+                        return false; // Prevent text selection
+                    });
+
+                    cell.addEventListener('mouseover', function () { // Add mouseover event listener
+                        if (isMouseDown) {
+                            this.classList.toggle('selectedoutline'); // Toggle 'selected' class
+                        }
+                    });
+
+                    cell.addEventListener('mouseup', function () { // Add mouseup event listener
+                        if (isMouseDown) {
+                            isMouseDown = false;
+                        }
+                    });
+                }
                 row.appendChild(cell);
             }
             table.appendChild(row);
@@ -592,7 +611,78 @@ function finalizePoll() {
 function clearSession() {
     sessionStorage.clear();
 }
+function sendFinalizedPoll(){
+    //send a finalize poll message to the server
+    
+    if (document.getElementById("dropdownMenuMedium").value == ""){
+        alert("Please select a medium.");
+        return;
+    }
 
+    //verify that the selected range is continuous, and over 1 day
+    var col = -1;
+    var last = -1;
+    var date = {
+        startRow : -1,
+        startCol : -1,
+        endRow : -1,
+        endCol : -1,
+    }
+    let table = document.getElementById("timeBlocks"); // Get the table
+    let numColumns = table.rows[0].cells.length; // Get the number of columns
+    for (let j = 0; j < numColumns; j++) { // Iterate over each column
+        for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+            const cell = table.rows[k].cells[j];
+            
+            if (cell.classList.contains("selectedoutline")) {
+                if (date.startRow == -1){
+                    date.startRow = k;
+                    date.startCol = j;
+                }
+                if (col != -1 && col != j){
+                    alert("Please make sure your selected time is continuous, and on the same day.");
+                    return;
+                }
+                if (last != k-1 && last != -1){
+                    alert("Please make sure your selected time is continuous, and on the same day.");
+                    return;
+                }
+                col = j;
+                last = k;
+                date.endRow = k;
+                date.endCol = j;
+            }
+        }
+    }
+    if (date.startCol == -1){
+        //no selection
+        alert("Please select a time by clicking.");
+    }
+    if (date.startRow == date.endRow){
+        if (window.confirm("Only one time selected, start and end date will be the same.") == false){
+            return;
+        }
+    }
+
+    //made it here means we are ready to send to the server
+
+    //first we need to turn our cols into times/dates
+    var DateString = new Date().getFullYear();
+    DateString += "/" + (document.getElementById("timeBlocks").rows[0].cells[date.startCol].innerHTML);
+    
+    var startTimeString = document.getElementById("timeBlocks").rows[date.startRow].cells[date.startCol].innerHTML;
+
+    var endTimeString = document.getElementById("timeBlocks").rows[date.endRow].cells[date.endCol].innerHTML;
+
+    fetch(`/finalize/${table.getAttribute('data-pid')}/${document.getElementById("dropdownMenuMedium").value}/${startTimeString}/${endTimeString}/${DateString}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: null
+    });
+    window.location.replace("../../dashboard");
+}
 function getResponse(blocks) {
 
     var dataMid = blocks.parentElement.getAttribute("data-mid");
@@ -606,6 +696,19 @@ function updateDisplay() {
     var inv = document.getElementById("dropdownMenuInvite")[document.getElementById("dropdownMenuInvite").selectedIndex];
     var med = document.getElementById("dropdownMenuMedium")[document.getElementById("dropdownMenuMedium").selectedIndex];
 
+    //clear table
+    const allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                cell.classList.remove('selected');
+                cell.style.background = null;
+            }
+        }
+    });
     if (document.getElementById("dropdownMenuMedium").value != ""){
         //medium selected
         if (document.getElementById("dropdownMenuInvite").value == ""){
@@ -623,24 +726,23 @@ function updateDisplay() {
         }
 
     }
-    else {
-        //clear table
-        const allTables = document.querySelectorAll('[id^="timeBlocks"]');
-        allTables.forEach((table, index) => {
-            const numColumns = table.rows[0].cells.length; // Get the number of columns
 
-            for (let j = 0; j < numColumns; j++) { // Iterate over each column
-                for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
-                    const cell = table.rows[k].cells[j];
-                    cell.classList.remove('selected');
-                    cell.style.background = null;
-                }
+
+
+}
+function clearTable(){
+    var allTables = document.querySelectorAll('[id^="timeBlocks"]');
+    allTables.forEach((table, index) => {
+        const numColumns = table.rows[0].cells.length; // Get the number of columns
+
+        for (let j = 0; j < numColumns; j++) { // Iterate over each column
+            for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
+                const cell = table.rows[k].cells[j];
+                cell.classList.remove('selected');
+                cell.style.background = null;
             }
-        });
-    }
-
-
-
+        }
+    });
 }
 function heatMap(data){
     //clear highlights
@@ -701,8 +803,12 @@ function getResForMidUid(uid, mid) {
     fetch("/poll/response/" + uid + "/" + mid)
         .then(response => response.json())
         .then(data => {
-            populateCells(data[0].available_time);
-            document.getElementById("mediumName").innerHTML = data[0].medium;
+            clearTable();
+            if (data.length != 0){
+                populateCells(data[0].available_time);
+            }
+            
+            document.getElementById("mediumName").innerHTML = document.getElementById("dropdownMenuMedium").options[document.getElementById("dropdownMenuMedium").selectedIndex].text;
         })
         .catch(error => console.error('Error:', error));
 }
@@ -710,8 +816,12 @@ function getResForMid(mid){
     fetch("/poll/response/" + mid)
         .then(response => response.json())
         .then(data => {
-            heatMap(data);
-            document.getElementById("mediumName").innerHTML = data[0].medium;
+            clearTable();
+            if (data.length != 0){
+                heatMap(data);
+            }
+
+            document.getElementById("mediumName").innerHTML = document.getElementById("dropdownMenuMedium").options[document.getElementById("dropdownMenuMedium").selectedIndex].text;
         })
         .catch(error => console.error('Error:', error));
 }
