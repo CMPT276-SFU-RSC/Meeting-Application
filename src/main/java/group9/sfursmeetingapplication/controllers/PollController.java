@@ -263,11 +263,15 @@ public class PollController {
         }
         // add update
         List<Poll> polls = pollRepo.findBypid(pid);
+
+        if (polls.size() == 0) {
+            // cant find poll
+            return "redirect:/dashboard";
+        }
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
-        if (polls.size() == 0) {
-            // cant find poll
+        if (polls.get(0).isFinalized()){
             return "redirect:/dashboard";
         }
 
@@ -452,6 +456,9 @@ public class PollController {
         try {
             // Get the poll
             Poll poll = pollRepo.findByPid(pid);
+            if (poll.isFinalized()){
+                return "redirect:/dashboard";
+            }
             // Get the user who created the poll
             User creator = userService.getUserById(poll.getCreator_id());
             String fullName = creator.getFirstName() + " " + creator.getLastName();
@@ -483,7 +490,9 @@ public class PollController {
         if (polls.isEmpty()) {
             return "redirect:/dashboard";
         }
-
+        if (polls.get(0).isFinalized()){
+            return "redirect:/dashboard";
+        }
         Poll poll = polls.get(0);
         model.addAttribute("poll", poll);
         model.addAttribute("mediums", mediums);
@@ -542,6 +551,9 @@ public class PollController {
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
+        if (polls.get(0).isFinalized()){
+            return "redirect:/dashboard";
+        }
         try {
             // Get the poll
             Poll poll = pollRepo.findByPid(pid);
@@ -594,11 +606,14 @@ public class PollController {
         }
         // add update
         List<Poll> polls = pollRepo.findBypid(pid);
+        if (polls.size() == 0) {
+            // cant find poll
+            return "redirect:/dashboard";
+        }
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
-        if (polls.size() == 0) {
-            // cant find poll
+        if (polls.get(0).isFinalized()){
             return "redirect:/dashboard";
         }
         Poll targetPoll = polls.get(0);
