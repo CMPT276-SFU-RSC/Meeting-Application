@@ -33,7 +33,7 @@
                 <div class="card-header" style="font-weight: bolder;">Admin Privelages</div>
                 <div class="card-body">
                     <h5 class="card-title"></h5>
-                    <a href="/userdisplay" class="btn btn-secondary">Display users</a>
+                    <a href="admins/userdisplay" class="btn btn-secondary">Display users</a>
                 </div>
             </div>
     </section>
@@ -95,8 +95,8 @@
                             <label for="details">Poll ID: </label>
                             <label class="description" th:text="${createdPolls.pid}"></label>
                             <div class="d-flex">
-                                <a class="btn btn-primary redButton" th:href="@{polls/viewVotes/{pid}(pid=${createdPolls.pid})}">View Votes</a>
-                                <a class="btn btn-primary redButton">Edit Poll</a>
+                                <a class="btn btn-primary redButton" th:href="@{polls/viewVotes/{pid}(pid=${createdPolls.pid})}">Responses</a>
+                                <a class="btn btn-primary redButton" th:href="@{polls/edit/{pid}(pid=${createdPolls.pid})}">Edit</a>
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                         <label class="description" th:text="${poll.pid}"></label>
                         <div class="d-flex">
                             <a class="btn btn-primary redButton" th:unless="${responses.contains(poll.pid)}" th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
-                            <a class="btn btn-primary redButton" th:if="${responses.contains(poll.pid)}" th:href="@{/}">Edit</a>
+                            <a class="btn btn-primary redButton" th:if="${responses.contains(poll.pid)}" th:href="@{/}">Update</a>
                         </div>
                     </div>
                 </div>

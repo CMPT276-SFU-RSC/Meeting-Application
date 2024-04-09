@@ -265,7 +265,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/userdisplay")
+    @GetMapping("admins/userdisplay")
     public String userpage(Model model, HttpServletRequest request, HttpSession session) {
         List<User> u1 = userRepo1.findall();
         model.addAttribute("u1", u1);
@@ -294,10 +294,10 @@ public class UserController {
         } // End of session check
 
         model.addAttribute("user", user);
-        return "users/display";
+        return "admins/display";
     }
 
-    @GetMapping("/deleteuser")
+    @GetMapping("admins/deleteuser")
     public String deleteuser1(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
          // Check if the user is logged in
          session = request.getSession(false);
@@ -323,7 +323,7 @@ public class UserController {
          } // End of session check
  
          model.addAttribute("user", user);
-        return "users/userdelete";
+        return "admins/userdelete";
     }
 
     @PostMapping("/users/d")

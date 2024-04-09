@@ -109,7 +109,7 @@ public class PollController {
         return "users/dashboard";
     }
 
-    @GetMapping("/pollcreate")
+    @GetMapping("/polls/create")
     public String poll(Model model, HttpServletRequest request,
             HttpSession session) {
         session = request.getSession(false);
@@ -474,7 +474,7 @@ public class PollController {
         }
     }
 
-    @GetMapping("/edit/{pid}")
+    @GetMapping("polls/edit/{pid}")
     public String editPoll(@PathVariable int pid, Model model, HttpSession session) {
         List<Poll> polls = pollRepo.findBypid(pid);
         List<Medium> mediums = mediumRepo.findBypid(pid);
@@ -511,7 +511,7 @@ public class PollController {
         }
 
         model.addAttribute("user", user);
-        return "users/polledit";
+        return "polls/polledit";
     }
 
     @GetMapping("/polls/viewVotes/{pid}")
