@@ -6,7 +6,6 @@ package group9.sfursmeetingapplication.controllers;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import group9.sfursmeetingapplication.repositories.ResponseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,36 +20,62 @@ import jakarta.servlet.http.HttpServletResponse;
 import group9.sfursmeetingapplication.models.Response;
 import group9.sfursmeetingapplication.services.ResponseService;
 import lombok.RequiredArgsConstructor;
-import java.util.Optional;
 
 @RequiredArgsConstructor // Lombok annotation to generate the required constructor
 @RestController // This annotation is used to mark the class as a REST controller.
 public class PollControllerRest {
     private final ResponseService responseService;
 
-
     @Autowired
     private ResponseRepository responseRepo;
-    
+
     /**
      * This method is used to respond to a poll.
+     * 
      * @param responses The list of responses.
-     * @param request The HTTP request.
-     * @param response The HTTP response.
+     * @param request   The HTTP request.
+     * @param response  The HTTP response.
      * @return ResponseEntity<String> The response entity.
      */
     @PostMapping("/poll/respond")
     public ResponseEntity<Map<String, String>> respondToPoll(@RequestBody List<Response> responses,
-    HttpServletRequest request, HttpServletResponse response) {
+            HttpServletRequest request, HttpServletResponse response) {
         try {
             System.out.println("Saving Poll Responses....");
             for (Response oneResponse : responses) {
                 responseService.saveUserResponse(oneResponse);
             }
-            return new ResponseEntity<>(Collections.singletonMap("message", "Responses saved successfully"), HttpStatus.CREATED);
+            return new ResponseEntity<>(Collections.singletonMap("message", "Responses saved successfully"),
+                    HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
-            return new ResponseEntity<>(Collections.singletonMap("error", "Error saving responses"), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(Collections.singletonMap("error", "Error saving responses"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * This method is used to update the response to a poll.
+     * 
+     * @param responses The list of responses.
+     * @param request   The HTTP request.
+     * @param response  The HTTP response.
+     * @return ResponseEntity<String> The response entity.
+     */
+    @PostMapping("/poll/update")
+    public ResponseEntity<Map<String, String>> updateResponseToPoll(@RequestBody List<Response> responses,
+            HttpServletRequest request, HttpServletResponse response) {
+        try {
+            System.out.println("Updating Poll Responses....");
+            for (Response oneResponse : responses) {
+                responseService.updateUserResponse(oneResponse);
+            }
+            return new ResponseEntity<>(Collections.singletonMap("message", "Responses updated successfully"),
+                    HttpStatus.CREATED);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return new ResponseEntity<>(Collections.singletonMap("error", "Error saving responses"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -59,6 +84,7 @@ public class PollControllerRest {
         List<Response> res = responseRepo.findByMidAndUid(Math.toIntExact(mid), Math.toIntExact(uid));
         return res;
     }
+
     @GetMapping("/poll/response/{mid}")
     public List<Response> getMediumResponse(@PathVariable long mid) {
         List<Response> res = responseRepo.findByMid(Math.toIntExact(mid));

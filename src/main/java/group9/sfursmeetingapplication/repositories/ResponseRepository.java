@@ -13,8 +13,17 @@ import group9.sfursmeetingapplication.models.Response;
 import java.util.Optional;
 
 @Repository
-public interface ResponseRepository extends JpaRepository<Response, Integer>{
+public interface ResponseRepository extends JpaRepository<Response, Integer> {
     List<Response> findByPid(int pid);
+
+    /**
+     * This method gets the response by the user's UID + PID + MID.
+     * @param uid The user's UID.
+     * @param pid The poll ID.
+     * @param mid The medium ID.
+     * @return Response The response object.
+     */
+    Response findByUidAndPidAndMid(Long uid, Integer pid, Integer mid);
 
     @Transactional
     void deleteBymid(Integer mid);

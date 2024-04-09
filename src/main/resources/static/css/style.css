@@ -311,7 +311,7 @@ body {
   border: none;
   cursor: pointer;
   font-weight: bolder;
-  background: #af000096;
+  background: #af0000b9;
   font-size: 20px;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   border-radius: 15px;
@@ -325,6 +325,21 @@ body {
 .btn.btn-primary.redButton:hover {
   box-shadow: 1px 4px 11px 0px rgba(0, 0, 0, 0.411);
   background: #c20000;
+}
+
+.btn.btn-primary.redButtonDisabled {
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  border: none;
+  cursor: pointer;
+  font-weight: bolder;
+  background: #af000059;
+  font-size: 20px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  border-radius: 15px;
+  color: rgb(255, 255, 255);
+  height: 50px;
+  margin-right: 5px;
+  display: inline-block;
 }
 
 .btn.btn-secondary.btn-lg {
@@ -488,7 +503,6 @@ input {
     margin: 10px;
     margin-right: 17px;
     margin-bottom: 15px;
-    margin-left: 17px;
     word-wrap: break-word;
     overflow-wrap: break-word;
     display: inline-block;
@@ -496,6 +510,12 @@ input {
     box-shadow: 1px 3px 4px 1px rgba(43, 43, 43, 0.658);
 }
 
+.weather-info {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  overflow-x: auto;
+}
 
 .event-box .title {
   font-size: 25px;
@@ -504,6 +524,13 @@ input {
 }
 
 .event-box .description {
+  font-size: 17px;
+  color: #666;
+  margin-bottom: 10px;
+  /* Adjusted margin to create space */
+}
+
+.event-box-custom .description {
   font-size: 17px;
   color: #666;
   margin-bottom: 10px;
@@ -788,6 +815,13 @@ input {
   /* Adjusted margin to create space */
 }
 
+.dark-mode .event-box-custom .description {
+  font-size: 17px;
+  color: #d3d3d3;
+  margin-bottom: 10px;
+  /* Adjusted margin to create space */
+}
+
 .dark-mode .event-box .comments {
   font-size: 17px;
   color: #d3d3d3;
@@ -950,4 +984,50 @@ background-color: #444444;
 
 .dark-mode .form-check-input {
   color: #ffffff;
+}
+
+.flatpickr-day:hover {
+  background-color: #A5192E !important;
+  color: #fff !important;
+  border: none;
+}
+
+.flatpickr-day.selected {
+  background-color:#bd0f0f !important;
+  color: #fff !important;
+  border: none !important;
+  border: none;
+}
+
+.flatpickr-rangeInputs input:hover {
+  background-color: #f0f0f0 !important;
+  color: #333 !important;
+  cursor: pointer;
+  border: none;
+}
+
+/* Hover effect on buttons */
+.flatpickr-confirm:hover {
+  background-color: #A5192E !important; /* Darker shade of primary color */
+  border: none;
+}
+
+.flatpickr-day.rangeStart:hover,
+.flatpickr-day.rangeEnd:hover,
+.flatpickr-day.rangeStart.selected:hover,
+.flatpickr-day.rangeEnd.selected:hover,
+.flatpickr-day.selected:not(.rangeStart):not(.rangeEnd):hover {
+    background-color: #A5192E !important;
+    color: #fff !important;
+    border: none;
+}
+
+.flatpickr-day.rangeStart:hover,
+.flatpickr-day.rangeEnd:hover,
+.flatpickr-day.rangeStart.selected:hover,
+.flatpickr-day.rangeEnd.selected:hover,
+.flatpickr-day.selected:not(.rangeStart):not(.rangeEnd):hover {
+  background-color: #A5192E !important;
+  color: #fff !important;
+  border: none;
 }

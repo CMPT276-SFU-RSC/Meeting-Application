@@ -11,12 +11,14 @@ public interface ResponseService {
 
     /**
      * Save the user response
+     * 
      * @param response The response object
      */
     void saveUserResponse(Response response);
 
     /**
      * Get all responses by uid
+     * 
      * @param uid The user id
      * @return List<Response> The list of responses
      */
@@ -24,10 +26,18 @@ public interface ResponseService {
 
     /**
      * Get response by uid+mid+pid
+     * 
      * @param uid The user id
      * @param mid The medium id
      * @param pid The poll id
      * @return Optional<Response> string of JSON
      */
     Optional<Response> getUserResponseByUidMidPid(long uid, long mid, long pid);
+
+    /**
+     * Update the user response
+     * 
+     * @param response The response object
+     */
+    void updateUserResponse(Response response);
 }

@@ -275,7 +275,7 @@ public class PollController {
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
-        if (polls.get(0).isFinalized()){
+        if (polls.get(0).isFinalized()) {
             return "redirect:/dashboard";
         }
 
@@ -393,6 +393,7 @@ public class PollController {
         return "redirect:/dashboard";
     }
 
+    // Not sure what this does
     @GetMapping("/getPolls/{pid}")
     public String displayEvents(@PathVariable int pid, Model model, HttpSession session) {
         List<Poll> polls = pollRepo.findBypid(pid);
@@ -422,15 +423,16 @@ public class PollController {
         model.addAttribute("user", user);
         return "users/showEvents";
     }
+    // Not sure what this does
 
     /**
-     * Respond to a poll
+     * This method is used to respond to a poll.
      * 
-     * @param pid
-     * @param model
-     * @param session
-     * @param request
-     * @return
+     * @param pid     The poll ID.
+     * @param model   The model.
+     * @param session The session.
+     * @param request The HTTP request.
+     * @return The view for the user to respond to the poll.
      */
     @GetMapping("/polls/respond/{pid}")
     public String respondPoll(@PathVariable int pid, Model model, HttpSession session,
@@ -460,7 +462,7 @@ public class PollController {
         try {
             // Get the poll
             Poll poll = pollRepo.findByPid(pid);
-            if (poll.isFinalized()){
+            if (poll.isFinalized()) {
                 return "redirect:/dashboard";
             }
             // Get the user who created the poll
@@ -485,6 +487,65 @@ public class PollController {
         }
     }
 
+    /**
+     * This method is used to update the response to a poll.
+     * 
+     * @param pid     The poll ID.
+     * @param model   The model.
+     * @param session The session.
+     * @param request The HTTP request.
+     * @return The view for the user to update their response to the poll.
+     */
+    @GetMapping("/polls/updateResponse/{pid}")
+    public String updatePollResponse(@PathVariable int pid, Model model, HttpSession session,
+            HttpServletRequest request) {
+        session = request.getSession(false);
+        if (session == null) {
+            System.out.println("Redirecting because there's no session");
+            // If the user is not logged in, redirect them to the login page
+            return "redirect:/login";
+        }
+
+        Long userId = (Long) session.getAttribute("user_id");
+        if (userId == null) {
+            System.out.println("Redirecting because there's no user ID in the session");
+            return "redirect:/login";
+        }
+
+        User user = userService.getUserById(userId);
+        if (user == null) {
+            System.out.println("Redirecting because the user doesn't exist");
+            // If the user doesn't exist, end the session and redirect the user to the login
+            // page
+            session.invalidate();
+            return "redirect:/login";
+        }
+
+        try {
+            // Get the poll
+            Poll poll = pollRepo.findByPid(pid);
+            // Get the user who created the poll
+            User creator = userService.getUserById(poll.getCreator_id());
+            String fullName = creator.getFirstName() + " " + creator.getLastName();
+            // Create a Poll DTO.
+            PollDTO pollDTO = pollService.createPollFromDTO(poll, fullName);
+            // Get the list of users that are invited to the poll.
+            List<Object[]> queryResults = invitedRepo.findByPid(pid);
+            List<InvitedDTO> invitedDTOs = invitedService.createListOfInvitedFromDTO(queryResults);
+            // Get the list of mediums for the poll.
+            List<Medium> mediums = mediumRepo.findBypid(pid);
+
+            model.addAttribute("mediums", mediums);
+            model.addAttribute("invited", invitedDTOs);
+            model.addAttribute("poll", pollDTO);
+            model.addAttribute("user", user);
+
+            return "polls/updateResponse";
+        } catch (Exception e) {
+            return "redirect:/dashboard";
+        }
+    }
+
     @GetMapping("polls/edit/{pid}")
     public String editPoll(@PathVariable int pid, Model model, HttpSession session) {
         List<Poll> polls = pollRepo.findBypid(pid);
@@ -494,7 +555,7 @@ public class PollController {
         if (polls.isEmpty()) {
             return "redirect:/dashboard";
         }
-        if (polls.get(0).isFinalized()){
+        if (polls.get(0).isFinalized()) {
             return "redirect:/dashboard";
         }
         Poll poll = polls.get(0);
@@ -551,12 +612,11 @@ public class PollController {
             session.invalidate();
             return "redirect:/login";
         }
-        List <Poll> polls = pollRepo.findBypid(pid);
+        List<Poll> polls = pollRepo.findBypid(pid);
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
         if (polls.get(0).isFinalized()){
-
             return "redirect:/dashboard";
         }
         try {
@@ -583,9 +643,11 @@ public class PollController {
             return "redirect:/dashboard";
         }
     }
+
     @PostMapping("/finalize/{pid}/{mid}/{startTime}/{endTime}/{date}/{date2}/{date3}")
-    public String finalizePoll(@PathVariable int pid, @PathVariable int mid, @PathVariable String startTime, 
-            @PathVariable String endTime, @PathVariable String date, @PathVariable String date2, @PathVariable String date3, 
+    public String finalizePoll(@PathVariable int pid, @PathVariable int mid, @PathVariable String startTime,
+            @PathVariable String endTime, @PathVariable String date, @PathVariable String date2,
+            @PathVariable String date3,
             HttpSession session,
             HttpServletRequest request) throws ParseException {
         session = request.getSession(false);
@@ -618,22 +680,22 @@ public class PollController {
         if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
-        if (polls.get(0).isFinalized()){
+        if (polls.get(0).isFinalized()) {
             return "redirect:/dashboard";
         }
         Poll targetPoll = polls.get(0);
 
-
         // Parse dates
-        if (date2.length() == 1){
+        if (date2.length() == 1) {
             date2 = "0" + date2;
         }
-        if (date3.length() == 1){
+        if (date3.length() == 1) {
             date3 = "0" + date3;
         }
-        java.time.Instant startDate = java.time.Instant.parse(date + '-' + date2 + '-' + date3 + "T" + startTime + ":00.00Z");
-        java.time.Instant endDate = java.time.Instant.parse(date + '-' + date2 + '-' + date3 + "T" + endTime + ":00.00Z");
-
+        java.time.Instant startDate = java.time.Instant
+                .parse(date + '-' + date2 + '-' + date3 + "T" + startTime + ":00.00Z");
+        java.time.Instant endDate = java.time.Instant
+                .parse(date + '-' + date2 + '-' + date3 + "T" + endTime + ":00.00Z");
 
         // Create and save Poll object
         targetPoll.setStartDate(startDate);
@@ -641,12 +703,11 @@ public class PollController {
         targetPoll.setFinalized(true);
         pollRepo.save(targetPoll);
 
-        //trim mediums/responses
+        // trim mediums/responses
         mediumRepo.trimBypid(pid, Integer.valueOf(mid));
         responseRepo.deleteByPid(pid);
-        
-
 
         return "redirect:/dashboard";
     }
+
 }
