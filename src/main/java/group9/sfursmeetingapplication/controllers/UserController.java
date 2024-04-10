@@ -321,16 +321,4 @@ public class UserController {
 
     }
 
-    @PostMapping("/users/d")
-    //TODO: Change the name of the method usersdelete.html
-    public String deleteuser2(@RequestParam Map<String, String> poll, HttpServletResponse response) {
-        Integer snumberr = Integer.parseInt(poll.get("snumber"));
-        List<User> usersToDelete1 = userRepo1.findname(snumberr);
-        for (User user : usersToDelete1) {
-            userRepo1.delete(user);
-        }
-
-        response.setStatus(200);
-        return "redirect:/dashboard";
-    }
 }
