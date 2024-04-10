@@ -263,6 +263,60 @@ function addMedium() {
     par.appendChild(node);
 }
 
+function sendUpdatePollForm() {
+    //add mediums
+    let mediums = document.getElementsByClassName("singleMedium");
+    if (mediums.length == 0) {
+        alert("Please add a medium");
+        return;
+    }
+    let users = document.getElementsByClassName("singleUser");
+    if (users.length == 0) {
+        alert("Please add a user");
+        return;
+    }
+    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
+        alert("Please make your start time before your end time");
+        return;
+    }
+    if (document.getElementById("startDate").value > document.getElementById("endDate").value) {
+        alert("Please make your start date before your end date");
+        return;
+    }
+    // add from our list
+    var newMed = 0;
+    var oldMed = 0;
+    for (var i = 0; i < mediums.length; i++) {
+        let node = document.createElement("input");
+        if (mediums[i].getAttribute("mid") != undefined) {
+            node.name = "o" + oldMed; //o[id]
+            //set its title to it's id, rather than storing it
+            node.value = mediums[i].getAttribute("mid");
+            oldMed++;
+        }
+        else {
+            node.name = "n" + newMed;
+            node.value = mediums[i].innerHTML;// "(r) " or "_"
+            newMed++;
+        }
+
+        node.hidden = true;
+        document.getElementById("inputField").append(node);
+    }
+
+    //add users
+    for (var i = 0; i < users.length; i++) {
+        let node = document.createElement("input");
+        node.name = "u" + i;
+        node.value = users[i].innerHTML;// "(x) fName lName"
+        node.hidden = true;
+        document.getElementById("inputField").append(node);
+    }
+
+
+    //send
+    document.getElementById("inputField").requestSubmit();
+}
 function addMediumsUsersToForm() {
     //add mediums
     let mediums = document.getElementsByClassName("singleMedium");
@@ -287,55 +341,7 @@ function addMediumsUsersToForm() {
     for (var i = 0; i < mediums.length; i++) {
         let node = document.createElement("input");
         node.name = "m" + i;
-        node.value = mediums[i].innerHTML;// "(r) __" or "___"
-        node.hidden = true;
-        document.getElementById("inputField").append(node);
-    }
-
-    //add users
-    for (var i = 0; i < users.length; i++) {
-        let node = document.createElement("input");
-        node.name = "u" + i;
-        node.value = users[i].innerHTML;// "(x) fName lName"
-        node.hidden = true;
-        document.getElementById("inputField").append(node);
-    }
-
-
-    //send
-    document.getElementById("inputField").requestSubmit();
-}
-
-function sendUpdatePollForm() {
-    //add mediums
-    let mediums = document.getElementsByClassName("singleMedium");
-    if (mediums.length == 0) {
-        alert("Please add a medium");
-        return;
-    }
-    let users = document.getElementsByClassName("singleUser");
-    if (users.length == 0) {
-        alert("Please add a user");
-        return;
-    }
-
-    // add from our list
-    var newMed = 0;
-    var oldMed = 0;
-    for (var i = 0; i < mediums.length; i++) {
-        let node = document.createElement("input");
-        if (mediums[i].getAttribute("mid") != undefined) {
-            node.name = "o" + oldMed; //o[id]
-            //set its title to it's id, rather than storing it
-            node.value = mediums[i].getAttribute("mid");
-            oldMed++;
-        }
-        else {
-            node.name = "n" + newMed;
-            node.value = mediums[i].innerHTML;// "(r) __" or "___"
-            newMed++;
-        }
-
+        node.value = mediums[i].innerHTML;// "(r) " or "_"
         node.hidden = true;
         document.getElementById("inputField").append(node);
     }
