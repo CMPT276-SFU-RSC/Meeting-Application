@@ -578,11 +578,11 @@ public class PollController {
             session.invalidate();
             return "redirect:/login";
         }
-        List<Poll> polls = pollRepo.findBypid(pid);
-        if (polls.get(0).getCreator_id() != userId && user.isOrganizer() == false) {
+        Poll polls = pollRepo.findByPid(pid);
+        if (polls.getCreator_id() != userId && user.isOrganizer() == false) {
             return "redirect:/dashboard";
         }
-        if (polls.get(0).isFinalized()){
+        if (polls.isFinalized()){
             return "redirect:/dashboard";
         }
         try {

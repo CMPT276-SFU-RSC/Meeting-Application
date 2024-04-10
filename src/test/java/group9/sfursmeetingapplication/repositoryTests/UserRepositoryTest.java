@@ -17,9 +17,6 @@ public class UserRepositoryTest {
 
     @Test
     public void testFindAll() {
-        long generatedLong = 25;
-        User userTest = new User(generatedLong, "organizer@yahoo.com", "password", "Harry", "Potter", "Robotics Team", "President", true, true);
-    
 
         List<User> users = userRepository.findAll();
         assertNotNull(users);
