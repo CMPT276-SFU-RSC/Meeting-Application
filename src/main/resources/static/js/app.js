@@ -581,9 +581,12 @@ function returnTime() {
         fetch(`/poll/response/${uid}/${mid}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                // Check if data[0] is undefined
+                if (data[0] === undefined) {
+                    return;
+                }
+                
                 let string = data[0].available_time;
-
                 const numColumns = table.rows[0].cells.length; // Get the number of columns
                 for (let j = 0; j < numColumns; j++) { // Iterate over each column
                     for (let k = 1; k < table.rows.length; k++) { // Iterate over each row
@@ -674,7 +677,7 @@ function finalizePoll(action) {
         response['mid'] = Number(table.getAttribute('data-mid'));
         response['pid'] = Number(table.getAttribute('data-pid'));
         response['available_time'] = selectedCells;
-        response['remote'] = Boolean(table.getAttribute('data-remote'));
+        response['remote'] = Boolean(table.getAttribute('data-remote') === 'true');
         response['medium'] = table.getAttribute('data-name');
         responses.push(response);
     }

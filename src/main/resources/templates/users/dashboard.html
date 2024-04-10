@@ -146,7 +146,7 @@
                                     <a class="btn btn-primary redButton" th:unless="${responses.contains(poll.pid)}"
                                         th:href="@{polls/respond/{pid}(pid=${poll.pid})}">Respond</a>
                                     <a class="btn btn-primary redButton" th:if="${responses.contains(poll.pid)}"
-                                        th:href="@{/}">Edit Response</a>
+                                        th:href="@{/polls/updateResponse/{pid}(pid=${poll.pid})}">Edit Response</a>
                                 </div>
                             </div>
                         </div>
