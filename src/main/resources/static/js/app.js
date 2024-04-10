@@ -263,7 +263,7 @@ function addMedium() {
     par.appendChild(node);
 }
 
-function addMediumsUsersToForm() {
+function sendUpdatePollForm() {
     //add mediums
     let mediums = document.getElementsByClassName("singleMedium");
     if (mediums.length == 0) {
@@ -275,7 +275,7 @@ function addMediumsUsersToForm() {
         alert("Please add a user");
         return;
     }
-    if (document.getElementById("startTime").value > document.getElementById("endTime").value) {
+    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
         alert("Please make your start time before your end time");
         return;
     }
@@ -284,10 +284,22 @@ function addMediumsUsersToForm() {
         return;
     }
     // add from our list
+    var newMed = 0;
+    var oldMed = 0;
     for (var i = 0; i < mediums.length; i++) {
         let node = document.createElement("input");
-        node.name = "m" + i;
-        node.value = mediums[i].innerHTML;// "(r) __" or "___"
+        if (mediums[i].getAttribute("mid") != undefined) {
+            node.name = "o" + oldMed; //o[id]
+            //set its title to it's id, rather than storing it
+            node.value = mediums[i].getAttribute("mid");
+            oldMed++;
+        }
+        else {
+            node.name = "n" + newMed;
+            node.value = mediums[i].innerHTML;// "(r) " or "_"
+            newMed++;
+        }
+
         node.hidden = true;
         document.getElementById("inputField").append(node);
     }
@@ -305,8 +317,7 @@ function addMediumsUsersToForm() {
     //send
     document.getElementById("inputField").requestSubmit();
 }
-
-function sendUpdatePollForm() {
+function addMediumsUsersToForm() {
     //add mediums
     let mediums = document.getElementsByClassName("singleMedium");
     if (mediums.length == 0) {
@@ -318,24 +329,19 @@ function sendUpdatePollForm() {
         alert("Please add a user");
         return;
     }
-
+    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
+        alert("Please make your start time before your end time");
+        return;
+    }
+    if (document.getElementById("startDate").value > document.getElementById("endDate").value) {
+        alert("Please make your start date before your end date");
+        return;
+    }
     // add from our list
-    var newMed = 0;
-    var oldMed = 0;
     for (var i = 0; i < mediums.length; i++) {
         let node = document.createElement("input");
-        if (mediums[i].getAttribute("mid") != undefined) {
-            node.name = "o" + oldMed; //o[id]
-            //set its title to it's id, rather than storing it
-            node.value = mediums[i].getAttribute("mid");
-            oldMed++;
-        }
-        else {
-            node.name = "n" + newMed;
-            node.value = mediums[i].innerHTML;// "(r) __" or "___"
-            newMed++;
-        }
-
+        node.name = "m" + i;
+        node.value = mediums[i].innerHTML;// "(r) " or "_"
         node.hidden = true;
         document.getElementById("inputField").append(node);
     }

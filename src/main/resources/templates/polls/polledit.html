@@ -55,7 +55,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     </div>
                     <div class="form-group col-md-6">
                         <label class="col-form-label" for="startTime">Earliest Start Time: </label>
-                        <input class="form-control form-control-lg mb-3" type="text" maxlength="5" start="0" step="1800" id="startTime" name="startTime" placeholder="--:--" title="00:00 TO 23:59" th:value="${#strings.substring(poll.startDate,11, 16)}" required>
+                        <input class="form-control form-control-lg mb-3" type="time" maxlength="5" start="0" step="1800" id="startTime" name="startTime" placeholder="--:--" title="00:00 TO 23:59" th:value="${#strings.substring(poll.startDate,11, 16)}" required>
                     </div>
 
                     <!-- end time/date -->
@@ -65,7 +65,7 @@ otherwise, manually adjust to your needs using the labels below. (strictly follo
                     </div>
                     <div class="form-group col-md-6">
                         <label class="col-form-label" for="endTime">Latest End Time: </label>
-                        <input class="form-control form-control-lg mb-3" type="text" maxlength="5" id="endTime" start="0" step="1800" name="endTime" placeholder="--:--" title="00:00 TO 23:59" th:value="${#strings.substring(poll.endDate,11, 16)}" required>
+                        <input class="form-control form-control-lg mb-3" type="time" maxlength="5" id="endTime" start="0" step="1800" name="endTime" placeholder="--:--" title="00:00 TO 23:59" th:value="${#strings.substring(poll.endDate,11, 16)}" required>
                     </div>
                     <label class="col-form-label" for="expirary">Expiry Date</label>
                     <input class="form-control form-control-lg" type="date" id="expirary" name="expirary" th:value="${{#strings.substring(poll.expirary,0, 10)}}" required>

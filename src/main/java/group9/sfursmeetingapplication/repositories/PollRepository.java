@@ -24,14 +24,14 @@ public interface PollRepository extends JpaRepository<Poll, Integer> {
                         nativeQuery = true)
         List<Poll> findByUID(Long uid);
 
-        @Query(value = "SELECT DISTINCT uid" +
-                        "FROM user_responses, polls" +
-                        "WHERE pid = ?1 AND polls.pid = user_responses.pid", nativeQuery = true)
+        @Query(value = "SELECT DISTINCT user_responses.uid " +
+                        "FROM user_responses, polls " +
+                        "WHERE user_responses.pid = ?1 AND polls.pid = user_responses.pid", nativeQuery = true)
         List<Integer> findResponseByPID(Integer pid);
 
-        @Query(value = "SELECT DISTINCT uid" +
-                        "FROM invited, polls" +
-                        "WHERE pid = ?1 AND polls.pid = invited.pid", nativeQuery = true)
+        @Query(value = "SELECT DISTINCT invited.uid " +
+                        "FROM invited, polls " +
+                        "WHERE invited.pid = ?1 AND polls.pid = invited.pid", nativeQuery = true)
         List<Integer> findInvitedByPID(Integer pid);
 
         @Query(value = "SELECT polls.* " +
