@@ -55,43 +55,38 @@ public class UserServiceImplementation implements UserService {
         emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), confirmation.getToken());
         return user;
     }
+
     @Override
     public User sendEV(User user) {
-        
-        
+
         // Send an email to the user
         emailService.sendEventMessage(user.getFirstName(), user.getEmail());
-        
-        return user;
-       
-    }
 
+        return user;
+
+    }
 
     @Override
     public void sendPasswordEmail(String email) {
 
         User foundUser = userRepository.findByEmailIgnoreCase(email);
         if (foundUser != null) {
-            if(resetPasswordRepository.findByUser(foundUser) != null) {
+            if (resetPasswordRepository.findByUser(foundUser) != null) {
                 resetPasswordRepository.delete(resetPasswordRepository.findByUser(foundUser));
             }
             ResetPassword reset = new ResetPassword(foundUser);
             resetPasswordRepository.save(reset);
-            emailService.sendSimplePasswordMailMessage(foundUser.getFirstName(), foundUser.getEmail(), reset.getToken());
+            emailService.sendSimplePasswordMailMessage(foundUser.getFirstName(), foundUser.getEmail(),
+                    reset.getToken());
         }
-        
+
     }
 
     @Override
     public void sendPollReadyEmail(User user) {
 
-            emailService.sendPollReadyMessage(user.getFirstName(), user.getEmail());
-            
-        }
-    
-
-
-    
+        emailService.sendPollReadyMessage(user.getFirstName(), user.getEmail());
+    }
 
     /**
      * This method gets a user from the database.
@@ -240,6 +235,7 @@ public class UserServiceImplementation implements UserService {
 
     /**
      * This method gets a user by their user uid.
+     * 
      * @param uid The user uid.
      * @return The user with the given user uid.
      */
@@ -251,5 +247,5 @@ public class UserServiceImplementation implements UserService {
         }
         return user;
     }
-}
 
+}

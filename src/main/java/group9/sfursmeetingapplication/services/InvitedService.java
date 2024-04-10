@@ -9,8 +9,9 @@ import group9.sfursmeetingapplication.dto.InvitedDTO;
 public interface InvitedService {
     /**
      * This method creates a list of InvitedDTO objects from the query results.
+     * 
      * @param queryResults The query results.
      */
     List<InvitedDTO> createListOfInvitedFromDTO(List<Object[]> queryResults);
-    
+
 }

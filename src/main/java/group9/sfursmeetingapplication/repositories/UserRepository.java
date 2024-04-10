@@ -16,62 +16,6 @@ import jakarta.transaction.Transactional;
 
 @Repository // Spring annotation to indicate that the class is a repository.
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    @Query(
-        value = "SELECT * FROM users",
-        nativeQuery = true
-    )
-    
-    List<User> findall();
-
-    @Query(
-        value = "SELECT * FROM users WHERE uid = ?1",
-        nativeQuery = true
-    )
-    
-    List<User> findUserByUID(Long uid);
-
-    @Query(
-        value = "SELECT * FROM users WHERE uid = ?1",
-        nativeQuery = true
-    )
-
-    List<User> findname(Integer uid);
-
-    @Query(
-        value = "delete from users where uid =?1",
-        nativeQuery = true
-    )
-
-    void deleteuser(Long uid);
-    //delete from users where uid =?1
-
-    @Query(
-        value = "SELECT uid FROM invited WHERE pid = ?1",
-        nativeQuery = true
-    )
-
-    List<Integer> findusers1(Integer pid);
-
-    @Modifying
-    @Transactional
-    @Query(
-        value = "DELETE FROM users " + 
-                "WHERE users.uid = ?1 ;",
-        nativeQuery = true
-    )
-    void deleteByUID(long uid);
-
-    @Modifying
-    @Transactional
-    @Query(
-        value = "DELETE FROM confirmations " + 
-                "WHERE confirmations.uid = ?1 ;",
-        nativeQuery = true
-    )
-    void deleteConfirmation(long uid);
-    
-  
     /**
      * Finds a User by email (ignoring case).
      * 
@@ -97,30 +41,50 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     User findByEmailIgnoreCaseAndPassword(String email, String password);
 
+    List<User> findAll();
+
     /**
      * Finds a User by user uid.
+     * 
      * @param uid The user uid.
      * @return User
      */
     User findByUid(Long uid);
 
+    @Query(value = "SELECT * FROM users", nativeQuery = true)
+    List<User> findall();
 
-    @Query(
-        value = "SELECT users.* " + 
-                "FROM users " +
-                "WHERE UPPER(users.first_name || ' ' || users.last_name) LIKE UPPER(?1 || '%');",
-        nativeQuery = true
-    )
+    @Query(value = "SELECT * FROM users WHERE uid = ?1", nativeQuery = true)
+    List<User> findUserByUID(Long uid);
 
+    @Query(value = "SELECT * FROM users WHERE uid = ?1", nativeQuery = true)
+    List<User> findname(Integer uid);
+
+    @Query(value = "delete from users where uid =?1", nativeQuery = true)
+    void deleteuser(Long uid);
+
+    @Query(value = "SELECT uid FROM invited WHERE pid = ?1", nativeQuery = true)
+    List<Integer> findusers1(Integer pid);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM users " +
+            "WHERE users.uid = ?1 ;", nativeQuery = true)
+    void deleteByUID(long uid);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM confirmations " +
+            "WHERE confirmations.uid = ?1 ;", nativeQuery = true)
+    void deleteConfirmation(long uid);
+
+    @Query(value = "SELECT users.* " +
+            "FROM users " +
+            "WHERE UPPER(users.first_name || ' ' || users.last_name) LIKE UPPER(?1 || '%');", nativeQuery = true)
     List<User> findBySearch(String firstName);
 
-    List<User> findAll();
-
-    @Query(
-        value = "SELECT users.* " + 
-                "FROM users, invited, polls " +
-                "WHERE polls.pid = ?1 AND users.uid = invited.uid AND polls.pid = invited.pid;",
-        nativeQuery = true
-    )
+    @Query(value = "SELECT users.* " +
+            "FROM users, invited, polls " +
+            "WHERE polls.pid = ?1 AND users.uid = invited.uid AND polls.pid = invited.pid;", nativeQuery = true)
     List<User> findByPollPid(int pid);
 }

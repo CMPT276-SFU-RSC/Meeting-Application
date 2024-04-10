@@ -9,10 +9,11 @@ import group9.sfursmeetingapplication.models.Poll;
 public interface PollService {
     /**
      * This method creates a PollDTO from a Poll object.
-     * @param poll The poll object to be converted.
-     * @param CreatorName The name of the creator of the poll. 
+     * 
+     * @param poll        The poll object to be converted.
+     * @param CreatorName The name of the creator of the poll.
      * @return The PollDTO object.
      */
     PollDTO createPollFromDTO(Poll poll, String CreatorName);
-    
+
 }

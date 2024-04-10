@@ -16,7 +16,8 @@ public class PollServiceImplementation implements PollService {
 
     /**
      * This method creates a PollDTO from a Poll object.\
-     * @param poll The poll object to be converted.
+     * 
+     * @param poll        The poll object to be converted.
      * @param CreatorName The name of the creator of the poll.
      * @return The PollDTO object.
      */

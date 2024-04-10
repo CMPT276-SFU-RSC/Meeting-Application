@@ -40,6 +40,4 @@ public class Invited {
         this.iid = iid;
     }
 
-
-
 }

@@ -3,7 +3,7 @@ package group9.sfursmeetingapplication.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="polls")
+@Table(name = "polls")
 public class Poll {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +13,6 @@ public class Poll {
     private String description;
     private boolean finalized;
 
-
     private java.time.Instant startDate;
     private java.time.Instant endDate;
     private java.time.Instant expirary;
@@ -21,8 +20,8 @@ public class Poll {
     public Poll() {
     }
 
-
-    public Poll(int pid, String title, String description,  java.time.Instant startDate, java.time.Instant endDate, java.time.Instant expirary) {
+    public Poll(int pid, String title, String description, java.time.Instant startDate, java.time.Instant endDate,
+            java.time.Instant expirary) {
         this.pid = pid;
         this.title = title;
         this.description = description;
@@ -32,7 +31,8 @@ public class Poll {
 
     }
 
-    public Poll(int pid, long creator_id, String title, String description, java.time.Instant startDate, java.time.Instant endDate,java.time.Instant expirary) {
+    public Poll(int pid, long creator_id, String title, String description, java.time.Instant startDate,
+            java.time.Instant endDate, java.time.Instant expirary) {
         this.pid = pid;
         this.creator_id = creator_id;
         this.title = title;
@@ -42,54 +42,61 @@ public class Poll {
         this.expirary = expirary;
     }
 
-
-
-
     public boolean isFinalized() {
         return finalized;
     }
 
-
     public void setFinalized(boolean finalized) {
         this.finalized = finalized;
     }
+
     public java.time.Instant getExpirary() {
         return expirary;
     }
+
     public void setExpirary(java.time.Instant expirary) {
         this.expirary = expirary;
     }
+
     public int getPid() {
         return pid;
     }
+
     public void setPid(int pid) {
         this.pid = pid;
     }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
     public java.time.Instant getStartDate() {
         return startDate;
     }
+
     public void setStartDate(java.time.Instant startDate) {
         this.startDate = startDate;
     }
+
     public java.time.Instant getEndDate() {
         return endDate;
     }
+
     public void setEndDate(java.time.Instant endDate) {
         this.endDate = endDate;
     }
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
-
 
     public long getCreator_id() {
         return creator_id;

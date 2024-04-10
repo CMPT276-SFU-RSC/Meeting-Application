@@ -22,9 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.repositories.ResponseRepository;
 import group9.sfursmeetingapplication.repositories.UserRepository;
-import group9.sfursmeetingapplication.repositories.ConfirmationRepository;
 import group9.sfursmeetingapplication.repositories.InvitedRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import group9.sfursmeetingapplication.models.Poll;
@@ -38,11 +36,10 @@ public class UserController {
     @Autowired
     private UserRepository userRepo1;
     @Autowired
-    private ConfirmationRepository CRepo1;
-    @Autowired
     private ResponseRepository responseRepo;
     @Autowired
     private InvitedRepository invitedRepo;
+
     /**
      * Handles a POST request to login a user.
      * 
@@ -236,7 +233,8 @@ public class UserController {
     }
 
     @GetMapping("admins/polldelete")
-    public String deletepage(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response, HttpServletRequest request, HttpSession session) {
+    public String deletepage(@RequestParam Map<String, String> newuser, Model model, HttpServletResponse response,
+            HttpServletRequest request, HttpSession session) {
         // Check if the user is logged in
         session = request.getSession(false);
         if (session == null) {
@@ -266,7 +264,6 @@ public class UserController {
 
     @GetMapping("/polls/delete/{pid}")
     public String deleteuser(@PathVariable int pid, HttpServletResponse response) {
-        // TODO: process POST request
         List<Poll> usersToDelete = pollRepo.findname(pid);
         for (Poll user : usersToDelete) {
             pollRepo.delete(user);
@@ -310,15 +307,13 @@ public class UserController {
 
     @GetMapping("/users/delete/{uid}")
     public String deleteUsers(@PathVariable long uid, HttpServletResponse response) {
-        //delete confirmations
-
-        //delete their responses
+        // delete their responses
         responseRepo.deleteByUid(uid);
-        //delete their invited
+        // delete their invited
         invitedRepo.deleteByUid(uid);
-        //delete their polls
+        // delete their polls
         pollRepo.deleteByCreatoruid(uid);
-        //delete them
+        // delete them
         userRepo1.deleteConfirmation(uid);
         userRepo1.deleteByUID(uid);
         response.setStatus(200);
@@ -327,13 +322,11 @@ public class UserController {
     }
 
     @PostMapping("/users/d")
+    //TODO: Change the name of the method usersdelete.html
     public String deleteuser2(@RequestParam Map<String, String> poll, HttpServletResponse response) {
-        // TODO: process POST request
-
         Integer snumberr = Integer.parseInt(poll.get("snumber"));
         List<User> usersToDelete1 = userRepo1.findname(snumberr);
         for (User user : usersToDelete1) {
-            //CRepo1.delete(user);
             userRepo1.delete(user);
         }
 

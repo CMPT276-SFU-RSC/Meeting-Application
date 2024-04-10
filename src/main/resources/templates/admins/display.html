@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,37 +14,40 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="js/app.js"></script>
 </head>
-  
+
 </head>
+
 <body>
     <div class="secondary-body">
-    <header>
-        <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
-    </header>
+        <header>
+            <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
+        </header>
 
-    <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Users Display</h1>
-    <main class="container-fluid justify-content-between">
-        <section >
-            <div class="card-group">
+        <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">All Users</h1>
+        <main class="container-fluid justify-content-between">
+            <section>
+                <div class="card-group">
                     <div th:each="poll : ${u1}">
                         <div class="event-box">
-                        <div class="title" th:text="${poll.firstName}"></div>
-                        <div class="event-box-divider"></div>
-                        <label for="details">Email: </label>
-                        <div class="description" th:text="${poll.email}"></div>
-                           <div class="details">
-                           <label for="details">User ID: </label>
-                            <label class="description" th:text="${poll.uid}" ></label><br>
-                            <label for="details">User Title: </label>
-                           <label class="description" th:text="${poll.title}" ></label>
-                           <a th:href="@{../users/delete/{uid}(uid=${poll.uid})}" class="btn btn-secondary">Delete</a>
+                            <div class="title" th:text="${poll.firstName}"></div>
+                            <div class="event-box-divider"></div>
+                            <label for="details">Email: </label>
+                            <div class="description" th:text="${poll.email}"></div>
+                            <div class="details">
+                                <label for="details">User ID: </label>
+                                <label class="description" th:text="${poll.uid}"></label><br>
+                                <label for="details">User Title: </label>
+                                <label class="description" th:text="${poll.title}"></label><br>
+                                <a th:href="@{../users/delete/{uid}(uid=${poll.uid})}"
+                                    class="btn btn-secondary">Delete</a>
+                            </div>
                         </div>
                     </div>
-            </div>
-        </div>
-        </section>
-    </main>
-    <footer th:replace="~{universals/footer :: footer}"></footer>
+                </div>
+            </section>
+        </main>
+        <footer th:replace="~{universals/footer :: footer}"></footer>
     </div>
 </body>
+
 </html>

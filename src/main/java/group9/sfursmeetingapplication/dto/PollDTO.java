@@ -8,7 +8,6 @@ import java.time.format.DateTimeFormatter;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-
 @AllArgsConstructor // Lombok annotation to generate a constructor with all the arguments.
 @NoArgsConstructor // Lombok annotation to generate an empty constructor.
 @SuperBuilder // Lombok annotation to generate a builder for the class.

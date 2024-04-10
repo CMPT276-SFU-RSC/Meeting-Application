@@ -21,7 +21,7 @@
         <nav th:replace="~{universals/navbar :: navbar (user=${user})}"></nav>
     </header>
 
-    <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Create a poll</h1>
+    <h1 class="d-flex justify-content-center m-5" style="font-weight: bolder; font-size: 44px;">Create Poll</h1>
     <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
         <p th:text="${errorMessage}"></p>
     </div>

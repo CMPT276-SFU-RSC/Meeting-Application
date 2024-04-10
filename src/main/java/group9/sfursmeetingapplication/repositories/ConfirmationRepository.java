@@ -6,13 +6,9 @@
 package group9.sfursmeetingapplication.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import group9.sfursmeetingapplication.models.Confirmation;
 import group9.sfursmeetingapplication.models.User;
-import jakarta.transaction.Transactional;
-
 
 @Repository // Spring annotation to indicate that the class is a repository.
 public interface ConfirmationRepository extends JpaRepository<Confirmation, Long> {
@@ -31,7 +27,5 @@ public interface ConfirmationRepository extends JpaRepository<Confirmation, Long
      * @return The Confirmation with the given uid.
      */
     Confirmation findByUser(User user);
-
-
 
 }

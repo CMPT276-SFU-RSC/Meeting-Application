@@ -154,4 +154,5 @@ public class EmailServiceImplementation implements EmailService {
             throw new RuntimeException("Error: " + ex.getMessage());
         }
     }
+
 }

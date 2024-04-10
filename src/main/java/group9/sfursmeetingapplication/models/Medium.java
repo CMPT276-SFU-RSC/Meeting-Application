@@ -3,28 +3,28 @@ package group9.sfursmeetingapplication.models;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="mediums")
+@Table(name = "mediums")
 public class Medium {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int mid; 
+    private int mid;
     private int pid;
-    private String name; 
-    private Boolean remote; 
+    private String name;
+    private Boolean remote;
 
     public Medium() {
 
     }
 
     public Medium(String name, Boolean remote) {
-        this.name = name; 
-        this.remote = remote; 
+        this.name = name;
+        this.remote = remote;
     }
 
     public Medium(int mid, String name, Boolean remote) {
-        this.mid = mid; 
-        this.name = name; 
-        this.remote = remote; 
+        this.mid = mid;
+        this.name = name;
+        this.remote = remote;
     }
 
     public int getMid() {
@@ -58,6 +58,5 @@ public class Medium {
     public void setPid(int pid) {
         this.pid = pid;
     }
-
 
 }

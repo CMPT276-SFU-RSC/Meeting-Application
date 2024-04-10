@@ -21,8 +21,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EmailController {
     private final UserService userService;
-    private final ResetPasswordRepository resetPasswordRepo; 
-    private final UserRepository userRepo; 
+    private final ResetPasswordRepository resetPasswordRepo;
+    private final UserRepository userRepo;
     private final BCryptPasswordEncoder passwordEncoder;
 
     /**
@@ -49,14 +49,15 @@ public class EmailController {
     }
 
     @PostMapping("/email/confirmPassword/{id}")
-    public String resendPasswordConfirmation(@PathVariable String id, @RequestParam Map<String, String> newValue, HttpServletResponse response) {
+    public String resendPasswordConfirmation(@PathVariable String id, @RequestParam Map<String, String> newValue,
+            HttpServletResponse response) {
         User user = userRepo.findByEmailIgnoreCase(id);
         user.setPassword(passwordEncoder.encode(newValue.get("password1Reset")));
         userRepo.save(user);
         return "universals/success";
     }
 
-   @PostMapping("/email/resetPassword")
+    @PostMapping("/email/resetPassword")
     public String resetPassword(@RequestParam Map<String, String> newModel, HttpServletResponse response,
             RedirectAttributes redirectAttributes) {
         try {
@@ -70,8 +71,8 @@ public class EmailController {
             response.setStatus(400);
             return "redirect:/emails/forgotPassword";
         }
-    } 
-    
+    }
+
     /**
      * Handles a GET request to confirm a user's account.
      * 
@@ -99,9 +100,11 @@ public class EmailController {
         }
     }
 
-    @GetMapping("/email/verifiedForgotPassword") // Spring annotation to map HTTP GET requests onto specific handler methods
-    public String confirmUserForgotPassword(Model model, @RequestParam("token") String token, HttpServletResponse response,
-    RedirectAttributes redirectAttributes) {
+    @GetMapping("/email/verifiedForgotPassword") // Spring annotation to map HTTP GET requests onto specific handler
+                                                 // methods
+    public String confirmUserForgotPassword(Model model, @RequestParam("token") String token,
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes) {
 
         // Check if the token is null or empty
         if (token == null || token.isEmpty()) {

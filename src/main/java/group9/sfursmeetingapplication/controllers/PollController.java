@@ -87,7 +87,6 @@ public class PollController {
         // get from DB
         // get all polls this user has been invited to
         // could in the future move results the user has answered
-        // List<Poll> polls = pollRepo.findByUID(user.uid);
         List<Poll> polls = pollRepo.findByUIDopen(user.getUid());
         List<Poll> polls1 = pollRepo.find();
         // Gets a list of all the polls the user has created.
@@ -168,7 +167,6 @@ public class PollController {
             return "redirect:/login";
         }
         // add poll
-
         String title = pollData.get("title");
         String description = pollData.get("description");
         String startDateString = pollData.get("startDate");
@@ -392,38 +390,6 @@ public class PollController {
 
         return "redirect:/dashboard";
     }
-
-    // Not sure what this does
-    @GetMapping("/getPolls/{pid}")
-    public String displayEvents(@PathVariable int pid, Model model, HttpSession session) {
-        List<Poll> polls = pollRepo.findBypid(pid);
-        List<Medium> mediums = mediumRepo.findBypid(pid);
-        if (polls.isEmpty()) {
-            return "redirect:/login";
-        }
-        Poll poll = polls.get(0);
-        model.addAttribute("poll", poll);
-        model.addAttribute("mediums", mediums);
-
-        // Check if the user is logged in
-        Long userId = (Long) session.getAttribute("user_id");
-        if (userId == null) {
-            System.out.println("Redirecting because there's no user ID in the session");
-            return "redirect:/login";
-        }
-
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            System.out.println("Redirecting because the user doesn't exist");
-            // If the user doesn't exist, end the session and redirect the user to the login
-            // page
-            session.invalidate();
-            return "redirect:/login";
-        } // End of session check
-        model.addAttribute("user", user);
-        return "users/showEvents";
-    }
-    // Not sure what this does
 
     /**
      * This method is used to respond to a poll.

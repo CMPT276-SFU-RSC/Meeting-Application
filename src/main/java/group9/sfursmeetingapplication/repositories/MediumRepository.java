@@ -8,20 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import group9.sfursmeetingapplication.models.Medium;
 
-
 public interface MediumRepository extends JpaRepository<Medium, Integer> {
-     List<Medium> findBymid(Integer mid);
-     List<Medium> findBypid(Integer pid);
+        List<Medium> findBymid(Integer mid);
 
-     @Transactional
-     void deleteBymid(Integer mid);
+        List<Medium> findBypid(Integer pid);
 
-     @Modifying
-     @Transactional
-     @Query(
-        value = "DELETE FROM mediums " + 
-                "WHERE mediums.pid = ?1 AND mediums.mid != ?2 ;",
-        nativeQuery = true
-    )
-     void trimBypid(int pid, int mid);
+        @Transactional
+        void deleteBymid(Integer mid);
+
+        @Modifying
+        @Transactional
+        @Query(value = "DELETE FROM mediums " +
+                        "WHERE mediums.pid = ?1 AND mediums.mid != ?2 ;", nativeQuery = true)
+        void trimBypid(int pid, int mid);
+
 }
