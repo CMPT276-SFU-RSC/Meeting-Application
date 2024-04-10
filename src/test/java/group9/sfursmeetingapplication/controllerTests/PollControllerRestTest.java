@@ -11,6 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,10 +35,16 @@ public class PollControllerRestTest {
     void testGetMediumResponse() throws Exception {
         when(responseRepo.findByMidAndUid(0, 0)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/poll/response/0/0").sessionAttr("user_id", (long)30));
+
+        mockMvc.perform(get("/poll/response/0/0"))
+            .andExpect(status().isOk());
     }
     @Test
     void testGetUserResponse() throws Exception {
         when(responseRepo.findByMid(0)).thenReturn(null);
         mockMvc.perform(MockMvcRequestBuilders.get("/poll/response/0").sessionAttr("user_id", (long)30));
+
+        mockMvc.perform(get("/poll/response/0"))
+        .andExpect(status().isOk());
     }
 }
