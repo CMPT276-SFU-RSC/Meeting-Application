@@ -160,9 +160,9 @@ body {
   border: none;
   font-weight: 500;
   cursor: pointer;
-  background: #A5192E;
+  background: #f0f0f0;
   font-size: 16px;
-  color: white;
+  color: rgb(92, 92, 92);
   transition: all 170ms ease-in-out;
 }
 
@@ -173,8 +173,6 @@ body {
 .btn.btn-primary.ml:active {
   background-color: #f0f0f0;
 }
-
-
 
 /* Adjust the shadow */
 .navbar {
@@ -284,7 +282,6 @@ body {
   font-size: 20px;
   font-weight: 500;
 }
-
 
 .btn.btn-primary.btn-lg {
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
@@ -853,7 +850,6 @@ input {
   background-color: #363636;
   color: #f9f9f9;
 }
-
 
 .dark-mode .form-select-lg {
   background-color: #363636;
