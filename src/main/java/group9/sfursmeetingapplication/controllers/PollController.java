@@ -139,7 +139,7 @@ public class PollController {
         }
 
         model.addAttribute("user", user);
-        return "users/pollcreate";
+        return "polls/pollcreate";
     }
 
     @PostMapping("/create-poll")
@@ -175,8 +175,8 @@ public class PollController {
         String endTimeString = pollData.get("endTime");
         String expiraryDateString = pollData.get("expirary");
 
-        if (startDateString.compareTo(endDateString) >= 0 || startTimeString.compareTo(endTimeString) >= 0) {
-            return "redirect:/pollcreate";
+        if (startDateString.compareTo(endDateString) > 0 || startTimeString.compareTo(endTimeString) >= 0) {
+            return "redirect:polls/pollcreate";
         }
         // Parse dates
         java.time.Instant startDate = java.time.Instant.parse(startDateString + "T" + startTimeString + ":00.00Z");

@@ -1,15 +1,13 @@
-function preventBack(){window.history.forward();}
-  setTimeout("preventBack()", 0);
-  window.onunload=function(){null};
+function preventBack() { window.history.forward(); }
+setTimeout("preventBack()", 0);
+window.onunload = function () { null };
 
-  
-  
-  window.addEventListener("beforeunload", function(event) {
+window.addEventListener("beforeunload", function (event) {
     // Create an XMLHttpRequest object
     var xhr = new XMLHttpRequest();
 
     // Define the callback function when the request is complete
-    xhr.onreadystatechange = function() {
+    xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             // Handle the response if needed
             if (xhr.status === 200) {
@@ -29,7 +27,6 @@ function preventBack(){window.history.forward();}
     // Send the request
     xhr.send();
 });
-
 
 /**
  * This function is called to all pages where the user is notified
@@ -170,7 +167,6 @@ function togglePasswordVisibility() {
     }
 }
 
-
 document.addEventListener('DOMContentLoaded', function () {
     const dateTimeRangeInput = document.getElementById('dateTimeRange');
     const startDateInput = document.getElementById('startDate');
@@ -279,11 +275,11 @@ function addMediumsUsersToForm() {
         alert("Please add a user");
         return;
     }
-    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
+    if (document.getElementById("startTime").value > document.getElementById("endTime").value) {
         alert("Please make your start time before your end time");
         return;
     }
-    if (document.getElementById("startDate").value >= document.getElementById("endDate").value) {
+    if (document.getElementById("startDate").value > document.getElementById("endDate").value) {
         alert("Please make your start date before your end date");
         return;
     }
@@ -797,7 +793,6 @@ function sendFinalizedPoll() {
     });
     window.location.replace("../../dashboard");
 }
-
 
 /**
  * Posts the selected cells to the database.
