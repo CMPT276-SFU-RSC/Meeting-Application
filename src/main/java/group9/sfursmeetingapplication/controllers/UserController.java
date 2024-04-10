@@ -23,6 +23,8 @@ import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.repositories.ResponseRepository;
 import group9.sfursmeetingapplication.repositories.UserRepository;
 import group9.sfursmeetingapplication.repositories.InvitedRepository;
+import group9.sfursmeetingapplication.repositories.MediumRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import group9.sfursmeetingapplication.models.Poll;
@@ -39,6 +41,8 @@ public class UserController {
     private ResponseRepository responseRepo;
     @Autowired
     private InvitedRepository invitedRepo;
+    @Autowired
+    private MediumRepository mediumRepo;
 
     /**
      * Handles a POST request to login a user.
@@ -267,6 +271,8 @@ public class UserController {
         List<Poll> usersToDelete = pollRepo.findname(pid);
         for (Poll user : usersToDelete) {
             pollRepo.delete(user);
+            responseRepo.deleteByPid(pid);
+            mediumRepo.trimBypid(pid, -1);
         }
         response.setStatus(200);
         return "redirect:/dashboard";

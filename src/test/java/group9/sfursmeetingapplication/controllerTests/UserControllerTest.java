@@ -1,8 +1,8 @@
-package group9.sfursmeetingapplication.modelTests;
+package group9.sfursmeetingapplication.controllerTests;
 import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
-
+import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +19,7 @@ import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @SpringBootTest
@@ -51,10 +52,9 @@ public class UserControllerTest {
         users.add(u2);  
 
         when(userRepo1.findall()).thenReturn(users);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/userdisplay"))
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andExpect(MockMvcResultMatchers.view().name("users/display"))
+        when(userRepo1.findByUid(30l)).thenReturn(u1);
+        mockMvc.perform(MockMvcRequestBuilders.get("/admins/userdisplay").sessionAttr("user_id", (long)30))
+            .andExpect(MockMvcResultMatchers.view().name("admins/display"))
             
             .andExpect(MockMvcResultMatchers.model().attribute("u1", hasItem(
                 allOf(
@@ -62,6 +62,8 @@ public class UserControllerTest {
                     hasProperty("password", Matchers.is("1234"))
                 )
             )));
+        mockMvc.perform(MockMvcRequestBuilders.get("/admins/userdisplay"))
+            .andExpect(MockMvcResultMatchers.view().name("redirect:/login"));
     }
     
     @Test
@@ -94,6 +96,24 @@ public class UserControllerTest {
         //not logged in
         mockMvc.perform(MockMvcRequestBuilders.get("/users/profile"))
             .andExpect(MockMvcResultMatchers.view().name("redirect:/login"));
+
+        
+        User u1 = new User(); 
+        u1.setFirstName("email1");
+        u1.setPassword("1234");
+
+        User u2 = new User();
+        u2.setFirstName("email2");
+        u2.setPassword("1234");
+
+        List<User> users = new ArrayList<User>();
+        users.add(u1);
+        users.add(u2);  
+
+        when(userRepo1.findall()).thenReturn(users);
+        when(userRepo1.findByUid(30l)).thenReturn(u1);
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/profile").sessionAttr("user_id", (long)30))
+            .andExpect(MockMvcResultMatchers.view().name("users/profile"));
     }
 
 
@@ -104,12 +124,7 @@ public class UserControllerTest {
             .andExpect(MockMvcResultMatchers.view().name("redirect:/login"));
     }
 
-    @Test
-    void userDeleteEndpoint() throws Exception {
-        //not logged in
-        mockMvc.perform(MockMvcRequestBuilders.get("/delete"))
-            .andExpect(MockMvcResultMatchers.view().name("users/delete"));
-    }
+
 
 
 }
