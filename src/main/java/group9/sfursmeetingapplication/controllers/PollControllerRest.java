@@ -6,7 +6,11 @@ package group9.sfursmeetingapplication.controllers;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import group9.sfursmeetingapplication.repositories.PollRepository;
 import group9.sfursmeetingapplication.repositories.ResponseRepository;
+import group9.sfursmeetingapplication.repositories.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,17 +21,24 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import group9.sfursmeetingapplication.models.Response;
-import group9.sfursmeetingapplication.services.ResponseService;
+import group9.sfursmeetingapplication.models.*;
+import group9.sfursmeetingapplication.services.*;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor // Lombok annotation to generate the required constructor
 @RestController // This annotation is used to mark the class as a REST controller.
 public class PollControllerRest {
     private final ResponseService responseService;
+    private final UserService userService; 
 
     @Autowired
     private ResponseRepository responseRepo;
+
+    @Autowired
+    private PollRepository pollRepo; 
+
+    @Autowired
+    private UserRepository userRepo; 
 
     /**
      * This method is used to respond to a poll.
@@ -44,6 +55,23 @@ public class PollControllerRest {
             System.out.println("Saving Poll Responses....");
             for (Response oneResponse : responses) {
                 responseService.saveUserResponse(oneResponse);
+            }
+
+            List<Integer> InvitedUsersList = pollRepo.findInvitedByPID(responses.get(0).getPid());
+            List<Integer> RespondedUsersList = pollRepo.findResponseByPID(responses.get(0).getPid());
+
+            Double respondedUsersSize = Double.valueOf(RespondedUsersList.size());
+            Double invitedUsersSize = Double.valueOf(InvitedUsersList.size());
+
+            Double preResponse = (respondedUsersSize - 1.0)/invitedUsersSize;
+            Double withResponse = respondedUsersSize/invitedUsersSize;
+
+            if(preResponse < 0.80 && withResponse >= 0.80) {
+
+                Poll poll = pollRepo.findByPid(responses.get(0).getPid());
+                List<User> usersList = userRepo.findUserByUID(poll.getCreator_id());
+                User foundUser = usersList.get(0);
+                userService.sendPollReadyEmail(foundUser);
             }
             return new ResponseEntity<>(Collections.singletonMap("message", "Responses saved successfully"),
                     HttpStatus.CREATED);
