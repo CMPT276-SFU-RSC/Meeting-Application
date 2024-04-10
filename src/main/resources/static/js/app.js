@@ -275,7 +275,7 @@ function addMediumsUsersToForm() {
         alert("Please add a user");
         return;
     }
-    if (document.getElementById("startTime").value > document.getElementById("endTime").value) {
+    if (document.getElementById("startTime").value >= document.getElementById("endTime").value) {
         alert("Please make your start time before your end time");
         return;
     }
